@@ -1,0 +1,39 @@
+GET http://localhost:8080/person/init
+
+###
+PUT http://localhost:8080/person/DIALOGSTATE_1/value
+Content-Type: application/json
+
+{
+    "dialogID": "DIALOGSTATE_1",
+    "step": "0",
+    "fieldPath": "/name",
+    "newValue": "Anton"
+}
+###
+
+PUT http://localhost:8080/person/DIALOGSTATE_1/value
+Content-Type: application/json
+
+{
+  "dialogID": "DIALOGSTATE_1",
+  "step": "1",
+  "fieldPath": "/name",
+  "newValue": "Bernhard"
+}
+###
+
+PUT http://localhost:8080/person/DIALOGSTATE_1/value
+Content-Type: application/json
+
+{
+  "dialogID": "DIALOGSTATE_1",
+  "step": "2",
+  "fieldPath": "/name",
+  "newValue": "Carsten"
+}
+###
+
+GET http://localhost:8080/person/DIALOGSTATE_1/3
+
+###

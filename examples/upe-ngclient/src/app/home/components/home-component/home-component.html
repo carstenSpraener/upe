@@ -1,0 +1,17 @@
+<h1>UPE-Application</h1>
+<a href="http://localhost:4200/upe/d/DIALOGSTATE_48/s/1/v/init">Show Dialog 48 Step 1</a>
+<div [upeProcess]="'person'">
+  <h2>Home Application</h2>
+  <div [upeView]="'init'">
+    <h2>Init View</h2>
+    <label>Name der Person</label>
+    <input [upeField]="'/name'" />
+    <button [upeViewNav]="'address'">Adress...</button>
+  </div>
+  <div [upeView]="'address'">
+    <h2>Address View</h2>
+    <label>Strasse</label>
+    <input [upeField]="'/adress/strasse'" />
+    <button [upeViewNav]="'_back'">Close</button>
+  </div>
+</div>
