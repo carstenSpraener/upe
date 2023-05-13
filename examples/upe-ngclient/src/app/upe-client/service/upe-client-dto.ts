@@ -1,3 +1,5 @@
+import {BehaviorSubject, Observable} from "rxjs";
+
 export interface ProcessElementListener {
   updateFromModel(element: ProcessElement): void;
 }
@@ -39,11 +41,15 @@ export interface UpeValueUpdate {
 }
 
 export const MAX_SEVERITY = 3;
+
+export const BG_COLORS: string[] = ["#FFFFFF", "#a3dba3", "#efef8d", "#ea9292"]
+
 export interface ProcessElement {
   isVisibel: boolean
   isEnabled: boolean
   fieldPath: string
   messages: ProcessMessage[]
+  update$: BehaviorSubject<boolean>;
 }
 
 export interface ProcessField extends ProcessElement {
@@ -54,6 +60,6 @@ export interface Process {
   state: DialogState
   elementListnerMap: Map<string, ProcessElementListener[]>;
   name: string
-  processFields: ProcessField[];
+  processFields: Map<string,ProcessField>;
 }
 

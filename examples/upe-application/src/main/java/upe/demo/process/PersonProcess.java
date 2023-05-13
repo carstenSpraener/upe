@@ -8,6 +8,7 @@ import upe.process.UProcessEngine;
 import upe.process.UProcessModification;
 import upe.process.UProcessTextField;
 import upe.process.impl.AbstractUProcessImpl;
+import upe.process.validation.impl.MandantoryValidator;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -21,6 +22,8 @@ public class PersonProcess extends AbstractUProcessImpl {
 
     public PersonProcess(UProcessEngine pe, String name) {
         super(pe, name);
+        addValidator(new NameValidator());
+        addValidator(new MandantoryValidator("name"));
     }
 
 

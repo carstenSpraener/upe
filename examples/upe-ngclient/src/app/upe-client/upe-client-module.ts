@@ -1,34 +1,30 @@
-import {Component, NgModule} from "@angular/core";
+import {NgModule} from "@angular/core";
 import {UpeClientService} from "./service/upe-client-service";
 import {HttpClientModule} from "@angular/common/http";
 import {CommonModule} from "@angular/common";
-import { RouterModule, Routes} from "@angular/router";
-import {UpeClientDirective} from "./components/upe-client-directive/upe-client-directive";
-import {UpeFieldDirective} from "./components/upe-field/upe-field-directive";
+import {RouterModule, Routes} from "@angular/router";
 import {UpeViewDirective} from "./components/upe-view/upe-view-directive";
+import {UpeFieldDirective} from "./components/upe-field/upe-field-directive";
 import {UpeViewNavDirective} from "./components/upe-viewnav-directive/upe-viewnav-directive";
-
-export const BG_COLORS: string[] = ["#FFFFFF", "#a3dba3", "#efef8d", "#ea9292"]
-
+import {UpeClientDirective} from "./components/upe-client-directive/upe-client-directive";
 
 @NgModule({
   imports: [
     CommonModule,
     HttpClientModule,
-    //RouterModule.forChild(upeRoutes),
     RouterModule,
   ],
   declarations: [
+    UpeViewNavDirective,
+    UpeViewDirective,
     UpeClientDirective,
     UpeFieldDirective,
-    UpeViewDirective,
-    UpeViewNavDirective
   ],
   exports: [
+    UpeViewNavDirective,
+    UpeViewDirective,
     UpeClientDirective,
     UpeFieldDirective,
-    UpeViewDirective,
-    UpeViewNavDirective
   ],
   providers: [
     UpeClientService

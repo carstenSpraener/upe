@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Directive, Input, OnDestroy, OnInit} from "@angular/core";
+import {AfterViewInit, Directive, Input, OnDestroy, OnInit} from "@angular/core";
 import {UpeClientService} from "../../service/upe-client-service";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {Process, ProcessDelta} from "../../service/upe-client-dto";
@@ -18,31 +18,12 @@ export class UpeClientDirective implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // console.log("UPEClientUPEClientComponent: processName is '"+this.processName+"'");
-    this.subscriptions.push(this.activatedRoute.paramMap.subscribe(
-      (params: ParamMap) => this.routeParamsChanged(params)
-    ));
-    /*
-    this.subscriptions.push(this.upeClientService.process$.subscribe( (p:Process|undefined)=> {
-      if( p ) {
-        console.log("UPEClientComponent: new process '" + p.name + " 'loaded!")
-      }
-    }));
-    this.subscriptions.push(this.upeClientService.processDelta$.subscribe( (p:ProcessDelta|undefined)=> {
-      if( p ) {
-        console.log("UPEClientComponent: new processDelta fired on process '"+p.processName+"'")
-      }
-    }));
-    this.subscriptions.push(this.upeClientService.activeView$.subscribe( (viewName:string|undefined)=> {
-      if( viewName ) {
-        console.log("UPEClientComponent: new view name fired '"+viewName+"'")
-      }
-    }));
-
-     */
   }
 
   ngOnInit() {
+    this.subscriptions.push(this.activatedRoute.paramMap.subscribe(
+        (params: ParamMap) => this.routeParamsChanged(params)
+    ));
   }
 
   ngOnDestroy() {

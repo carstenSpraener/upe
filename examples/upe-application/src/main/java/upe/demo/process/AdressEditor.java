@@ -4,6 +4,7 @@ import upe.annotations.UpeProcessField;
 import upe.process.UProcessComponent;
 import upe.process.UProcessTextField;
 import upe.process.impl.UProcessComponentImpl;
+import upe.process.validation.impl.MandantoryValidator;
 
 public class AdressEditor extends UProcessComponentImpl {
     @UpeProcessField("strasse")
@@ -11,6 +12,7 @@ public class AdressEditor extends UProcessComponentImpl {
 
     public AdressEditor(UProcessComponent parent, String name) {
         super(parent, name);
+        addValidator(new MandantoryValidator("strasse"));
     }
 
 }

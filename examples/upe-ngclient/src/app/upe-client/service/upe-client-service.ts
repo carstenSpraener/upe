@@ -1,9 +1,12 @@
 import {Injectable} from "@angular/core";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, filter} from "rxjs";
 import {
-  DialogState, MAX_SEVERITY,
+  DialogState,
+  MAX_SEVERITY,
   Process,
-  ProcessDelta, ProcessElement, ProcessElementDelta,
+  ProcessDelta,
+  ProcessElement,
+  ProcessElementDelta,
   ProcessElementListener,
   ProcessField,
   UpeValueUpdate
@@ -19,6 +22,7 @@ export class UpeClientService {
   activeView$ = new BehaviorSubject<string | undefined>(undefined);
   activeProcess: Process | undefined = undefined;
   activeView: string = "init";
+  viewSeverity$ = new BehaviorSubject<{view: string, severity: number }>({view: 'init', severity: 0});
 
   static serverURL = "http://localhost:8080";
 
@@ -72,17 +76,18 @@ export class UpeClientService {
     return url;
   }
 
-  private buildProcessFields(delta: ProcessDelta): ProcessField[] {
-    var fields: ProcessField[] = []
+  private buildProcessFields(delta: ProcessDelta): Map<string, ProcessField> {
+    var fields: Map<string, ProcessField> = new Map();
     for (let peDelta of delta.elementDeltaList) {
       var field: ProcessField = {
         fieldPath: peDelta.elementPath,
         value: peDelta.valueForFrontend,
         isEnabled: peDelta.enabled,
         isVisibel: peDelta.isVisible,
-        messages: peDelta.newMessages
+        messages: peDelta.newMessages,
+        update$ : new BehaviorSubject<boolean>(false)
       }
-      fields.push(field);
+      fields.set(field.fieldPath, field);
     }
     return fields;
   }
@@ -103,7 +108,7 @@ export class UpeClientService {
     this.process$.next(this.activeProcess);
     this.processDelta$.next(delta);
     this.activeView$.next(this.activeView);
-
+    this.activeProcess.processFields.forEach( pf => pf.update$.next(true));
     var url = this.buildPathFromDialogState(delta.state);
     this.router.navigateByUrl(url);
   }
@@ -147,7 +152,6 @@ export class UpeClientService {
       var nextURL = this.buildPathFromDialogState(delta.state);
       this.activeProcess.state = delta.state;
       this.updateActiveProcessModel(delta);
-      this.processDelta$.next(delta);
       this.router.navigateByUrl(nextURL);
     }
   }
@@ -167,45 +171,40 @@ export class UpeClientService {
     for (let fieldUpd of delta.elementDeltaList) {
       this.updateProcessField(fieldUpd)
     }
+    this.process$.next(this.activeProcess);
   }
 
   private updateProcessField(fieldUpd: ProcessElementDelta): void {
     if( !this.activeProcess ) {
       return;
     }
-    var processField: ProcessField;
-    var found = false;
-    if(this.activeProcess.processFields ) {
-      for (let pf of this.activeProcess?.processFields) {
-        if (pf.fieldPath == fieldUpd.elementPath) {
-          processField = pf;
-          found = true
-          break;
-        }
+    var pField = this.activeProcess.processFields.get(fieldUpd.elementPath);
+    if( !pField ) {
+      pField = {
+        fieldPath: fieldUpd.elementPath,
+        messages: fieldUpd.newMessages,
+        isEnabled: fieldUpd.enabled,
+        isVisibel: fieldUpd.isVisible,
+        value: fieldUpd.valueForFrontend,
+        update$ : new BehaviorSubject<boolean>(false)
       }
+    } else {
+      pField.messages = fieldUpd.newMessages? fieldUpd.newMessages : []
+      pField.value = fieldUpd.valueForFrontend
+      pField.isEnabled = fieldUpd.enabled !== undefined? fieldUpd.enabled : true;
+      pField.isVisibel = fieldUpd.isVisible !== undefined ? fieldUpd.isVisible : true;
     }
-    processField = {
-      fieldPath: fieldUpd.elementPath,
-      messages: fieldUpd.newMessages,
-      isEnabled: fieldUpd.enabled,
-      isVisibel: fieldUpd.isVisible,
-      value: fieldUpd.valueForFrontend
-    }
-    if (!found) {
-      this.activeProcess?.processFields.push(processField);
-    }
+    this.activeProcess.processFields.set(fieldUpd.elementPath, pField);
+    pField.update$.next(true);
+    this.process$.next(this.activeProcess);
   }
 
   findProcessElementByPath(elementPath: string): ProcessElement | null {
     if (!this.activeProcess || !this.activeProcess.processFields) {
       return null;
     }
-    for (let pf of this.activeProcess?.processFields) {
-      if (pf.fieldPath == elementPath) {
-        return pf;
-      }
-    }
-    return null;
+    let field = this.activeProcess.processFields.get(elementPath);
+    return field ? field : null;
   }
 
   getElementsSeverity(pe: ProcessElement): number {
@@ -219,5 +218,10 @@ export class UpeClientService {
       }
     }
     return severity;
+  }
+
+  publishSeverityUpdate(viewName: string, severtity: number) {
+    console.log("Update severity on view '"+viewName+" to "+severtity)
+    this.viewSeverity$.next( {view: viewName, severity: severtity})
   }
 }
