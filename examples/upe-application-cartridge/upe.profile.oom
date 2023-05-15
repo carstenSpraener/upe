@@ -1,0 +1,260 @@
+import de.spraener.nxtgen.groovy.ModelDSL
+
+ModelDSL.make {
+  mPackage {
+    name 'upe.profile'
+    documentation ''
+    id 'Xw2I2BGGAqACRA03'
+    metaType 'Model'
+    stereotype 'metamodel'
+    mPackage {  //Exported by PackageExporterBase
+      name 'rest'
+      documentation ''
+      id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O'
+      metaType 'Package'
+      mPackage {  //Exported by PackageExporterBase
+        name 'generator'
+        documentation ''
+        id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V'
+        metaType 'Package'
+        mClass {  //Exported by ClassExporterBase
+          name 'DtoGenerator'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:PcIc2BGGAqACRBZp'
+          metaType 'Class'
+          stereotype 'CodeGenerator', {
+            taggedValue 'requiredStereotype', 'Dto'
+            taggedValue 'outputType', 'Java'
+            taggedValue 'generatesOn', 'MClass'
+            taggedValue 'outputTo', 'src-gen'
+          }
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'UPEStereotypes'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:AVDS2BGGAqACRB1d'
+          metaType 'Class'
+          stereotype 'StereotypeEnum'
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'UPECartridge'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:jkey2BGGAqACRB3M'
+          metaType 'Class'
+          stereotype 'cgV19Cartridge'
+        }
+        mClass {
+          name 'Dto'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:060o2BGGAqACRA1v'
+          metaType 'Stereotype'
+        }
+        mClass {
+          name 'UProcess'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:W48d2BGGAqACRB5Y'
+          metaType 'Stereotype'
+        }
+        mClass {
+          name 'UProcessComponent'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:PsBd2BGGAqACRB6A'
+          metaType 'Stereotype'
+        }
+        mClass {
+          name 'Scaffolds'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:ER.92BGGAqACRB95'
+          metaType 'Stereotype'
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'ProcessComponentGenerator'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:W0bb2BGGAqACRCBM'
+          metaType 'Class'
+          stereotype 'CodeGenerator', {
+            taggedValue 'requiredStereotype', 'UProcessComponent'
+            taggedValue 'outputType', 'Java'
+            taggedValue 'generatesOn', 'MClass'
+            taggedValue 'outputTo', 'src'
+          }
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'GeneratorGapTransformation'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:_9072BGGAqACRCBz'
+          metaType 'Class'
+          stereotype 'Transformation', {
+            taggedValue 'transformedMetaType', 'MClass'
+            taggedValue 'priority', '10'
+          }
+        }
+        mClass {
+          name 'UProcessComponentBase'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:FyD72BGGAqACRCC_'
+          metaType 'Stereotype'
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'ProcessComponentBaseGenerator'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:DHz72BGGAqACRCDM'
+          metaType 'Class'
+          stereotype 'CodeGenerator', {
+            taggedValue 'requiredStereotype', 'UProcessComponentBase'
+            taggedValue 'outputType', 'Java'
+            taggedValue 'generatesOn', 'MClass'
+            taggedValue 'outputTo', 'src-gen'
+          }
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'ProcessGenerator'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:hOnG.BGGAqACRAmK'
+          metaType 'Class'
+          stereotype 'CodeGenerator', {
+            taggedValue 'requiredStereotype', 'UProcess'
+            taggedValue 'outputType', 'Java'
+            taggedValue 'generatesOn', 'MClass'
+            taggedValue 'outputTo', 'src'
+          }
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'ProcessBaseGenerator'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:mrYm.BGGAqACRAmm'
+          metaType 'Class'
+          stereotype 'CodeGenerator', {
+            taggedValue 'requiredStereotype', 'UProcessBase'
+            taggedValue 'outputType', 'Java'
+            taggedValue 'generatesOn', 'MClass'
+            taggedValue 'outputTo', 'src-gen'
+          }
+        }
+        mClass {
+          name 'UProcessBase'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:13cW.BGGAqACRAnv'
+          metaType 'Stereotype'
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'UProcessAction'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:Zi6W.BGGAqACRAoA'
+          metaType 'Class'
+          stereotype 'Stereotype'
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'ProcesActionBaseGenerator'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:BjYh.BGGAqACRA92'
+          metaType 'Class'
+          stereotype 'CodeGenerator', {
+            taggedValue 'requiredStereotype', 'UProcessActionBase'
+            taggedValue 'outputType', 'Java'
+            taggedValue 'generatesOn', 'MClass'
+            taggedValue 'outputTo', 'src-gen'
+          }
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'ProcesActionGenerator'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:fRhh.BGGAqACRA.d'
+          metaType 'Class'
+          stereotype 'CodeGenerator', {
+            taggedValue 'requiredStereotype', 'UProcessAction'
+            taggedValue 'outputType', 'Java'
+            taggedValue 'generatesOn', 'MClass'
+            taggedValue 'outputTo', 'src'
+          }
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'UProcessComponent'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:MwVZ.BGGAqACRBAC'
+          metaType 'Class'
+          stereotype 'Stereotype'
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'UValidator'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:4NPcBBGGAqACRArM'
+          metaType 'Class'
+          stereotype 'Stereotype'
+        }
+        mClass {
+          name 'UProcessAction'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:rBWB.BGGAqACRA70'
+          metaType 'Stereotype'
+        }
+        mClass {
+          name 'UValidator'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:JsDcBBGGAqACRAp1'
+          metaType 'Stereotype'
+          mAttribute {
+            name 'msgID'
+            documentation ''
+            id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:JsDcBBGGAqACRAp1$5sDcBBGGAqACRAp2$FsDcBBGGAqACRAp3'
+            metaType 'TaggedValueDefinition'
+          }
+          mAttribute {
+            name 'msgLevel'
+            documentation ''
+            id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:JsDcBBGGAqACRAp1$5sDcBBGGAqACRAp2$FsDcBBGGAqACRAp4'
+            metaType 'TaggedValueDefinition'
+          }
+          mAttribute {
+            name 'msgText'
+            documentation ''
+            id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:JsDcBBGGAqACRAp1$5sDcBBGGAqACRAp2$qMopBBGGAqACRApH'
+            metaType 'TaggedValueDefinition'
+          }
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'ValidatorOperationToClass'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:aoL8BBGGAqACRAsS'
+          metaType 'Class'
+          stereotype 'Transformation', {
+            taggedValue 'transformedMetaType', 'MOperation'
+            taggedValue 'requiredStereotype', 'UValidator'
+            taggedValue 'priority', '5'
+          }
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'ValidatorGenerator'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:ZmUSBBGGAqACRAtY'
+          metaType 'Class'
+          stereotype 'CodeGenerator', {
+            taggedValue 'requiredStereotype', 'UValidator'
+            taggedValue 'outputType', 'Java'
+            taggedValue 'generatesOn', 'MClass'
+            taggedValue 'outputTo', 'src'
+          }
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'UValidatorBase'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:Jo6SBBGGAqACRAt4'
+          metaType 'Class'
+          stereotype 'Stereotype'
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'ValidatorBaseGenerator'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:N32SBBGGAqACRAuF'
+          metaType 'Class'
+          stereotype 'CodeGenerator', {
+            taggedValue 'requiredStereotype', 'UValidatorBase'
+            taggedValue 'outputType', 'Java'
+            taggedValue 'generatesOn', 'MClass'
+            taggedValue 'outputTo', 'src-gen'
+          }
+        }
+      }
+    }
+  }
+}
