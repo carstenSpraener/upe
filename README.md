@@ -11,12 +11,13 @@ technologies or other rapidly changing frameworks. This is achived by:
 * A programming model independent of the runtime environment
 * As a side product the application is highly testable
 
-### If you want to start quickly check the "[Getting started](doc/GettingStarted.md)" document.
+__At the moment there is no Getting Started.__ 
+## [Take a look at the examples to get an idea](examples/Readme.md)
 
 You can build __highly interactive complex applications__ where every field on
 a dialog is a resource. In a browser the Backward-Button is not forbidden,
 and you can even send the link to your specific dialog to a colleague to
-let him do further work. No session required.
+let him do further work. No browser session required.
 
 ## The concept of UPE
 
