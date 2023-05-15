@@ -1,49 +1,66 @@
 <h1>UPE-Application</h1>
-<div [upeProcess]="'person'">
+<div [upeProcess]="'personProcess'" style="margin-bottom: 60px">
     <div [upeView]="'init'" class="upePanel">
         <h3>InitView</h3>
+
         <label>Name:</label>
-        <input [upeField]="'/name'"/>
+        <input [upeField]="'/person/name'"/>
+
+        <label>First Name:</label>
+        <input [upeField]="'/person/firstName'"/>
+
+        <label>Age:</label>
+        <input [upeField]="'/person/age'"/>
+
+        <label>Gender:</label>
+        <input [upeField]="'/person/gender'"/>
+        <hr/>
         <button [upeViewNav]="'address'">Address</button>
     </div>
 
     <div [upeView]="'address'" class="upePanel">
         <h3>Address View</h3>
         <label>Street:</label>
-        <input [upeField]="'/address/strasse'"/>
+        <input [upeField]="'/person/address/street'"/>
+        <label>Number:</label>
+        <input [upeField]="'/person/address/number'"/>
+        <label>ZipCode:</label>
+        <input [upeField]="'/person/address/zipCode'"/>
+        <label>City:</label>
+        <input [upeField]="'/person/address/city'"/>
         <button [upeViewNav]="'_back'" class="upeNavButton">Close</button>
     </div>
-  <button (click)="toggleShowProcessState()">Show/Hide State</button>
-    <div *ngIf="showProcesState">
+</div>
+<button (click)="toggleShowProcessState()">Show/Hide State</button>
+<div *ngIf="showProcesState">
   <pre>
 {{processJson}}
   </pre>
-        <label>Name:</label>{{this.nameFieldJSON}}<br/>
-        <label>Street:</label>{{this.streetFieldJSON}}<br/>
-        <h4>Fields</h4>
-        <pre>
+    <label>Name:</label>{{this.nameFieldJSON}}<br/>
+    <label>Street:</label>{{this.streetFieldJSON}}<br/>
+    <h4>Fields</h4>
+    <pre>
 {{fieldsJson}}
   </pre>
-        <button (click)="setName('Carsten')">Set Name</button>
-        <br/>
-        <button (click)="setName('Sanne')">Set other Name</button>
-        <br/>
-        <button (click)="setName('')">Clear Name</button>
-        <!--
-      <div [upeView]="'init'">
-        <h2>Init View</h2>
-        <button [upeViewNav]="'address'">Adress...</button>
-          <label>Name der Person</label>
-          <input [upeField]="'/name'" />
-      </div>
-          -->
-        <!--
-      <div [upeView]="'address'">
-          <button [upeViewNav]="'_back'">Close</button>
-          <h2>Address View</h2>
-          <label>Strasse</label>
-          <input [upeField]="'/adress/strasse'" />
-      </div>
-        -->
-    </div>
+    <button (click)="setName('Carsten')">Set Name</button>
+    <br/>
+    <button (click)="setName('Sanne')">Set other Name</button>
+    <br/>
+    <button (click)="setName('')">Clear Name</button>
+    <!--
+  <div [upeView]="'init'">
+    <h2>Init View</h2>
+    <button [upeViewNav]="'address'">Adress...</button>
+      <label>Name der Person</label>
+      <input [upeField]="'/name'" />
+  </div>
+      -->
+    <!--
+  <div [upeView]="'address'">
+      <button [upeViewNav]="'_back'">Close</button>
+      <h2>Address View</h2>
+      <label>Strasse</label>
+      <input [upeField]="'/adress/strasse'" />
+  </div>
+    -->
 </div>

@@ -1,0 +1,275 @@
+import de.spraener.nxtgen.groovy.ModelDSL
+
+ModelDSL.make {
+  mPackage {
+    name 'upe'
+    documentation ''
+    id 'QtXw2BGGAqACRAyZ'
+    metaType 'Package'
+    mPackage {  //Exported by PackageExporterBase
+      name 'demo'
+      documentation ''
+      id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg'
+      metaType 'Package'
+      mPackage {  //Exported by PackageExporterBase
+        name 'process'
+        documentation ''
+        id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn'
+        metaType 'Package'
+        mPackage {  //Exported by PackageExporterBase
+          name 'dto'
+          documentation ''
+          id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:65QI2BGGAqACRAyu'
+          metaType 'Package'
+          mClass {  //Exported by ClassExporterBase
+            name 'Person'
+            documentation ''
+            id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:65QI2BGGAqACRAyu:6IkI2BGGAqACRAzF'
+            metaType 'Class'
+            stereotype 'Dto'
+            mAssociation {
+              name 'address'
+              documentation ''
+              id 'G05o2BGGAqACRA4K:G05o2BGGAqACRA4L:dKJo2BGGAqACRA36$dKJo2BGGAqACRA39'
+              metaType 'AssociationEnd'
+              assocId 'G05o2BGGAqACRA4K:G05o2BGGAqACRA4L:dKJo2BGGAqACRA36$dKJo2BGGAqACRA39'
+              opositeAttribute ''
+              opositeMultiplicity 'Unspecified'
+              associationType 'OneToOne'
+              type 'upe.demo.process.dto.Address'
+              multiplicity 'Unspecified'
+              navigable 'true'
+              composite 'false'
+              oppositeAggregationKind 'shared'
+            }
+            mDependency {  //Exported by DependencyExporterBase
+              name ''
+              documentation ''
+              id 'G05o2BGGAqACRA4K:nce92BGGAqACRB94:hyG92BGGAqACRB9p'
+              metaType 'Dependency'
+              stereotype 'Scaffolds'
+                target 'upe.demo.process.dto.Person'
+            }
+            mAttribute {  //Exported by AttributeExporterBase
+              name 'name'
+              documentation ''
+              id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:65QI2BGGAqACRAyu:6IkI2BGGAqACRAzF$Eoco2BGGAqACRA14'
+              metaType 'Attribute'
+              type 'String'
+              visibility 'private'
+              multiplicity 'Unspecified'
+            }
+            mAttribute {  //Exported by AttributeExporterBase
+              name 'firstName'
+              documentation ''
+              id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:65QI2BGGAqACRAyu:6IkI2BGGAqACRAzF$TQzsBBGGAqACRAn8'
+              metaType 'Attribute'
+              type 'String'
+              visibility 'private'
+              multiplicity 'Unspecified'
+            }
+            mAttribute {  //Exported by AttributeExporterBase
+              name 'age'
+              documentation ''
+              id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:65QI2BGGAqACRAyu:6IkI2BGGAqACRAzF$gqrsBBGGAqACRAoA'
+              metaType 'Attribute'
+              type 'Integer'
+              visibility 'private'
+              multiplicity 'Unspecified'
+            }
+            mAttribute {  //Exported by AttributeExporterBase
+              name 'gender'
+              documentation ''
+              id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:65QI2BGGAqACRAyu:6IkI2BGGAqACRAzF$bPrsBBGGAqACRAoE'
+              metaType 'Attribute'
+              type 'String'
+              visibility 'private'
+              multiplicity 'Unspecified'
+            }
+          }
+          mClass {  //Exported by ClassExporterBase
+            name 'Address'
+            documentation ''
+            id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:65QI2BGGAqACRAyu:dpCo2BGGAqACRA2I'
+            metaType 'Class'
+            stereotype 'Dto'
+            mDependency {  //Exported by DependencyExporterBase
+              name 'null'
+              documentation ''
+              id 'G05o2BGGAqACRA4K:nce92BGGAqACRB94:Spm92BGGAqACRB9t'
+              metaType 'Dependency'
+              stereotype 'Scaffolds'
+                target 'upe.demo.process.dto.Address'
+            }
+            mAttribute {  //Exported by AttributeExporterBase
+              name 'street'
+              documentation ''
+              id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:65QI2BGGAqACRAyu:dpCo2BGGAqACRA2I$Ozyo2BGGAqACRA2U'
+              metaType 'Attribute'
+              type 'String'
+              visibility 'private'
+              multiplicity '1'
+              required 'true'
+            }
+            mAttribute {  //Exported by AttributeExporterBase
+              name 'number'
+              documentation ''
+              id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:65QI2BGGAqACRAyu:dpCo2BGGAqACRA2I$STKo2BGGAqACRA2Y'
+              metaType 'Attribute'
+              type 'String'
+              visibility 'private'
+              multiplicity 'Unspecified'
+            }
+            mAttribute {  //Exported by AttributeExporterBase
+              name 'zipCode'
+              documentation ''
+              id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:65QI2BGGAqACRAyu:dpCo2BGGAqACRA2I$hUao2BGGAqACRA2c'
+              metaType 'Attribute'
+              type 'String'
+              visibility 'private'
+              multiplicity '1'
+              required 'true'
+            }
+            mAttribute {  //Exported by AttributeExporterBase
+              name 'city'
+              documentation ''
+              id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:65QI2BGGAqACRAyu:dpCo2BGGAqACRA2I$4eGo2BGGAqACRA2g'
+              metaType 'Attribute'
+              type 'String'
+              visibility 'private'
+              multiplicity '1'
+              required 'true'
+            }
+            mAttribute {  //Exported by AttributeExporterBase
+              name 'country'
+              documentation ''
+              id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:65QI2BGGAqACRAyu:dpCo2BGGAqACRA2I$CMmo2BGGAqACRA2k'
+              metaType 'Attribute'
+              type 'String'
+              visibility 'private'
+              multiplicity 'Unspecified'
+            }
+          }
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'PersonProcess'
+          documentation ''
+          id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:QGvt2BGGAqACRB4u'
+          metaType 'Class'
+          stereotype 'UProcess'
+          mAssociation {
+            name 'person'
+            documentation ''
+            id 'G05o2BGGAqACRA4K:G05o2BGGAqACRA4L:0Ald2BGGAqACRB6R$0Ald2BGGAqACRB6U'
+            metaType 'AssociationEnd'
+            assocId 'G05o2BGGAqACRA4K:G05o2BGGAqACRA4L:0Ald2BGGAqACRB6R$0Ald2BGGAqACRB6U'
+            opositeAttribute 'null'
+            opositeMultiplicity 'Unspecified'
+            associationType 'OneToOne'
+            type 'upe.demo.process.PersonEditor'
+            multiplicity '1'
+            navigable 'true'
+            composite 'true'
+            oppositeAggregationKind 'composite'
+          }
+          mAssociation {
+            name 'actSave'
+            documentation ''
+            id 'G05o2BGGAqACRA4K:G05o2BGGAqACRA4L:JsJB.BGGAqACRA8c$JsJB.BGGAqACRA8f'
+            metaType 'AssociationEnd'
+            assocId 'G05o2BGGAqACRA4K:G05o2BGGAqACRA4L:JsJB.BGGAqACRA8c$JsJB.BGGAqACRA8f'
+            opositeAttribute 'null'
+            opositeMultiplicity 'Unspecified'
+            associationType 'OneToOne'
+            type 'upe.demo.process.ActSave'
+            multiplicity 'Unspecified'
+            navigable 'true'
+            composite 'true'
+            oppositeAggregationKind 'composite'
+          }
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'PersonEditor'
+          documentation ''
+          id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:abOd2BGGAqACRB50'
+          metaType 'Class'
+          stereotype 'UProcessComponent'
+          mAssociation {
+            name 'address'
+            documentation ''
+            id 'G05o2BGGAqACRA4K:G05o2BGGAqACRA4L:oZHd2BGGAqACRB7d$oZHd2BGGAqACRB7g'
+            metaType 'AssociationEnd'
+            assocId 'G05o2BGGAqACRA4K:G05o2BGGAqACRA4L:oZHd2BGGAqACRB7d$oZHd2BGGAqACRB7g'
+            opositeAttribute 'null'
+            opositeMultiplicity 'Unspecified'
+            associationType 'OneToOne'
+            type 'upe.demo.process.AddressEditor'
+            multiplicity '1'
+            navigable 'true'
+            composite 'true'
+            oppositeAggregationKind 'composite'
+          }
+          mDependency {  //Exported by DependencyExporterBase
+            name ''
+            documentation ''
+            id 'G05o2BGGAqACRA4K:nce92BGGAqACRB94:hyG92BGGAqACRB9p'
+            metaType 'Dependency'
+            stereotype 'Scaffolds'
+              target 'upe.demo.process.dto.Person'
+          }
+          mOperation {  //Exported by OperationExporterBase
+            name 'valNameAndFirstName'
+            documentation ''
+            id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:abOd2BGGAqACRB50$0q8cBBGGAqACRApU'
+            metaType 'Operation'
+            stereotype 'UValidator', {
+              taggedValue 'msgID', 'PE-001'
+              taggedValue 'msgLevel', 'ERROR'
+              taggedValue 'msgText', 'You must specify a name and or a first name.'
+            }
+            mParameter {  //Exported by ParameterExporterBase
+              name 'name'
+              documentation ''
+              id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:abOd2BGGAqACRB50$0q8cBBGGAqACRApU$DTKcBBGGAqACRAph'
+              metaType 'Parameter'
+            }
+            mParameter {  //Exported by ParameterExporterBase
+              name 'firstName'
+              documentation ''
+              id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:abOd2BGGAqACRB50$0q8cBBGGAqACRApU$4f6cBBGGAqACRApj'
+              metaType 'Parameter'
+            }
+          }
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'AddressEditor'
+          documentation ''
+          id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:r3td2BGGAqACRB6s'
+          metaType 'Class'
+          stereotype 'UProcessComponent'
+          mDependency {  //Exported by DependencyExporterBase
+            name 'null'
+            documentation ''
+            id 'G05o2BGGAqACRA4K:nce92BGGAqACRB94:Spm92BGGAqACRB9t'
+            metaType 'Dependency'
+            stereotype 'Scaffolds'
+              target 'upe.demo.process.dto.Address'
+          }
+        }
+        mElement {
+          name 'Dto Model'
+          documentation ''
+          id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:2cZ..BGGAqACRA4o'
+          metaType 'DiagramOverview'
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'ActSave'
+          documentation ''
+          id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:eAcB.BGGAqACRA7n'
+          metaType 'Class'
+          stereotype 'UProcessAction'
+        }
+      }
+    }
+  }
+}

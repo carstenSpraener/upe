@@ -1,10 +1,7 @@
 package upe.resource.testprocess;
 
 import upe.annotations.UpeProcess;
-import upe.process.UProcessElementFactory;
-import upe.process.UProcessElementSystem;
-import upe.process.UProcessEngine;
-import upe.process.UProcessTextField;
+import upe.process.*;
 import upe.process.impl.AbstractUProcessImpl;
 import upe.process.impl.UProcessTextFieldImpl;
 import upe.process.validation.UProcessValidator;
@@ -28,10 +25,9 @@ public class PersonProcess extends AbstractUProcessImpl {
 
     @Override
     public void initialize(Map<String, Serializable> args) {
-        inputStarts();
-        this.name.setStringValue(null);
-        super.doValidation();
-        inputStops();
+        try(UProcessModification mod = new UProcessModification(this)) {
+            this.name.setStringValue(null);
+        }
     }
 
     @Override

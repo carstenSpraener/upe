@@ -1,4 +1,4 @@
-package upe.demo;
+package upe.demo.rest;
 
 import com.google.gson.Gson;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +11,7 @@ public abstract class ProcessController {
     @ResponseBody
     public String startNewProcess() {
         UpeDialog dialog = new UpeDialog();
-        ProcessDelta delta = dialog.initiateProcess("person", null);
+        ProcessDelta delta = dialog.initiateProcess("personProcess", null);
         return new Gson().toJson(delta);
     }
 

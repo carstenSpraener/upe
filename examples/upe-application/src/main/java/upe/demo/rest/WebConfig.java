@@ -1,4 +1,4 @@
-package upe.demo;
+package upe.demo.rest;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

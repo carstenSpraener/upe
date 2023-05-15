@@ -30,16 +30,16 @@ export class HomeComponent implements OnInit, OnDestroy {
                     fieldsJson += JSON.stringify(pf,this.noStreamsStringification, 2)
                 })
                 this.fieldsJson = fieldsJson;
-                this.upeSrv.findProcessElementByPath("/name")?.update$.subscribe(b => {
+                this.upeSrv.findProcessElementByPath("/person/name")?.update$.subscribe(b => {
                     if (b) {
                         this.nameFieldJSON =
-                        JSON.stringify(this.upeSrv.findProcessElementByPath("/name"), this.noStreamsStringification);
+                        JSON.stringify(this.upeSrv.findProcessElementByPath("/person/name"), this.noStreamsStringification);
                     }
                 })
-                this.upeSrv.findProcessElementByPath("/address/strasse")?.update$.subscribe(b => {
+                this.upeSrv.findProcessElementByPath("/person/address/strasse")?.update$.subscribe(b => {
                     if (b) {
                         this.streetFieldJSON =
-                            JSON.stringify(this.upeSrv.findProcessElementByPath("/address/strasse"), this.noStreamsStringification);
+                            JSON.stringify(this.upeSrv.findProcessElementByPath("/person/address/strasse"), this.noStreamsStringification);
                     }
                 })
             })
@@ -59,7 +59,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     setName(value: string) {
-        this.upeSrv.handleValueChange("/name", value);
+        this.upeSrv.handleValueChange("/person/name", value);
     }
 
     toggleShowProcessState() {

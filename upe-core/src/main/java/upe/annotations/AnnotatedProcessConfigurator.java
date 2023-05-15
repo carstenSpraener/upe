@@ -41,10 +41,21 @@ public class AnnotatedProcessConfigurator {
                 LOGGER.severe(String.format("Cannot create UProcessComponent for field '%s'. Error: %s", f.getName(), roXC.getMessage()));
             }
         }
-        if( p.getClass().isAnnotationPresent(UpeScaffolds.class) ) {
-            UpeScaffolds scaffolds = p.getClass().getAnnotation(UpeScaffolds.class);
+        UpeScaffolds scaffolds = findScaffolds(p);
+        if( scaffolds!=null ) {
             ((UProcessComponentImpl)p).scaffold(scaffolds.value());
         }
+    }
+
+    private static UpeScaffolds findScaffolds(UProcessComponent p) {
+        Class<?> clazz = p.getClass();
+        while( !clazz.equals(Object.class) ) {
+            if( clazz.isAnnotationPresent(UpeScaffolds.class) ) {
+                return clazz.getAnnotation(UpeScaffolds.class);
+            }
+            clazz = clazz.getSuperclass();
+        }
+        return null;
     }
 
     private static UProcessElement createProcessFieldFor(UProcessElementFactory peFactory, UProcessComponent parent, Field f, UpeProcessField pFieldConfig) {

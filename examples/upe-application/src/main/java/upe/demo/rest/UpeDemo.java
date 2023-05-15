@@ -1,13 +1,17 @@
-package upe.demo;
+package upe.demo.rest;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import upe.annotations.UpeApplication;
 import upe.demo.process.PersonProcess;
 import upe.process.ApplicationConfiguration;
 
 import javax.annotation.PostConstruct;
 
 @SpringBootApplication
+@UpeApplication({
+        PersonProcess.class
+})
 public class UpeDemo {
 
     public static void main(String... args) throws Exception {
@@ -16,6 +20,6 @@ public class UpeDemo {
 
     @PostConstruct
     public void initUPE() {
-        ApplicationConfiguration.getInstance().addProcessClass("person", PersonProcess.class.getName());
+        ApplicationConfiguration.getInstance().readApplication(UpeDemo.class);
     }
 }
