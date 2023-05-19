@@ -1,5 +1,2 @@
-build
-libs
 **/*-gen
 **/*.vpp.bak_*
-**/*.vpp.lck

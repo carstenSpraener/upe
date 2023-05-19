@@ -1,13 +1,13 @@
 # WARNING! Highly under construction
 
 __The projects in this dirctory are highly under 
-cunstructions. The purpose of the projects is
+construction. The purpose of the projects is
 to test the implementation of upe-code, upe-rest,
 upe-angular-frontend and the cgV19-Cartridge for 
 upe.__
 
 But of course you can look around and get an idea
-of how thinks are ment to be used. But please _do 
+of how thinks are meant to be used. But please _do 
 not blame me for code in this directory_.
 
 ## The projects are:
@@ -18,14 +18,14 @@ upe.
 
 ### upe-application
 A model driven developed application to demonstrate
-the use of upe. The model is a VisualParadigm 
+the use of upe. The model is a [VisualParadigm](https://www.visual-paradigm.com/download/community.jsp) 
 UML-Model.
 
 The application runs as a Spring Boot application 
 without a frontend.
 
 ### upe-ngclient
-A prototype/POC for a Angular fronend for an
+A prototype/POC for an Angular frontend for an
 upe application. Not very nice but with some 
 interesting features.
 
@@ -33,8 +33,8 @@ interesting features.
 
 ## Features
 
-* The process layer is developed model driven (or low code like). It's 
-model is a VisualParadigm UML-Model containg mainly these classes:
+* The process layer is developed model driven (or low code like). Its 
+model is a VisualParadigm UML-Model containing mainly these classes:
 
 __Process Layer of the demo application__
 ![Process Layer of the demo application](images/img.png) 
@@ -44,7 +44,7 @@ __DTO-Layer of the demo application__
 ![DTO-Layer of the process application](images/img_1.png)
 
 * All business logic is running on the server. The
-fronend has  just code to splitt the fields into
+frontend has  just code to splitt the fields into
 views and bind some input fields and buttons to
 process elements.
 
@@ -59,7 +59,7 @@ process elements.
  </div>
 
 ```
-* validation errors will be displayed immediately. Also enable/diable elements or
+* validation errors will be displayed immediately. Also enable/disable elements or
 visible/hide process elements.
 
 * Forward and Backword-Button in the browser are 

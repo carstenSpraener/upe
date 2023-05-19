@@ -189,7 +189,7 @@ def accessMethods(MClass modelElement) {
 return """// ${ProtectionStrategie.GENERATED_LINE}
 package ${pkgName};
 ${importList(modelElement)}
-${elementAnnotations(modelElement)}public class ${cName}${extendsExpr(modelElement)} {
+${elementAnnotations(modelElement)}public class ${cName}${extendsExpr(modelElement)} implements java.io.Serializable {
     private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(${cName}.class.getName());
 ${attributeDeclaration(modelElement)}
 ${referenceDeclaration(modelElement)}

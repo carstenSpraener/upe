@@ -5,6 +5,7 @@ import upe.process.impl.UActionMethodInvoker;
 import upe.process.impl.UMethodUProcessAction;
 import upe.process.impl.UProcessComponentImpl;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -32,6 +33,15 @@ public class AnnotatedProcessConfigurator {
             UpeProcessAction actionConfig = m.getAnnotation(UpeProcessAction.class);
             new UMethodUProcessAction(p, actionConfig.value(), new UActionMethodInvoker(p, m));
         }
+        for (Field actField : collectActionFields(p)) {
+            UpeProcessAction actionConfig = actField.getAnnotation(UpeProcessAction.class);
+            try {
+                actField.setAccessible(true);
+                actField.set(p, createProcessActionFor(p, actField, actionConfig));
+            } catch (ReflectiveOperationException roXC) {
+                LOGGER.severe(String.format("Cannot create UProcessElement for field '%s'. Error: %s", actField.getName(), roXC.getMessage()));
+            }
+        }
         for (Field f : collectAnnotatedComponents(p)) {
             try {
                 UpeProcessComponent pcConfig = f.getAnnotation(UpeProcessComponent.class);
@@ -45,6 +55,17 @@ public class AnnotatedProcessConfigurator {
         if( scaffolds!=null ) {
             ((UProcessComponentImpl)p).scaffold(scaffolds.value());
         }
+    }
+
+    private static UProcessAction createProcessActionFor(UProcessComponent p, Field actField, UpeProcessAction actionConfig) throws ReflectiveOperationException {
+        String name = actionConfig.value();
+        if( name==null ||"".equals(name) ) {
+            name = actField.getName();
+        }
+        UProcessAction action = (UProcessAction)actField.getType()
+                .getConstructor(UProcessComponent.class, String.class)
+                .newInstance(p, name);
+        return action;
     }
 
     private static UpeScaffolds findScaffolds(UProcessComponent p) {
@@ -84,11 +105,19 @@ public class AnnotatedProcessConfigurator {
     }
 
     private static List<Field> collectAnnotatedFields(UProcessComponent p) {
+        return collectAnnotatedFields(p, UpeProcessField.class);
+    }
+
+    private static List<Field> collectActionFields(UProcessComponent p) {
+        return collectAnnotatedFields(p, UpeProcessAction.class);
+    }
+
+    private static List<Field> collectAnnotatedFields(UProcessComponent p, Class<? extends Annotation> annotation) {
         List<Field> processFields = new ArrayList<>();
         Class<?> clazz = p.getClass();
         while (!clazz.equals(Object.class)) {
             for (Field f : clazz.getDeclaredFields()) {
-                if (f.isAnnotationPresent(UpeProcessField.class)) {
+                if (f.isAnnotationPresent(annotation)) {
                     processFields.add(f);
                 }
             }

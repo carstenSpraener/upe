@@ -28,6 +28,18 @@ def readValues(MClass mc) {
     return sb.toString()
 }
 
+def paramList(MClass mc) {
+    StringBuilder sb = new StringBuilder();
+    mc.attributes.forEach {
+        if( sb.length()>0 ) {
+            sb.append(", ");
+        }
+        String name = it.name
+        sb.append(name);
+    }
+    return sb.toString()
+}
+
 def listFields(MClass mc) {
     StringBuilder sb = new StringBuilder();
     mc.attributes.forEach {
@@ -69,7 +81,7 @@ public abstract class ${mClass.getName()} extends UProcessValidatorSupport {
     @Override
     public void validate(UProcessComponent proc) {
 ${readValues(orgClass)}
-        if( hasError(name, firstName) ) {
+        if( hasError(${paramList(orgClass)}) ) {
             addMessage(
                     getMessageID(),
                     proc,

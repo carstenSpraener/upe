@@ -13,6 +13,10 @@ public class UPERuntimeException extends RuntimeException implements UPEExceptio
     private final Throwable rootException;
     private final String message;
 
+    public UPERuntimeException( String message ) {
+        this(message, null);
+    }
+
     public UPERuntimeException(Throwable t) {
         super(t);
         if (t instanceof UPEExceptionHolder holder) {

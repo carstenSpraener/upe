@@ -20,6 +20,7 @@ buildscript {
 
 plugins {
     id 'java-library'
+    id 'groovy'
 }
 
 apply plugin: 'de.spraener.nxtgen.cgv19'
@@ -63,6 +64,7 @@ dependencies {
 
     implementation "de.spraener.nxtgen:cgv19-core:23.0.0-RC2"
     implementation "de.spraener.nxtgen:cgv19-oom:23.0.0-RC2"
+    implementation 'org.apache.groovy:groovy:4.0.12'
 
     testImplementation 'junit:junit:4.13.1'
 }

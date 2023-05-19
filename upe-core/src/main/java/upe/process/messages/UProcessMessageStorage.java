@@ -20,7 +20,7 @@ public class UProcessMessageStorage {
 	public UProcessMessage getMessage(String messageID ) {
 		UProcessMessage msg = messageMap.get(messageID);
 		if( msg==null ) {
-			msg = new UProcessMessageImpl( messageID, "No message width id "+messageID+"defined.", UProcessMessage.MESSAGE_LEVEL_ERROR );
+			msg = new UProcessMessageImpl( messageID, "No message width id '"+messageID+"' defined.", UProcessMessage.MESSAGE_LEVEL_ERROR );
 		}
 		return msg;
 	}

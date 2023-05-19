@@ -4,11 +4,11 @@ or __U__ I, __P__ rocess and __E__ verything else
 UPE is a framework that allows to implement the most parts of an 
 application in a portable, scalable and testable way. The intention is
 to make your expensive business code free from UI technologies, backend
-technologies or other rapidly changing frameworks. This is achived by:
+technologies or other rapidly changing frameworks. This is achieved by:
 
 * Providing a framework that has a very flat dependency graph
 * Providing structures to build reusable components
-* A programming model independent of the runtime environment
+* A single threaded programming model independent of the runtime environment
 * As a side product the application is highly testable
 
 __At the moment there is no Getting Started.__ 
@@ -36,10 +36,10 @@ for 20 years now with changing environments like:
 A UPE application is a collection of UProcess-Classes. Each UProcess has a unique
 name. The UProcesses are managed by a UProcessEngine.
 
-There are several ProcessEngines to run such applications. UPE supports at the moment 
+There are several UProcessEngines to run such applications. UPE supports at the moment 
 swing/javaFX, Tomcat/JSP, SpringBoot/Angular, and Test
 
-A Process can call a sub process of jump to another process. Several life cycle methods inform
+A Process can call a sub process or jump to another process. Several life cycle methods inform
 the application of important life cycle events like started, finished or canceled. 
 
 #### Composite-Pattern for UProcess
@@ -51,7 +51,7 @@ UProcessComponents are intended to be reused by many UProcesses/UProcessComponen
 UProcessComponents building a tree of UProcessComponents.
 
 At the leaves of this UProcessComponents are UProcessElements which do not hold
-further children. The  children are UProcessFields and UProcessActions. These
+further children. The  leaves are UProcessFields and UProcessActions. These
 fields are intended to be rendered by some UI but do not have a specific UI.
 
 #### UProcessFields
@@ -60,11 +60,11 @@ for the user. They can be addressed by a simple path string. Validators of a
 UProcess will check the state and add/remove Messages to a UProcessElement.
 
 #### UProcessAction
-A UProcesAction typically reacts on a Button press from the frontend and 
+A UProcessAction typically reacts on a Button press from the frontend and 
 will provide the required business logic. It collects data, send them to
 some backend, receives the answer and maps the result into the process.
 
-It als calls/jumps other processes. 
+It also calls/jumps to other processes. 
 
 ### Frontends
 
@@ -75,7 +75,7 @@ process.
 It communicates with the process over a string based interface in the form
 
 ```java
-setField("/person/address/street","5th Avnue")
+setField("/person/address/street","5th Avenue")
 getFieldState("/person/address/street")
 triggerAction("/actStore")
 ```
