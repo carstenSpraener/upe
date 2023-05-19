@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class UProcessBackend {
+public class UProcessBackend implements AutoCloseable {
     private static ThreadLocal<UProcessBackend> myInstance = new ThreadLocal<>();
 
-    private static Map<String, Supplier> supplierMap = new HashMap<>();
+    private static Map<String, Supplier<?>> supplierMap = new HashMap<>();
     private UProcessBackend(){}
 
     public static UProcessBackend getInstance() {
@@ -25,7 +25,7 @@ public class UProcessBackend {
     public <F> F provide(Class<? extends F> clazz) {
         UpeBackendFacade facade = clazz.getAnnotation(UpeBackendFacade.class);
         String facadeName = facade.value();
-        Supplier<F> supplier = findProviderForFacade(facadeName);
+        Supplier<F> supplier = (Supplier<F>) findProviderForFacade(facadeName);
         if( supplier == null ) {
             throw new UPEConfigurationException("No supplier for backend facade "+clazz.getName());
         } else {
@@ -33,13 +33,18 @@ public class UProcessBackend {
         }
     }
 
-    private static Supplier findProviderForFacade(String facadeName) {
+    private static Supplier<?> findProviderForFacade(String facadeName) {
         return supplierMap.get(facadeName);
     }
 
-    public static void addSupplier(String name, Supplier supplier) {
+    public static void addSupplier(String name, Supplier<?> supplier) {
         synchronized(supplierMap) {
             supplierMap.put(name, supplier);
         }
+    }
+
+    @Override
+    public void close()  {
+        myInstance.remove();
     }
 }

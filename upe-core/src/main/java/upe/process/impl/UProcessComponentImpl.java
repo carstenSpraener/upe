@@ -71,21 +71,16 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
                 return parent.getProcessElement(name.substring(idx + 1));
             }
             UProcessComponent subPC = (UProcessComponent)readChildByName(roleName);
-            if (subPC == null) {
-                throw new IllegalArgumentException("no such child with name " + name + " in process " + getProcess().getName());
-            } else {
-                return subPC.getProcessElement(name.substring(idx + 1));
-            }
+            return subPC.getProcessElement(name.substring(idx + 1));
         } else {
             return readChildByName(name);
         }
     }
 
-    private UProcessElement readChildByName(String name) {
-        String mapName = name;
+    private UProcessElement readChildByName(final String name) {
         UProcessElement child = null;
         if( isIndexedName(name) ){
-            mapName = removeIndex(name);
+            String mapName = removeIndex(name);
             int index = getIndexFromName(name);
             UProcessComponentList list = (UProcessComponentList) name2processElementMap.get(mapName);
             child = list.getAt(index);

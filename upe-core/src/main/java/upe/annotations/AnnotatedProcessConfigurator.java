@@ -63,10 +63,9 @@ public class AnnotatedProcessConfigurator {
         if( name==null ||"".equals(name) ) {
             name = actField.getName();
         }
-        UProcessAction action = (UProcessAction)actField.getType()
+        return (UProcessAction)actField.getType()
                 .getConstructor(UProcessComponent.class, String.class)
                 .newInstance(p, name);
-        return action;
     }
 
     private static UpeScaffolds findScaffolds(UProcessComponent p) {

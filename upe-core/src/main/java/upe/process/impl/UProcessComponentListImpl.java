@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UProcessComponentListImpl<T extends UProcessComponent> extends UProcessComponentImpl implements UProcessComponentList<T> {
-    List<T> elementList = new ArrayList<>();
+    private List<T> elementList = new ArrayList<>();
 
     public UProcessComponentListImpl(UProcessComponent parent, String name ) {
         super(parent, name);
