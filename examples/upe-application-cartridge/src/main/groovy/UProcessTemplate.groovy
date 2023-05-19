@@ -46,6 +46,32 @@ class UProcessBaseTemplate {
         return sb.toString();
     }
 
+    String mapToProcessFieldType(String type) {
+        if( type.equalsIgnoreCase("string")) {
+            return "UProcessTextField"
+        } else if( type.equalsIgnoreCase("int")
+                || type.equalsIgnoreCase("integer")
+                || type.equalsIgnoreCase("double")
+                || type.equalsIgnoreCase("float")
+        ) {
+            return "UProcessDecimalField"
+        } else if( type.equalsIgnoreCase("boolean")) {
+            return "UProcessBooleanField"
+        } else if( type.equalsIgnoreCase("date")) {
+            return "UProcessDateField"
+        } else if( type.equalsIgnoreCase("image")) {
+            return "UProcessImageField"
+        }
+    }
+    String peFields() {
+        StringBuilder sb = new StringBuilder()
+        this.orgClass.attributes.forEach {
+            String type = mapToProcessFieldType(it.type)
+            String name = it.name
+            sb.append("    @UpeProcessField\n    upe.process.${type} ${name};\n")
+        }
+        return sb.toString();
+    }
     String validations() {
         List<MAttribute> attrList = new ArrayList();
         attrList.addAll(this.mClass.attributes);
@@ -85,7 +111,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 public abstract class ${mClass.getName()} extends AbstractUProcessImpl {
-${peReferences()}
+${peFields()}${peReferences()}
      public ${mClass.getName()}(UProcessEngine pe, String name) {
         super(pe, name);
         ${validations()}

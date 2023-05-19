@@ -31,16 +31,16 @@ public class UPEScaffoldingTest {
         prs.setAddress(new AddressDto());
         prs.getAddress().setStreet("Kirchesch");
 
-        UProcessComponentImpl prsEditor = (UProcessComponentImpl) activeUProcess.getProcessElement("/person");
+        UProcessComponentImpl prsEditor = (UProcessComponentImpl) activeUProcess.getProcessElement("/personList[0]");
         prsEditor.mapFromScaffolded(PersonDto.class, prs);
 
-        assertEquals("Carsten", ((UProcessField) activeUProcess.getProcessElement("/person/name")).getValueForFrontend());
-        assertEquals("Kirchesch", ((UProcessField) activeUProcess.getProcessElement("/person/address/street")).getValueForFrontend());
+        assertEquals("Carsten", ((UProcessField) activeUProcess.getProcessElement("/personList[0]/name")).getValueForFrontend());
+        assertEquals("Kirchesch", ((UProcessField) activeUProcess.getProcessElement("/personList[0]/address/street")).getValueForFrontend());
     }
 
     @Test
     public void testMappingToDto() throws Exception {
-        UProcessComponentImpl prsEditor = (UProcessComponentImpl) activeUProcess.getProcessElement("/person");
+        UProcessComponentImpl prsEditor = (UProcessComponentImpl) activeUProcess.getProcessElement("/personList[0]");
 
         prsEditor.setFieldValue("name", "Carsten");
         prsEditor.setFieldValue("address/street", "Kirchesch");

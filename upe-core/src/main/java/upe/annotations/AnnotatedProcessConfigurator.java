@@ -8,6 +8,7 @@ import upe.process.impl.UProcessComponentImpl;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,6 +93,10 @@ public class AnnotatedProcessConfigurator {
             pe = peFactory.newDecimalField(parent, peName);
         } else if (fType.equals(UProcessDateField.class)) {
             pe = peFactory.newDateField(parent, peName);
+        } else if (fType.equals(UProcessBooleanField.class)) {
+            pe = peFactory.newBooleanField(parent, peName);
+        } else if( fType.equals(UProcessComponentList.class) ) {
+            pe = peFactory.newProcessComponentList(parent, peName);
         } else {
             try {
                 pe = (UProcessElement) fType.getConstructor(UProcessComponent.class, String.class).newInstance(parent, peName);

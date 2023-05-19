@@ -54,7 +54,7 @@ import upe.process.impl.UProcessComponentImpl;
 import upe.process.validation.impl.MandantoryValidator;
 
 ${scaffoldsDefinition()}public class ${mClass.getName()} extends UProcessComponentImpl {
-${this.pbTemplate.peReferences()}
+${this.pbTemplate.peFields()}${this.pbTemplate.peReferences()}
     public ${mClass.getName()}(UProcessComponent parent, String name) {
         super(parent, name);
 ${this.pbTemplate.validations()}

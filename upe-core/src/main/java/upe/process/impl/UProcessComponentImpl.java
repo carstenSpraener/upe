@@ -4,6 +4,7 @@ import upe.annotations.AnnotatedProcessConfigurator;
 import upe.exception.UPERuntimeException;
 import upe.incubator.process.impl.GenericUProcessImpl;
 import upe.process.UProcessComponent;
+import upe.process.UProcessComponentList;
 import upe.process.UProcessElement;
 import upe.process.UProcessField;
 import upe.process.messages.UProcessMessage;
@@ -69,19 +70,48 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
             if ("..".equals(roleName)) {
                 return parent.getProcessElement(name.substring(idx + 1));
             }
-            UProcessComponent subPC = (UProcessComponent) name2processElementMap.get(roleName);
+            UProcessComponent subPC = (UProcessComponent)readChildByName(roleName);
             if (subPC == null) {
                 throw new IllegalArgumentException("no such child with name " + name + " in process " + getProcess().getName());
             } else {
                 return subPC.getProcessElement(name.substring(idx + 1));
             }
         } else {
-            UProcessElement child = name2processElementMap.get(name);
-            if (child == null) {
-                throw new IllegalArgumentException("no such child with name '" + name + "' in process(component) " + getName());
-            }
-            return child;
+            return readChildByName(name);
         }
+    }
+
+    private UProcessElement readChildByName(String name) {
+        String mapName = name;
+        UProcessElement child = null;
+        if( isIndexedName(name) ){
+            mapName = removeIndex(name);
+            int index = getIndexFromName(name);
+            UProcessComponentList list = (UProcessComponentList) name2processElementMap.get(mapName);
+            child = list.getAt(index);
+        } else {
+            child = name2processElementMap.get(name);
+        }
+        if (child == null) {
+            throw new IllegalArgumentException("no such child with name '" + name + "' in process(component) " + getName());
+        }
+        return child;
+    }
+
+    private int getIndexFromName(String name) {
+        String number = name.substring(name.indexOf('[')+1, name.length()-1);
+        return Integer.valueOf(number);
+    }
+
+    private boolean isIndexedName(String name) {
+        return name.endsWith("]") && name.contains("[");
+    }
+
+    private String removeIndex( String name ) {
+        if( name.indexOf('[') == -1 ) {
+            return name;
+        }
+        return name.substring(0, name.indexOf('['));
     }
 
     @Override

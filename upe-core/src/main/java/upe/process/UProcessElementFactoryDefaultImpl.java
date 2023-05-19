@@ -30,4 +30,13 @@ public class UProcessElementFactoryDefaultImpl implements UProcessElementFactory
 		return new UProcessTextFieldImpl(parent, name);
 	}
 
+	@Override
+	public UProcessBooleanField newBooleanField(UProcessComponent parent, String name) {
+		return new UProcessBooleanFieldImpl(parent, name);
+	}
+
+	@Override
+	public UProcessComponentList newProcessComponentList(UProcessComponent parent, String peName) {
+		return new UProcessComponentListImpl(parent, peName);
+	}
 }

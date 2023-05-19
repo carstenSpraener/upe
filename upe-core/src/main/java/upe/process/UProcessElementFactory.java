@@ -6,4 +6,6 @@ public interface UProcessElementFactory {
 	UProcessDateField newDateField(UProcessComponent parent, String name );
 	UProcessImageField newImageField(UProcessComponent parent, String name );
 	UProcessChoiceField newChoiceField(UProcessComponent parent, String name );
+    UProcessBooleanField newBooleanField(UProcessComponent parent, String peName);
+	UProcessComponentList newProcessComponentList(UProcessComponent parent, String peName);
 }
