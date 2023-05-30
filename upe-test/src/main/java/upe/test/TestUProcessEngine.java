@@ -1,12 +1,16 @@
 package upe.test;
 
-import upe.process.UProcessEngine;
 import upe.process.engine.BaseUProcessEngine;
 import upe.process.messages.UProcessMessage;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is an implementation of an UProcessEngine to use in tests. It is not
+ * bound to any backend or runtime environment except plain java.
+ *
+ */
 public class TestUProcessEngine extends BaseUProcessEngine {
     private List<UProcessMessage> messageList = new ArrayList<>();
 

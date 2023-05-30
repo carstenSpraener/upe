@@ -3,11 +3,14 @@ package upe.test.jupiter;
 import java.lang.reflect.Field;
 import java.util.function.Supplier;
 
-public class FieldReflectionBackendSupplier implements Supplier<Object> {
+/**
+ * Helper class to use as a supplier for backend mocks.
+ */
+class FieldReflectionBackendSupplier implements Supplier<Object> {
     private Field field;
     private Object testInstance;
 
-    public FieldReflectionBackendSupplier(Field field, Object testInstance) {
+    FieldReflectionBackendSupplier(Field field, Object testInstance) {
         this.field = field;
         this.testInstance = testInstance;
     }

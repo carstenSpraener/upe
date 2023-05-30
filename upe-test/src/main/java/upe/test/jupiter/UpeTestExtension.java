@@ -14,6 +14,26 @@ import upe.test.annotations.UpeProcessToTest;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
+/**
+ * A JUpiter-Extension to make writing upe-Tests very easy and support a test driven development.
+ * JUnit-Test classes shall use this extension to make use of the JUnit-Support of upe like this.
+ * <pre>
+ * {@code
+ * @ExtendWith(
+ *         UpeTestExtension.class
+ * )
+ * @UpeApplication(
+ * {
+ *         PersonProcess.class,
+ *         ClientBrowsingProcess.class,
+ *         ClientBrowserDispatcherProcess.class
+ * })
+ * public class ...Test {}}</pre>
+ *
+ * @see UInject
+ * @see UpeProcessToTest
+ * @see UpeBackendComponent
+ */
 public class UpeTestExtension  implements TestInstancePostProcessor {
 
     @Override

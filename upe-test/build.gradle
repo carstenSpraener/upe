@@ -1,0 +1,20 @@
+plugins {
+    id 'java'
+    id 'groovy'
+}
+
+java {
+    sourceCompatibility = 17
+    targetCompatibility = 17
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':upe-core')
+    implementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+
+    testImplementation 'org.mockito:mockito-core:5.3.1'
+}

@@ -1,2 +1,4 @@
 include ':upe-core'
+include ':upe-test'
 include ':upe-rest'
+
