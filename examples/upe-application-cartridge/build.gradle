@@ -1,20 +1,10 @@
 buildscript {
     repositories {
         mavenCentral();
-        maven {
-            url="https://maven.pkg.github.com/carstenSpraener/cgV19"
-            credentials {
-                username = System.getenv("GITHUB_USERNAME")
-                password = System.getenv("GITHUB_TOKEN")
-            }
-        }
-        maven {
-            url="${System.getenv("HOME")}/Projekte/GitHub/cgV19/repo"
-        }
     }
     dependencies {
-        classpath "de.spraener.nxtgen:cgv19-core:23.0.0-RC2"
-        classpath "de.spraener.nxtgen:cgv19-gradle:23.0.0-RC2"
+        classpath "de.spraener.nxtgen:cgv19-core:23.0.0"
+        classpath "de.spraener.nxtgen:cgv19-gradle:23.0.0"
     }
 }
 
@@ -23,7 +13,7 @@ plugins {
     id 'groovy'
 }
 
-apply plugin: 'de.spraener.nxtgen.cgv19'
+apply plugin: 'de.spraener.nxtgen.cgV19'
 
 sourceSets {
     src {
@@ -41,29 +31,17 @@ cgV19 {
     model = 'http://localhost:7001/upe.profile'
 }
 
-compileJava.dependsOn generate
-
 repositories {
     mavenCentral();
-    maven {
-        url = "https://maven.pkg.github.com/carstenSpraener/cgV19"
-        credentials {
-            username = System.getenv("GITHUB_USERNAME")
-            password = System.getenv("GITHUB_TOKEN")
-        }
-    }
-    maven {
-        url="${System.getenv("HOME")}/Projekte/GitHub/cgV19/repo"
-    }
 }
 
 dependencies {
-    cartridge "de.spraener.nxtgen:cgv19-core:23.0.0-RC2"
-    cartridge "de.spraener.nxtgen:cgv19-oom:23.0.0-RC2"
-    cartridge "de.spraener.nxtgen:cgv19-metacartridge:23.0.0-RC2"
+    cartridge "de.spraener.nxtgen:cgv19-core:23.0.0"
+    cartridge "de.spraener.nxtgen:cgv19-oom:23.0.0"
+    cartridge "de.spraener.nxtgen:cgv19-metacartridge:23.0.0"
 
-    implementation "de.spraener.nxtgen:cgv19-core:23.0.0-RC2"
-    implementation "de.spraener.nxtgen:cgv19-oom:23.0.0-RC2"
+    implementation "de.spraener.nxtgen:cgv19-core:23.0.0"
+    implementation "de.spraener.nxtgen:cgv19-oom:23.0.0"
     implementation 'org.apache.groovy:groovy:4.0.12'
 
     testImplementation 'junit:junit:4.13.1'

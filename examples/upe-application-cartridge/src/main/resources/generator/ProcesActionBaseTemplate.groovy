@@ -19,5 +19,8 @@ public abstract class ${mClass.getName()} extends AbstractUActionImpl {
         super(parent, name);
     }
 
+    public UProcessComponent getParent() {
+       return (UProcessComponent)getProcess().getProcessElement(getElementPath()+"/..");
+    }
 }
 """

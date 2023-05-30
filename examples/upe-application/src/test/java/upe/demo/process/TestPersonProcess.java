@@ -1,12 +1,17 @@
 package upe.demo.process;
 
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import upe.annotations.UpeApplication;
 import upe.backend.UProcessBackend;
 import upe.demo.process.backend.PersonMgr;
 import upe.demo.process.dto.Person;
+import upe.demo.rest.component.PersonMgrImpl;
 import upe.process.UProcessAction;
 import upe.process.UProcessElement;
 import upe.process.UProcessEngine;
@@ -14,6 +19,7 @@ import upe.process.UProcessModification;
 import upe.process.messages.UProcessMessage;
 import upe.test.UpeAssertions;
 import upe.test.annotations.UInject;
+import upe.test.annotations.UpeBackendComponent;
 import upe.test.annotations.UpeProcessToTest;
 import upe.test.jupiter.UpeTestExtension;
 
@@ -29,18 +35,24 @@ import static org.mockito.Mockito.*;
         UpeTestExtension.class
 })
 @UpeApplication({
-    PersonProcess.class,
-    ClientBrowsingProcess.class
+        PersonProcess.class,
+        ClientBrowsingProcess.class,
+        ClientBrowserDispatcherProcess.class
 })
 public class TestPersonProcess {
     @UInject
     private UProcessEngine processEngine;
 
+    @UpeBackendComponent("personMgr")
+    private PersonMgr personMgr = mock(PersonMgr.class);
+
     @UpeProcessToTest("personProcess")
     private PersonProcess prsProc;
 
-    @UpeProcessToTest()
-    private ClientBrowsingProcess clientBrowsingProcess;
+    @BeforeEach
+    public void setSupplier() {
+        when(personMgr.findAll()).thenReturn(new PersonMgrImpl().findAll());
+    }
 
     @Test
     public void testValNameAndFirstName() throws Exception {
@@ -51,7 +63,7 @@ public class TestPersonProcess {
         ua.assertHasError("person/name", "PE-001");
         ua.assertHasError("person/firstName", "PE-001");
 
-        try(var mod = new UProcessModification(this.prsProc)) {
+        try (var mod = new UProcessModification(this.prsProc)) {
             prsProc.setFieldValue("person/name", "Doe");
         }
         ua.assertMaxMsgLevel("person/name", UProcessMessage.MESSAGE_LEVEL_NONE);
@@ -59,7 +71,7 @@ public class TestPersonProcess {
         ua.assertNotHasError("person/name", "PE-001");
         ua.assertNotHasError("person/firstName", "PE-001");
 
-        try(var mod = new UProcessModification(this.prsProc)) {
+        try (var mod = new UProcessModification(this.prsProc)) {
             prsProc.setFieldValue("person/name", "");
         }
         ua.assertMaxMsgLevel("person/name", UProcessMessage.MESSAGE_LEVEL_ERROR);
@@ -67,7 +79,7 @@ public class TestPersonProcess {
         ua.assertHasError("person/name", "PE-001");
         ua.assertHasError("person/firstName", "PE-001");
 
-        try(var mod = new UProcessModification(this.prsProc)) {
+        try (var mod = new UProcessModification(this.prsProc)) {
             prsProc.setFieldValue("person/firstName", "John");
         }
         ua.assertMaxMsgLevel("person/name", UProcessMessage.MESSAGE_LEVEL_NONE);
@@ -85,7 +97,7 @@ public class TestPersonProcess {
         ua.assertMaxMsgLevel("person/address/city", UProcessMessage.MESSAGE_LEVEL_ERROR);
         ua.assertMaxMsgLevel("person/address/country", UProcessMessage.MESSAGE_LEVEL_NONE);
 
-        try( var m = new UProcessModification(this.prsProc)) {
+        try (var m = new UProcessModification(this.prsProc)) {
             this.prsProc.setFieldValue("person/address/street", "5th Avenue");
             this.prsProc.setFieldValue("person/address/number", "7b");
             this.prsProc.setFieldValue("person/address/zipCode", "49594");
@@ -105,15 +117,16 @@ public class TestPersonProcess {
         PersonMgr mgrMock = mock(PersonMgr.class);
         UProcessBackend.addSupplier("personMgr", () -> mgrMock);
         final List<Person> storedPrs = new ArrayList<>();
-        when(mgrMock.savePerson(any())).thenAnswer(i ->{
+        when(mgrMock.savePerson(any())).thenAnswer(i -> {
             Person prs = i.getArgument(0);
             storedPrs.add(prs);
             return prs;
-        } );
+        });
 
         UProcessElement actSave = this.prsProc.getProcessElement("actSave");
         assertNotNull(actSave);
-        try(var m = new UProcessModification(this.prsProc) ) {
+        try (var m = new UProcessModification(this.prsProc)) {
+            this.prsProc.setFieldValue("person/id", "1");
             this.prsProc.setFieldValue("person/name", "Doe");
             this.prsProc.setFieldValue("person/firstName", "John");
             this.prsProc.setFieldValue("person/age", "27");
@@ -125,7 +138,7 @@ public class TestPersonProcess {
             this.prsProc.setFieldValue("person/address/country", "Germany");
         }
 
-        ((UProcessAction)actSave).execute(null);
+        ((UProcessAction) actSave).execute(null);
         verify(mgrMock, times(1)).savePerson(any());
         Person prs = storedPrs.get(0);
         assertNotNull(prs);
@@ -145,13 +158,14 @@ public class TestPersonProcess {
     public void testActSaveWithErrors() throws Exception {
         UProcessElement actSave = this.prsProc.getProcessElement("actSave");
         assertNotNull(actSave);
-        ((UProcessAction)actSave).execute(null);
+        ((UProcessAction) actSave).execute(null);
         UpeAssertions ua = new UpeAssertions(this.prsProc);
 
         ua.assertProcessMessageQueued("PE-002");
     }
+
     @Test
-    public void testCallFromClientBrowsing() throws Exception {
-        assertNotNull(this.clientBrowsingProcess);
+    public void testInitViaDispatcher() {
+
     }
 }

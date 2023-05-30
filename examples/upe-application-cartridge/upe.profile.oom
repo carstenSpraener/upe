@@ -44,24 +44,28 @@ ModelDSL.make {
           stereotype 'cgV19Cartridge'
         }
         mClass {
+          stereotype 'Stereotype'
           name 'Dto'
           documentation ''
           id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:060o2BGGAqACRA1v'
           metaType 'Stereotype'
         }
         mClass {
+          stereotype 'Stereotype'
           name 'UProcess'
           documentation ''
           id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:W48d2BGGAqACRB5Y'
           metaType 'Stereotype'
         }
         mClass {
+          stereotype 'Stereotype'
           name 'UProcessComponent'
           documentation ''
           id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:PsBd2BGGAqACRB6A'
           metaType 'Stereotype'
         }
         mClass {
+          stereotype 'Stereotype'
           name 'Scaffolds'
           documentation ''
           id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:ER.92BGGAqACRB95'
@@ -90,6 +94,7 @@ ModelDSL.make {
           }
         }
         mClass {
+          stereotype 'Stereotype'
           name 'UProcessComponentBase'
           documentation ''
           id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:FyD72BGGAqACRCC_'
@@ -132,6 +137,7 @@ ModelDSL.make {
           }
         }
         mClass {
+          stereotype 'Stereotype'
           name 'UProcessBase'
           documentation ''
           id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:13cW.BGGAqACRAnv'
@@ -183,12 +189,14 @@ ModelDSL.make {
           stereotype 'Stereotype'
         }
         mClass {
+          stereotype 'Stereotype'
           name 'UProcessAction'
           documentation ''
           id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:rBWB.BGGAqACRA70'
           metaType 'Stereotype'
         }
         mClass {
+          stereotype 'Stereotype'
           name 'UValidator'
           documentation ''
           id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:JsDcBBGGAqACRAp1'
@@ -253,6 +261,50 @@ ModelDSL.make {
             taggedValue 'generatesOn', 'MClass'
             taggedValue 'outputTo', 'src-gen'
           }
+        }
+        mClass {
+          stereotype 'Stereotype'
+          name 'UBackendFacade'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:Wc1sDBGGAqAAAwzY'
+          metaType 'Stereotype'
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'UBackendFacade'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:Q_.cDBGGAqAAAw3a'
+          metaType 'Class'
+          stereotype 'Stereotype'
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'BackendFacadeGenerator'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:X5ZcDBGGAqAAAw3u'
+          metaType 'Class'
+          stereotype 'CodeGenerator', {
+            taggedValue 'requiredStereotype', 'UBackendFacade'
+            taggedValue 'outputType', 'Java'
+            taggedValue 'generatesOn', 'MClass'
+            taggedValue 'outputTo', 'src-gen'
+          }
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'FacadeScaffoldOperations'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:8eR8DBGGAqAAAw6R'
+          metaType 'Class'
+          stereotype 'Transformation', {
+            taggedValue 'transformedMetaType', 'MClass'
+            taggedValue 'requiredStereotype', 'UBackendFacade'
+            taggedValue 'priority', '5'
+          }
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'Scaffolds'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:fYVCDBGGAqAAAw6.'
+          metaType 'Class'
+          stereotype 'Stereotype'
         }
       }
     }

@@ -31,6 +31,7 @@ public class ${mClass.getName()} extends ${mClass.getName()}Base {
      
     @Override
     public void initialize(Map<String, Serializable> args) {
+        super.initialize(args);
         try(UProcessModification mod = new UProcessModification(this)) {
         }
     }

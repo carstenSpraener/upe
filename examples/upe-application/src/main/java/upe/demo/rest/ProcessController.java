@@ -1,17 +1,42 @@
 package upe.demo.rest;
 
 import com.google.gson.Gson;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
 import upe.resource.UpeDialog;
 import upe.resource.model.ProcessDelta;
 import upe.resource.model.ProcessPutValue;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
+
 public abstract class ProcessController {
+    public abstract String getStartProcessName();
+
+    @GetMapping(value = "/ping", produces = MimeTypeUtils.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> ping() {
+        return ResponseEntity.ok("pong!");
+    }
+
     @GetMapping("/init")
     @ResponseBody
-    public String startNewProcess() {
+    public String startNewProcess(HttpServletRequest request) {
+        Map<String,java.io.Serializable> args = new HashMap<>();
+        for(Map.Entry<String, String[]> e : request.getParameterMap().entrySet() ) {
+            String key = e.getKey();
+            String value = "";
+            for( String v : e.getValue() ) {
+                if( !"".equals(value) ) {
+                    value += ";";
+                }
+                value += v;
+            }
+            args.put(key,value);
+        }
         UpeDialog dialog = new UpeDialog();
-        ProcessDelta delta = dialog.initiateProcess("personProcess", null);
+        ProcessDelta delta = dialog.initiateProcess(getStartProcessName(), args);
         return new Gson().toJson(delta);
     }
 

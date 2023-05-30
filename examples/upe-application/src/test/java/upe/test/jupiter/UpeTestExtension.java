@@ -2,11 +2,13 @@ package upe.test.jupiter;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
+import upe.backend.UProcessBackend;
 import upe.process.ApplicationConfiguration;
 import upe.process.UProcessEngine;
 import upe.process.engine.BaseUProcessEngine;
 import upe.test.TestUProcessEngine;
 import upe.test.annotations.UInject;
+import upe.test.annotations.UpeBackendComponent;
 import upe.test.annotations.UpeProcessToTest;
 
 import java.lang.reflect.Field;
@@ -21,12 +23,21 @@ public class UpeTestExtension  implements TestInstancePostProcessor {
             TestUProcessEngine engine = new TestUProcessEngine();
 
             for (Field field : testInstance.getClass().getDeclaredFields()) {
-                if (field.isAnnotationPresent(UpeProcessToTest.class)) {
-                    injectTestProcess(engine, testInstance, field);
+                if( field.isAnnotationPresent(UpeBackendComponent.class)) {
+                    String name = field.getAnnotation(UpeBackendComponent.class).value();
+                    if( "".equals(name) ) {
+                        name = field.getName();
+                    }
+                    UProcessBackend.addSupplier(name, new FieldReflectionBackendSupplier(field, testInstance));
                 }
-                if (field.getType().isAssignableFrom(UProcessEngine.class) && field.isAnnotationPresent(UInject.class)) {
+                if (UProcessEngine.class.isAssignableFrom(field.getType()) && field.isAnnotationPresent(UInject.class)) {
                     field.setAccessible(true);
                     field.set(testInstance, engine);
+                }
+            }
+            for(Field field : testInstance.getClass().getDeclaredFields()) {
+                if (field.isAnnotationPresent(UpeProcessToTest.class)) {
+                    injectTestProcess(engine, testInstance, field);
                 }
             }
         } catch( ReflectiveOperationException roXc ) {

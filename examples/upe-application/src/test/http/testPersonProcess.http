@@ -1,4 +1,4 @@
-GET http://localhost:8080/person/init
+GET http://localhost:8080/personProcess/init
 
 ###
 PUT http://localhost:8080/person/DIALOGSTATE_1/value

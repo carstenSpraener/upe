@@ -6,6 +6,7 @@ import de.spraener.nxtgen.oom.model.MClass
 import de.spraener.nxtgen.oom.model.OOModel
 import upe.profile.rest.generator.GeneratorGapTransformation
 import upe.profile.rest.generator.JavaHelper
+import upe.profile.rest.generator.MyModelHelper
 import upe.profile.rest.generator.UPEStereotypes
 
 MClass mClass = this.getProperty("modelElement");
@@ -59,6 +60,7 @@ ${this.pbTemplate.peFields()}${this.pbTemplate.peReferences()}
         super(parent, name);
 ${this.pbTemplate.validations()}
     }
+${this.pbTemplate.generateActionGetters()}
 }
 """
 

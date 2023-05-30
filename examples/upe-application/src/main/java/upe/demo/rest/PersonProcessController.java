@@ -7,4 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/personProcess")
 public class PersonProcessController extends ProcessController {
 
+
+    @Override
+    public String getStartProcessName() {
+        return "clientBrowserDispatcherProcess";
+    }
 }
