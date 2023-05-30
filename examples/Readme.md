@@ -1,8 +1,8 @@
 # WARNING! Highly under construction
 
-__The projects in this dirctory are highly under 
+__The projects in this directory are highly under 
 construction. The purpose of the projects is
-to test the implementation of upe-code, upe-rest,
+to test the implementation of upe-core, upe-rest,
 upe-angular-frontend and the cgV19-Cartridge for 
 upe.__
 
@@ -12,7 +12,7 @@ not blame me for code in this directory_.
 
 ## The projects are:
 
-### upe-application-catridge
+### upe-application-cartridge
 A [cgV19-cartridge](https://github.com/carstenSpraener/cgV19) for model driven development with
 upe.
 
@@ -37,16 +37,21 @@ interesting features.
 model is a VisualParadigm UML-Model containing mainly these classes:
 
 __Process Layer of the demo application__
-![Process Layer of the demo application](images/img.png) 
+
+![upe-demo-process-layer-model.png](images/upe-demo-process-layer-model.png)
 
 __DTO-Layer of the demo application__
 
-![DTO-Layer of the process application](images/img_1.png)
+![upe-application-dto-layer.png](images/upe-application-dto-layer.png)
+
+__Backend-Layer of the demo application__
+
+![ue-demo-backed-layer.png](images/ue-demo-backed-layer.png)
 
 * All business logic is running on the server. The
 frontend has  just code to splitt the fields into
 views and bind some input fields and buttons to
-process elements.
+process elements. Frontend-Code is mostly like this:
 
 ```hmtl
 <div [upeProcess]="'personProcess'" style="margin-bottom: 60px">
@@ -69,4 +74,10 @@ errors will reappear.
 * The link in the browser can be shared. Opening the
 link will open the application in exact the same state
 as you see it.
+* There is no "Session" as in classic web applications. Your
+running application is a REST-Resource where you can GET, PUT and POST
+some Data.
+* Synchronisation between frontend and server upe application is done
+via POST-Requests and ProcessDelta-Response.
+
 

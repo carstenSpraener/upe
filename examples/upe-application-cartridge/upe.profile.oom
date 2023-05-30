@@ -306,6 +306,57 @@ ModelDSL.make {
           metaType 'Class'
           stereotype 'Stereotype'
         }
+        mClass {
+          stereotype 'Stereotype'
+          name 'MasterDetail'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:Y4jZDBGGAqAAAw9v'
+          metaType 'Stereotype'
+        }
+        mClass {
+          stereotype 'Stereotype'
+          name 'MasterList'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:eu6pNhGGAqAABwr.'
+          metaType 'Stereotype'
+        }
+        mClass {
+          stereotype 'Stereotype'
+          name 'DetailEditor'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:lr8hNhGGAqAABwqq'
+          metaType 'Stereotype'
+        }
+        mClass {
+          stereotype 'Stereotype'
+          name 'Identifier'
+          documentation 'A unique value to identify each instance'
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:69TpNhGGAqAABwsw'
+          metaType 'Stereotype'
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'MDLoadDataOperationTransformation'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:pOsFthGGAqAABwqh'
+          metaType 'Class'
+          stereotype 'Transformation', {
+            taggedValue 'transformedMetaType', 'MClass'
+            taggedValue 'priority', '5'
+          }
+        }
+        mClass {
+          stereotype 'Stereotype'
+          name 'MDDataLoader'
+          documentation ''
+          id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:GMrlthGGAqAABwrX'
+          metaType 'Stereotype'
+          mAttribute {
+            name 'loadedDTO'
+            documentation ''
+            id 'Xw2I2BGGAqACRA03:OI102BGGAqACRA5O:Es902BGGAqACRA5V:GMrlthGGAqAABwrX$vPflthGGAqAABwrc$vPflthGGAqAABwrd'
+            metaType 'TaggedValueDefinition'
+          }
+        }
       }
     }
   }

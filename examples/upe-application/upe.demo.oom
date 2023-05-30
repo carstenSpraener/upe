@@ -48,7 +48,15 @@ ModelDSL.make {
               id 'G05o2BGGAqACRA4K:nce92BGGAqACRB94:hyG92BGGAqACRB9p'
               metaType 'Dependency'
               stereotype 'Scaffolds'
-                target 'upe.demo.process.dto.Person'
+              target 'upe.demo.process.dto.Person'
+            }
+            mDependency {  //Exported by DependencyExporterBase
+              name 'null'
+              documentation ''
+              id 'G05o2BGGAqACRA4K:nce92BGGAqACRB94:dCo8DBGGAqAAAw4_'
+              metaType 'Dependency'
+              stereotype 'Scaffolds'
+              target 'upe.demo.process.dto.Person'
             }
             mAttribute {  //Exported by AttributeExporterBase
               name 'name'
@@ -86,6 +94,16 @@ ModelDSL.make {
               visibility 'private'
               multiplicity 'Unspecified'
             }
+            mAttribute {  //Exported by AttributeExporterBase
+              name 'id'
+              documentation ''
+              id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:65QI2BGGAqACRAyu:6IkI2BGGAqACRAzF$XgxpNhGGAqAABwsZ'
+              metaType 'Attribute'
+              stereotype 'Identifier'
+              type 'long'
+              visibility 'private'
+              multiplicity 'Unspecified'
+            }
           }
           mClass {  //Exported by ClassExporterBase
             name 'Address'
@@ -99,7 +117,7 @@ ModelDSL.make {
               id 'G05o2BGGAqACRA4K:nce92BGGAqACRB94:Spm92BGGAqACRB9t'
               metaType 'Dependency'
               stereotype 'Scaffolds'
-                target 'upe.demo.process.dto.Address'
+              target 'upe.demo.process.dto.Address'
             }
             mAttribute {  //Exported by AttributeExporterBase
               name 'street'
@@ -171,6 +189,7 @@ ModelDSL.make {
             navigable 'true'
             composite 'true'
             oppositeAggregationKind 'composite'
+            stereotype 'DetailEditor'
           }
           mAssociation {
             name 'actSave'
@@ -186,6 +205,36 @@ ModelDSL.make {
             navigable 'true'
             composite 'true'
             oppositeAggregationKind 'composite'
+          }
+          mAssociation {
+            name 'actCancel'
+            documentation ''
+            id 'G05o2BGGAqACRA4K:G05o2BGGAqACRA4L:uKKILBGD.AAAAQp.$uKKILBGD.AAAAQqB'
+            metaType 'AssociationEnd'
+            assocId 'G05o2BGGAqACRA4K:G05o2BGGAqACRA4L:uKKILBGD.AAAAQp.$uKKILBGD.AAAAQqB'
+            opositeAttribute 'null'
+            opositeMultiplicity 'Unspecified'
+            associationType 'OneToOne'
+            type 'upe.demo.process.ActCancel'
+            multiplicity 'Unspecified'
+            navigable 'true'
+            composite 'true'
+            oppositeAggregationKind 'composite'
+          }
+          mDependency {  //Exported by DependencyExporterBase
+            name 'null'
+            documentation ''
+            id 'G05o2BGGAqACRA4K:nce92BGGAqACRB94:tLupthGGAqAABwpO'
+            metaType 'Dependency'
+            stereotype 'MasterDetail'
+            target 'upe.demo.process.PersonProcess'
+          }
+          mDependency {  //Exported by DependencyExporterBase
+            name 'calls'
+            documentation ''
+            id 'G05o2BGGAqACRA4K:nce92BGGAqACRB94:xGGnthGGAqAABwu9'
+            metaType 'Dependency'
+            target 'upe.demo.process.PersonProcess'
           }
         }
         mClass {  //Exported by ClassExporterBase
@@ -215,7 +264,7 @@ ModelDSL.make {
             id 'G05o2BGGAqACRA4K:nce92BGGAqACRB94:hyG92BGGAqACRB9p'
             metaType 'Dependency'
             stereotype 'Scaffolds'
-              target 'upe.demo.process.dto.Person'
+            target 'upe.demo.process.dto.Person'
           }
           mOperation {  //Exported by OperationExporterBase
             name 'valNameAndFirstName'
@@ -253,7 +302,7 @@ ModelDSL.make {
             id 'G05o2BGGAqACRA4K:nce92BGGAqACRB94:Spm92BGGAqACRB9t'
             metaType 'Dependency'
             stereotype 'Scaffolds'
-              target 'upe.demo.process.dto.Address'
+            target 'upe.demo.process.dto.Address'
           }
         }
         mElement {
@@ -269,6 +318,248 @@ ModelDSL.make {
           metaType 'Class'
           stereotype 'UProcessAction'
         }
+        mClass {  //Exported by ClassExporterBase
+          name 'ClientBrowsingProcess'
+          documentation ''
+          id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:ei4q9BGGAqACRA0J'
+          metaType 'Class'
+          stereotype 'UProcess'
+          mAssociation {
+            name 'null'
+            documentation ''
+            id 'G05o2BGGAqACRA4K:G05o2BGGAqACRA4L:LnLq9BGGAqACRA2a$LnLq9BGGAqACRA2b'
+            metaType 'AssociationEnd'
+            assocId 'G05o2BGGAqACRA4K:G05o2BGGAqACRA4L:LnLq9BGGAqACRA2a$LnLq9BGGAqACRA2b'
+            opositeAttribute 'null'
+            opositeMultiplicity 'Unspecified'
+            associationType 'OneToOne'
+            type 'upe.demo.process.ClientBrowsingProcess'
+            multiplicity 'Unspecified'
+            navigable 'true'
+            composite 'false'
+            oppositeAggregationKind 'none'
+          }
+          mAssociation {
+            name 'null'
+            documentation ''
+            id 'G05o2BGGAqACRA4K:G05o2BGGAqACRA4L:LnLq9BGGAqACRA2a$LnLq9BGGAqACRA2d'
+            metaType 'AssociationEnd'
+            assocId 'G05o2BGGAqACRA4K:G05o2BGGAqACRA4L:LnLq9BGGAqACRA2a$LnLq9BGGAqACRA2d'
+            opositeAttribute 'null'
+            opositeMultiplicity 'Unspecified'
+            associationType 'OneToOne'
+            type 'upe.demo.process.ClientBrowsingProcess'
+            multiplicity 'Unspecified'
+            navigable 'true'
+            composite 'true'
+            oppositeAggregationKind 'composite'
+          }
+          mAssociation {
+            name 'personList'
+            documentation ''
+            id 'G05o2BGGAqACRA4K:G05o2BGGAqACRA4L:9n5wLBGD.AAAAQoc$9n5wLBGD.AAAAQof'
+            metaType 'AssociationEnd'
+            assocId 'G05o2BGGAqACRA4K:G05o2BGGAqACRA4L:9n5wLBGD.AAAAQoc$9n5wLBGD.AAAAQof'
+            opositeAttribute 'null'
+            opositeMultiplicity 'Unspecified'
+            associationType 'OneToMany'
+            type 'upe.demo.process.PersonEditor'
+            multiplicity '0..*'
+            navigable 'true'
+            composite 'true'
+            oppositeAggregationKind 'composite'
+            stereotype 'MasterList'
+          }
+          mDependency {  //Exported by DependencyExporterBase
+            name 'null'
+            documentation ''
+            id 'G05o2BGGAqACRA4K:nce92BGGAqACRB94:tLupthGGAqAABwpO'
+            metaType 'Dependency'
+            stereotype 'MasterDetail'
+            target 'upe.demo.process.PersonProcess'
+          }
+          mDependency {  //Exported by DependencyExporterBase
+            name 'calls'
+            documentation ''
+            id 'G05o2BGGAqACRA4K:nce92BGGAqACRB94:dx6nthGGAqAABwu5'
+            metaType 'Dependency'
+            target 'upe.demo.process.ClientBrowsingProcess'
+          }
+        }
+        mPackage {  //Exported by PackageExporterBase
+          name 'backend'
+          documentation ''
+          id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:iI6sDBGGAqAAAwyE'
+          metaType 'Package'
+          mClass {  //Exported by ClassExporterBase
+            name 'PersonMgr'
+            documentation ''
+            id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:iI6sDBGGAqAAAwyE:WwWsDBGGAqAAAwyL'
+            metaType 'Class'
+            stereotype 'UBackendFacade'
+            mDependency {  //Exported by DependencyExporterBase
+              name 'null'
+              documentation ''
+              id 'G05o2BGGAqACRA4K:nce92BGGAqACRB94:dCo8DBGGAqAAAw4_'
+              metaType 'Dependency'
+              stereotype 'Scaffolds'
+              target 'upe.demo.process.dto.Person'
+            }
+          }
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'ActCancel'
+          documentation ''
+          id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:tnMILBGD.AAAAQpn'
+          metaType 'Class'
+          stereotype 'UProcessAction'
+        }
+        mClass {  //Exported by ClassExporterBase
+          name 'ClientBrowserDispatcherProcess'
+          documentation 'This process is an intial dispatcher. Depending on the values in the args\nmap it will jump to the browsing process (if no personID is given) or it will jump to the PersonProcess with the given personID.'
+          id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:U0UnthGGAqAABwuZ'
+          metaType 'Class'
+          stereotype 'UProcess'
+          mDependency {  //Exported by DependencyExporterBase
+            name 'calls'
+            documentation ''
+            id 'G05o2BGGAqACRA4K:nce92BGGAqACRB94:dx6nthGGAqAABwu5'
+            metaType 'Dependency'
+            target 'upe.demo.process.ClientBrowsingProcess'
+          }
+          mDependency {  //Exported by DependencyExporterBase
+            name 'calls'
+            documentation ''
+            id 'G05o2BGGAqACRA4K:nce92BGGAqACRB94:xGGnthGGAqAABwu9'
+            metaType 'Dependency'
+            target 'upe.demo.process.PersonProcess'
+          }
+          mAttribute {  //Exported by AttributeExporterBase
+            name 'personID'
+            documentation ''
+            id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:U0UnthGGAqAABwuZ$qg1nthGGAqAABwvp'
+            metaType 'Attribute'
+            type 'Integer'
+            visibility 'private'
+            multiplicity 'Unspecified'
+          }
+        }
+        mElement {
+          name 'backend Class Diagram'
+          documentation ''
+          id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:V3fjdhGGAqAABwwd'
+          metaType 'DiagramOverview'
+        }
+      }
+    }
+    mPackage {  //Exported by PackageExporterBase
+      name 'common'
+      documentation ''
+      id 'QtXw2BGGAqACRAyZ:Ysh5DBGGAqAAAw98'
+      metaType 'Package'
+      mClass {  //Exported by ClassExporterBase
+        name 'MasterProcessComponent'
+        documentation ''
+        id 'QtXw2BGGAqACRAyZ:Ysh5DBGGAqAAAw98:sy15DBGGAqAAAw.W'
+        metaType 'Class'
+        stereotype 'UProcessComponent'
+        mAssociation {
+          name 'actOpenDetail'
+          documentation ''
+          id 'G05o2BGGAqACRA4K:G05o2BGGAqACRA4L:dgYFDBGGAqAAAw_m$dgYFDBGGAqAAAw_p'
+          metaType 'AssociationEnd'
+          assocId 'G05o2BGGAqACRA4K:G05o2BGGAqACRA4L:dgYFDBGGAqAAAw_m$dgYFDBGGAqAAAw_p'
+          opositeAttribute 'null'
+          opositeMultiplicity 'Unspecified'
+          associationType 'OneToOne'
+          type 'upe.common.ActOpenDetail'
+          multiplicity '1'
+          navigable 'true'
+          composite 'true'
+          oppositeAggregationKind 'composite'
+        }
+        mAssociation {
+          name 'actCreateDetail'
+          documentation ''
+          id 'G05o2BGGAqACRA4K:G05o2BGGAqACRA4L:YaMFDBGGAqAAAxAE$YaMFDBGGAqAAAxAH'
+          metaType 'AssociationEnd'
+          assocId 'G05o2BGGAqACRA4K:G05o2BGGAqACRA4L:YaMFDBGGAqAAAxAE$YaMFDBGGAqAAAxAH'
+          opositeAttribute 'null'
+          opositeMultiplicity 'Unspecified'
+          associationType 'OneToOne'
+          type 'upe.common.ActCreateDetail'
+          multiplicity '1'
+          navigable 'true'
+          composite 'true'
+          oppositeAggregationKind 'composite'
+        }
+        mAssociation {
+          name 'actReturnFromDetail'
+          documentation ''
+          id 'G05o2BGGAqACRA4K:G05o2BGGAqACRA4L:EaCFDBGGAqAAAxAU$EaCFDBGGAqAAAxAX'
+          metaType 'AssociationEnd'
+          assocId 'G05o2BGGAqACRA4K:G05o2BGGAqACRA4L:EaCFDBGGAqAAAxAU$EaCFDBGGAqAAAxAX'
+          opositeAttribute 'null'
+          opositeMultiplicity 'Unspecified'
+          associationType 'OneToOne'
+          type 'upe.common.ActReturnFromDetail'
+          multiplicity '1'
+          navigable 'true'
+          composite 'true'
+          oppositeAggregationKind 'composite'
+        }
+        mAssociation {
+          name 'actLoadData'
+          documentation ''
+          id 'G05o2BGGAqACRA4K:G05o2BGGAqACRA4L:cifQLBGD.AAAAQkc$cifQLBGD.AAAAQkf'
+          metaType 'AssociationEnd'
+          assocId 'G05o2BGGAqACRA4K:G05o2BGGAqACRA4L:cifQLBGD.AAAAQkc$cifQLBGD.AAAAQkf'
+          opositeAttribute 'null'
+          opositeMultiplicity 'Unspecified'
+          associationType 'OneToOne'
+          type 'upe.common.ActLoadData'
+          multiplicity '1'
+          navigable 'true'
+          composite 'true'
+          oppositeAggregationKind 'composite'
+        }
+        mAttribute {  //Exported by AttributeExporterBase
+          name 'detailProcessName'
+          documentation ''
+          id 'QtXw2BGGAqACRAyZ:Ysh5DBGGAqAAAw98:sy15DBGGAqAAAw.W$Q1cwLBGD.AAAAQmc'
+          metaType 'Attribute'
+          type 'String'
+          visibility 'private'
+          multiplicity 'Unspecified'
+        }
+      }
+      mClass {  //Exported by ClassExporterBase
+        name 'ActOpenDetail'
+        documentation ''
+        id 'QtXw2BGGAqACRAyZ:Ysh5DBGGAqAAAw98:h.j5DBGGAqAAAw.l'
+        metaType 'Class'
+        stereotype 'UProcessAction'
+      }
+      mClass {  //Exported by ClassExporterBase
+        name 'ActCreateDetail'
+        documentation ''
+        id 'QtXw2BGGAqACRAyZ:Ysh5DBGGAqAAAw98:PUn5DBGGAqAAAw.8'
+        metaType 'Class'
+        stereotype 'UProcessAction'
+      }
+      mClass {  //Exported by ClassExporterBase
+        name 'ActReturnFromDetail'
+        documentation ''
+        id 'QtXw2BGGAqACRAyZ:Ysh5DBGGAqAAAw98:pEv5DBGGAqAAAw_N'
+        metaType 'Class'
+        stereotype 'UProcessAction'
+      }
+      mClass {  //Exported by ClassExporterBase
+        name 'ActLoadData'
+        documentation ''
+        id 'QtXw2BGGAqACRAyZ:Ysh5DBGGAqAAAw98:5Y7QLBGD.AAAAQkQ'
+        metaType 'Class'
+        stereotype 'UProcessAction'
       }
     }
   }
