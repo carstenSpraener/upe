@@ -47,7 +47,7 @@ public class AnnotatedProcessConfigurator {
             try {
                 UpeProcessComponent pcConfig = f.getAnnotation(UpeProcessComponent.class);
                 f.setAccessible(true);
-                createProcessComponentFor(p, f, pcConfig);
+                createProcessComponentFor(peFactory, p, f, pcConfig);
             } catch (ReflectiveOperationException roXC) {
                 LOGGER.severe(String.format("Cannot create UProcessComponent for field '%s'. Error: %s", f.getName(), roXC.getMessage()));
             }
@@ -94,8 +94,6 @@ public class AnnotatedProcessConfigurator {
             pe = peFactory.newDateField(parent, peName);
         } else if (fType.equals(UProcessBooleanField.class)) {
             pe = peFactory.newBooleanField(parent, peName);
-        } else if( fType.equals(UProcessComponentList.class) ) {
-            pe = peFactory.newProcessComponentList(parent, peName);
         } else {
             try {
                 pe = (UProcessElement) fType.getConstructor(UProcessComponent.class, String.class).newInstance(parent, peName);
@@ -159,12 +157,19 @@ public class AnnotatedProcessConfigurator {
         return processComponentFields;
     }
 
-    private static void createProcessComponentFor(UProcessComponent parent, Field f, UpeProcessComponent pcConfig) throws ReflectiveOperationException {
+    private static void createProcessComponentFor(UProcessElementFactory factory, UProcessComponent parent, Field f, UpeProcessComponent pcConfig) throws ReflectiveOperationException {
         String name = pcConfig.value();
+        Class<?> fType = f.getType();
         if( "".equals(name) ) {
             name = f.getName();
         }
-        UProcessComponent pc = (UProcessComponent) f.getType().getConstructor(UProcessComponent.class, String.class).newInstance(parent, name);
+        UProcessComponent pc;
+        if( fType.equals(UProcessComponentList.class) ) {
+            Class<? extends UProcessComponent> clazz = pcConfig.listType();
+            pc = factory.newProcessComponentList(parent, pcConfig.value(), clazz);
+        } else {
+            pc = (UProcessComponent) fType.getConstructor(UProcessComponent.class, String.class).newInstance(parent, name);
+        }
         f.set(parent, pc);
     }
 

@@ -57,6 +57,7 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
 
     @Override
     public UProcessElement getProcessElement(String name) {
+        name = compressPath(name);
         int idx;
         if (name.startsWith("/")) {
             name = name.substring(1);
@@ -75,6 +76,20 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
         } else {
             return readChildByName(name);
         }
+    }
+
+    private String compressPath(String aPath) {
+        int idx=0;
+        while( (idx = aPath.indexOf("/..")) != -1 ) {
+            String prefix = aPath.substring(0, idx);
+            String posfix = aPath.substring(idx+3);
+            if( prefix.indexOf("/") == -1 ) {
+                aPath = posfix;
+            } else {
+                aPath = prefix.substring(0, prefix.lastIndexOf('/')) + posfix;
+            }
+        }
+        return aPath;
     }
 
     private UProcessElement readChildByName(final String name) {
@@ -314,13 +329,15 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
                 && valueClass.equals(BigDecimal.class)) {
             return Integer.valueOf(((BigDecimal) value).intValue());
         }
+        if( Long.class.equals(paramClass) || long.class.equals(paramClass)) {
+            return Long.valueOf(value.toString());
+        }
         if (BigDecimal.class.equals(paramClass) && valueClass.equals(String.class)) {
 			return new BigDecimal((String) value);
         }
         if (Double.class.equals(paramClass)) {
             return Double.valueOf(value.toString());
         }
-
         //TODO: Weitere Converter implementieren.
         return value;
     }

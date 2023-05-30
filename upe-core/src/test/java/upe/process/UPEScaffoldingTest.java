@@ -19,9 +19,9 @@ public class UPEScaffoldingTest {
     }
     @Test
     public void testScaffoldingProcessCreation() throws Exception {
-        assertNotNull(activeUProcess.getProcessElement("/person/name"));
-        assertNotNull(activeUProcess.getProcessElement("/person/address"));
-        assertNotNull(activeUProcess.getProcessElement("/person/address/street"));
+        assertNotNull(activeUProcess.getProcessElement("/personList[0]/name"));
+        assertNotNull(activeUProcess.getProcessElement("/personList[0]/address"));
+        assertNotNull(activeUProcess.getProcessElement("/personList[0]/address/street"));
     }
 
     @Test

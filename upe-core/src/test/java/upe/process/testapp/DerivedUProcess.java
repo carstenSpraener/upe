@@ -21,7 +21,7 @@ public class DerivedUProcess extends BaseUProcess {
     @UpeProcessField("result")
     private UProcessTextField resultFromSubProcess;
 
-    @UpeProcessField()
+    @UpeProcessComponent(value = "personList", listType=PersonEditor.class)
     private UProcessComponentList<PersonEditor> personList;
 
     public DerivedUProcess(UProcessEngine pe, String name) {
@@ -31,7 +31,7 @@ public class DerivedUProcess extends BaseUProcess {
     @Override
     public void initialize(Map<String, Serializable> args) {
         super.initialize(args);
-        this.personList.add(new PersonEditor(this, "person"));
+        this.personList.add(this.personList.createNewInstance());
     }
 
     @UpeProcessAction("actCallSubprocess")

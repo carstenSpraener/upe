@@ -26,4 +26,5 @@ public @interface UpeProcessComponent {
      * @return
      */
     String value() default "";
+    Class<? extends UProcessComponent> listType() default UProcessComponent.class;
 }

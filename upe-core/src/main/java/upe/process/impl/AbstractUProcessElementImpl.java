@@ -1,9 +1,6 @@
 package upe.process.impl;
 
-import upe.process.UProcess;
-import upe.process.UProcessComponent;
-import upe.process.UProcessElement;
-import upe.process.UProcessElementListener;
+import upe.process.*;
 import upe.process.messages.UProcessMessage;
 
 import java.util.ArrayList;
@@ -51,6 +48,10 @@ public class AbstractUProcessElementImpl implements UProcessElement {
 	public String getElementPath() {
 		if( parent == null ) {
 			return "";
+		}
+		if( parent instanceof UProcessComponentList<?>) {
+			UProcessComponentList list = (UProcessComponentList) parent;
+			return parent.getElementPath() + "["+list.indexOf(this)+"]";
 		}
 		return parent.getElementPath()+"/"+getName();
 	}

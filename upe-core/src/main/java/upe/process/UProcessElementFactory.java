@@ -7,5 +7,5 @@ public interface UProcessElementFactory {
 	UProcessImageField newImageField(UProcessComponent parent, String name );
 	UProcessChoiceField newChoiceField(UProcessComponent parent, String name );
     UProcessBooleanField newBooleanField(UProcessComponent parent, String peName);
-	UProcessComponentList newProcessComponentList(UProcessComponent parent, String peName);
+	UProcessComponentList newProcessComponentList(UProcessComponent parent, String peName, Class<? extends UProcessComponent> listElementClazz);
 }
