@@ -97,7 +97,7 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
         if( isIndexedName(name) ){
             String mapName = removeIndex(name);
             int index = getIndexFromName(name);
-            UProcessComponentList list = (UProcessComponentList) name2processElementMap.get(mapName);
+            UProcessComponentList<? extends UProcessComponent> list = (UProcessComponentList) name2processElementMap.get(mapName);
             child = list.getAt(index);
         } else {
             child = name2processElementMap.get(name);

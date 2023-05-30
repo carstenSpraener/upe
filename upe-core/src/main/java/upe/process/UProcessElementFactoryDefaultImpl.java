@@ -36,7 +36,7 @@ public class UProcessElementFactoryDefaultImpl implements UProcessElementFactory
 	}
 
 	@Override
-	public UProcessComponentList newProcessComponentList(UProcessComponent parent, String peName, Class<? extends UProcessComponent> listElementClazz) {
-		return new UProcessComponentListImpl(parent, peName, listElementClazz);
+	public UProcessComponentList<UProcessComponent> newProcessComponentList(UProcessComponent parent, String peName, Class<? extends UProcessComponent> listElementClazz) {
+		return new UProcessComponentListImpl<>(parent, peName, listElementClazz);
 	}
 }

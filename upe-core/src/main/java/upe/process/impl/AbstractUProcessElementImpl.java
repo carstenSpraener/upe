@@ -49,8 +49,7 @@ public class AbstractUProcessElementImpl implements UProcessElement {
 		if( parent == null ) {
 			return "";
 		}
-		if( parent instanceof UProcessComponentList<?>) {
-			UProcessComponentList list = (UProcessComponentList) parent;
+		if( parent instanceof UProcessComponentList<? extends UProcessComponent> list) {
 			return parent.getElementPath() + "["+list.indexOf(this)+"]";
 		}
 		return parent.getElementPath()+"/"+getName();

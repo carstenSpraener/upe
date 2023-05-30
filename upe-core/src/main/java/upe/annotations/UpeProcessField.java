@@ -1,6 +1,5 @@
 package upe.annotations;
 
-import upe.process.UProcessComponent;
 import upe.process.UProcessField;
 
 import java.lang.annotation.ElementType;

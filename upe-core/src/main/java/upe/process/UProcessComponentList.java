@@ -1,7 +1,5 @@
 package upe.process;
 
-import upe.process.impl.AbstractUProcessElementImpl;
-
 public interface UProcessComponentList<T extends UProcessComponent> extends UProcessComponent {
     void add(T element);
     void remove(T element);
