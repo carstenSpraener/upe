@@ -13,6 +13,7 @@ import {
 } from "./upe-client-dto";
 import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
+import {environment} from "../../../environments/environment";
 
 
 @Injectable()
@@ -24,7 +25,7 @@ export class UpeClientService {
   activeView: string = "init";
   viewSeverity$ = new BehaviorSubject<{view: string, severity: number }>({view: 'init', severity: 0});
 
-  static serverURL = "http://localhost:8080";
+  static serverURL = environment.BACKEND_URL;
 
   constructor(
     private http: HttpClient,
