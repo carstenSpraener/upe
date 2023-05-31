@@ -33,25 +33,10 @@ interesting features.
 
 ## Features
 
-* The process layer is developed model driven (or low code like). Its 
-model is a VisualParadigm UML-Model containing mainly these classes:
-
-__Process Layer of the demo application__
-
-![upe-demo-process-layer-model.png](images/upe-demo-process-layer-model.png)
-
-__DTO-Layer of the demo application__
-
-![upe-application-dto-layer.png](images/upe-application-dto-layer.png)
-
-__Backend-Layer of the demo application__
-
-![ue-demo-backed-layer.png](images/ue-demo-backed-layer.png)
-
 * All business logic is running on the server. The
-frontend has  just code to splitt the fields into
-views and bind some input fields and buttons to
-process elements. Frontend-Code is mostly like this:
+  frontend has  just code to splitt the fields into
+  views and bind some input fields and buttons to
+  process elements. Frontend-Code is mostly like this:
 
 ```hmtl
 <div [upeProcess]="'personProcess'" style="margin-bottom: 60px">
@@ -64,20 +49,38 @@ process elements. Frontend-Code is mostly like this:
  </div>
 
 ```
-* validation errors will be displayed immediately. Also enable/disable elements or
-visible/hide process elements.
 
-* Forward and Backword-Button in the browser are 
-allowed. You can go back through your inputs and
-errors will reappear.
+* validation errors will be displayed immediately. Also enable/disable elements or
+  visible/hide process elements.
+
+* Forward and Backword-Button in the browser are
+  allowed. You can go back through your inputs and
+  errors will reappear.
 
 * The link in the browser can be shared. Opening the
-link will open the application in exact the same state
-as you see it.
+  link will open the application in exact the same state
+  as you see it.
 * There is no "Session" as in classic web applications. Your
-running application is a REST-Resource where you can GET, PUT and POST
-some Data.
-* Synchronisation between frontend and server upe application is done
-via POST-Requests and ProcessDelta-Response.
+  running application is a REST-Resource where you can GET, PUT and POST
+  some Data.
+* Synchronisation between frontend and the server-side upe application is
+  done via PUT-Requests and ProcessDelta-Response.
 
 
+## Model Driven Development with [cgV19](https://github.com/carstenSpraener/cgV19)
+
+As mentioned above, the application is a model driven developed application.
+This means, you will have a mode that feeds a generator that generates
+the majority of your projects code.
+
+__Process Layer of the demo application__
+
+![upe-demo-process-layer-model.png](images/upe-demo-process-layer-model.png)
+
+__DTO-Layer of the demo application__
+
+![upe-application-dto-layer.png](images/upe-application-dto-layer.png)
+
+__Backend-Layer of the demo application__
+
+![ue-demo-backed-layer.png](images/ue-demo-backed-layer.png)
