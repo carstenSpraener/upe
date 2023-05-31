@@ -55,7 +55,6 @@ public class UpeAssertions {
             assertHasError(elementPath, msgID);
             throw new UPEAssertionException("ProcesField '" + elementPath + "' has unexpected message '" + msgID);
         } catch( UPEAssertionException axc ) {
-            return;
         }
     }
 

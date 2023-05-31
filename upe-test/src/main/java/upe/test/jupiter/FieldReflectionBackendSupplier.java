@@ -1,5 +1,7 @@
 package upe.test.jupiter;
 
+import upe.exception.UPERuntimeException;
+
 import java.lang.reflect.Field;
 import java.util.function.Supplier;
 
@@ -21,7 +23,7 @@ class FieldReflectionBackendSupplier implements Supplier<Object> {
             field.setAccessible(true);
             return this.field.get(this.testInstance);
         }catch( ReflectiveOperationException roXC ) {
-            throw new RuntimeException(roXC);
+            throw new UPERuntimeException(roXC);
         }
     }
 }
