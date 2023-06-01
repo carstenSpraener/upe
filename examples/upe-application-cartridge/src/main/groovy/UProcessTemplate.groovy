@@ -51,19 +51,21 @@ import upe.common.MasterProcessComponent;
 
     String peReferences() {
         StringBuffer sb = new StringBuffer();
+        sb.append("    // Components by References\n")
         orgClass.associations.forEach {
             if( MyModelHelper.MDHelper.isMasterDetailAssociation(it) ) {
                 sb.append("""    @UpeProcessComponent()
     private MasterProcessComponent ${it.getName()}Master;
 """)
             }
+            sb.append("    // Association to "+it.type+"\n");
             MClass target = MyModelHelper.Assoc.getTargetClass(it);
             if( StereotypeHelper.hasStereotye(target, UPEStereotypes.UPROCESSACTION.name)) {
                 sb.append(generateActionField(it, target))
             } else if( StereotypeHelper.hasStereotye(target, UPEStereotypes.UPROCESSCOMPONENT.name)) {
                 sb.append(generateProcessComponentField(it, target))
             } else {
-                de.spraener.nxtgen.NextGen.LOGGER.severe("Unknownd target "+target.name);
+                de.spraener.nxtgen.NextGen.LOGGER.severe("Unknownd target for reference "+it.name+" from "+orgClass.name+"  to "+it.type);
             }
         }
         return sb.toString();
@@ -141,12 +143,13 @@ import upe.common.MasterProcessComponent;
         MClass detail = MyModelHelper.MDHelper.getDetailProcess(assoc)
         String detailProcessName = JavaHelper.firstToUpperCase(detail.getName());
         String listName = assoc.getName();
-        return """            MasterDetailConfiguration config = new MasterDetailConfiguration(
+        return """            ${listName}Master.init(
+                 new MasterDetailConfiguration(
                     getElementPath()+"/${listName}",
                     "${detailProcessName}",
                     "id"
-            ).withDataSupplier(this::load${JavaHelper.firstToUpperCase(listName)}Data);
-            ${listName}Master.init(config);
+                ).withDataSupplier(this::load${JavaHelper.firstToUpperCase(listName)}Data)
+            );
 """
     }
     String initializations() {

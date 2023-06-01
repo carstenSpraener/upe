@@ -26,5 +26,7 @@ public class ValidationTests {
             nameElement.setValueFromFrontend("Carsten");
         }
         assertEquals(0, nameElement.getMaximumMessageLevel());
+        // And when we come this long... check that the rule was executed.
+        assertEquals("carsten", activeUProcess.getProcessElement("/myNameLC", UProcessField.class).getValue());
     }
 }

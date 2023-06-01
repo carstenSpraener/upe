@@ -3,13 +3,13 @@
  */
 package upe.resource;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import upe.resource.model.UpeDialogState;
 import upe.resource.persistorimpl.UpeDialogPersistorJdbcImpl;
 
 import java.sql.Connection;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UpePersistorTests {
     @Test

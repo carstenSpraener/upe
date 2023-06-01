@@ -61,6 +61,10 @@ public class UProcessDecimalFieldImpl extends AbstractUProcessFieldImpl implemen
 
 	@Override
 	public void setValueFromFrontend(String value ) {
+		if( value == null ) {
+			setDecimalValue(null);
+			return;
+		}
 		try {
 			setDecimalValue( new BigDecimal(getDecimalFormat().parse(value).toString()) );
 		} catch (ParseException e) {

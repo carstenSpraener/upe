@@ -4,6 +4,7 @@
 package upe.resource;
 
 import com.google.gson.Gson;
+import upe.exception.UPERuntimeException;
 import upe.process.UProcess;
 import upe.process.UProcessAction;
 import upe.process.UProcessEngine;
@@ -17,9 +18,22 @@ import upe.resource.persistorimpl.UpeDialogPersistorJdbcImpl;
 import java.io.Serializable;
 import java.util.ConcurrentModificationException;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class UpeDialog {
     private BaseUProcessEngine engine = new BaseUProcessEngine();
+
+    private class ModificationResult {
+        UpeDialogState state;
+        ProcessDelta delta;
+        String oldValue;
+
+        public ModificationResult(UpeDialogState state, ProcessDelta delta, String oldValue) {
+            this.state = state;
+            this.delta = delta;
+            this.oldValue = oldValue;
+        }
+    }
 
     public ProcessDelta initiateProcess(String name, Map<String, Serializable> args) {
         UpeDialogState state = UpeDialogPersistorJdbcImpl.intance().initiate();
@@ -59,27 +73,59 @@ public class UpeDialog {
     }
 
     public ProcessDelta putValueChange(String dialogID, int stepCount, String valuePath, String newValueFromFrontend) {
+        String oldValue = "";
+        Consumer<UProcess> procConsumer = (p) -> {
+            ((UProcessField)p.getProcessElement(valuePath)).setValueFromFrontend(newValueFromFrontend);
+        };
+        ModificationResult result = doProcessModification(dialogID, stepCount, valuePath, procConsumer);
+        UpeDialogPersistorJdbcImpl.intance().storeStep(
+                result.state.getDialogID(),
+                result.state.getStepCount(),
+                valuePath,
+                result.oldValue,
+                newValueFromFrontend
+        );
+        return result.delta;
+    }
+
+    private ModificationResult doProcessModification(String dialogID, int stepCount, String valuePath,
+                                                     Consumer<UProcess> procConsumer
+    ) {
         UpeDialogState state = rebuild(dialogID).getState();
-        if( state.getStepCount() != stepCount ) {
-            throw new ConcurrentModificationException("Dialog "+dialogID+" was externaly updated");
+        if( state.getStepCount() != stepCount) {
+            throw new ConcurrentModificationException("Dialog "+ dialogID +" was externaly updated");
         }
         ProcessDelta delta = new ProcessDelta(state);
         UProcess p = getActiveProcess();
-        String oldValue = ((UProcessField)p.getProcessElement(valuePath)).getValueForFrontend();
+        String oldValue = null;
+        if( p.getProcessElement(valuePath) instanceof UProcessField field) {
+            oldValue = field.getValueForFrontend();
+        }
         delta.startRecording(p);
         p.inputStarts();
-        ((UProcessField)p.getProcessElement(valuePath)).setValueFromFrontend(newValueFromFrontend);
+        procConsumer.accept(p);
         p.inputStops();
         delta.stopRecording(p);
         state.setStepCount(state.getStepCount()+1);
-        UpeDialogPersistorJdbcImpl.intance().storeStep(state.getDialogID(),
-                state.getStepCount(),
-                valuePath,
-                oldValue,
-                newValueFromFrontend
-        );
-        return delta;
+        return new ModificationResult(state, delta, oldValue);
     }
+
+    public ProcessDelta triggerAction(String dialogID, int stepCount, String actionPath) {
+        ModificationResult result = doProcessModification(dialogID, stepCount, actionPath, (p) -> {
+            if( p.getProcessElement(actionPath) instanceof UProcessAction act) {
+                act.execute(null);
+            } else {
+                throw new UPERuntimeException("Illegal action path '"+actionPath+"' in trigger action");
+            }
+        });
+        UpeDialogPersistorJdbcImpl.intance().storeAction(
+                result.state.getDialogID(),
+                result.state.getStepCount(),
+                actionPath
+        );
+        return result.delta;
+    }
+
 
     private void handleStep(UProcessEngine pe, UpeStep step) {
         String type = step.getType();

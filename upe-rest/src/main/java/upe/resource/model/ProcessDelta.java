@@ -29,6 +29,18 @@ public class ProcessDelta {
     }
 
     public void stopRecording(UProcess p) {
+        List<UProcessElement> elementList = new ArrayList<>();
+        elementList = p.getProcessElements(elementList)
+                .stream()
+                .filter(pe -> pe instanceof UProcessField)
+                .collect(Collectors.toList());
+        elementList.stream()
+                .map(pe -> (UProcessField) pe)
+                .filter( pf -> this.isNewProcessField(pf, elementStateList))
+                .forEach(pf -> {
+                    ProcessElementState state = ProcessElementState.fromNewField(pf.getElementPath());
+                    elementStateList.add(state);
+                });
         elementDeltaList = elementStateList.stream()
                 .map(
                         pState -> {
@@ -48,6 +60,15 @@ public class ProcessDelta {
                     }
                 });
         this.elementStateList = null;
+    }
+
+    private boolean isNewProcessField(UProcessField pf, List<ProcessElementState> elementStateList) {
+        for( ProcessElementState state : elementStateList ) {
+            if( state.getFieldPath().equals(pf.getElementPath()) ) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void buildCompleteState(UProcess p) {

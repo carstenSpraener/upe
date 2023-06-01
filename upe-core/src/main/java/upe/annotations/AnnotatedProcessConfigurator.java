@@ -3,11 +3,13 @@ package upe.annotations;
 import upe.process.*;
 import upe.process.impl.UActionMethodInvoker;
 import upe.process.impl.UMethodUProcessAction;
+import upe.process.impl.UMethodURule;
 import upe.process.impl.UProcessComponentImpl;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +56,11 @@ public class AnnotatedProcessConfigurator {
         UpeScaffolds scaffolds = findScaffolds(p);
         if( scaffolds!=null ) {
             ((UProcessComponentImpl)p).scaffold(scaffolds.value());
+        }
+        for (Method m : collecRuleMethods(p)) {
+            UpeRule ruleConfig = m.getAnnotation(UpeRule.class);
+            UMethodURule rule = new UMethodURule(p, m);
+            p.addRule(rule);
         }
     }
 
@@ -127,13 +134,20 @@ public class AnnotatedProcessConfigurator {
         return processFields;
     }
 
+    private static List<Method> collecRuleMethods(UProcessComponent p) {
+        return collectMethodsWith(p, UpeRule.class);
+    }
 
     private static List<Method> collectActionMethods(UProcessComponent p) {
+        return collectMethodsWith(p, UpeProcessAction.class);
+    }
+
+    private static List<Method> collectMethodsWith(UProcessComponent p, Class aClazz) {
         List<Method> processMethods = new ArrayList<>();
         Class<?> clazz = p.getClass();
         while (!clazz.equals(Object.class)) {
             for (Method m : clazz.getDeclaredMethods()) {
-                if (m.isAnnotationPresent(UpeProcessAction.class)) {
+                if (m.isAnnotationPresent(aClazz)) {
                     processMethods.add(m);
                 }
             }

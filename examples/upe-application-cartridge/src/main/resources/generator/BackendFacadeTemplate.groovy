@@ -33,6 +33,7 @@ import upe.annotations.UpeBackendFacade;
 
 @UpeBackendFacade("${StereotypeHelper.getStereotype(mClass, "UBackendFacade").getTaggedValue("facadeName")}")
 public interface ${mClass.getName()} {
+    String NAME="${StereotypeHelper.getStereotype(mClass, "UBackendFacade").getTaggedValue("facadeName")}";
 ${listOperations(mClass)}
 }
 """

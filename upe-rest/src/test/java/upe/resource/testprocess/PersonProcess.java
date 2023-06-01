@@ -1,24 +1,33 @@
 package upe.resource.testprocess;
 
 import upe.annotations.UpeProcess;
-import upe.process.*;
+import upe.annotations.UpeProcessAction;
+import upe.annotations.UpeProcessComponent;
+import upe.annotations.UpeProcessField;
+import upe.process.UProcessComponentList;
+import upe.process.UProcessEngine;
+import upe.process.UProcessModification;
+import upe.process.UProcessTextField;
 import upe.process.impl.AbstractUProcessImpl;
-import upe.process.impl.UProcessTextFieldImpl;
-import upe.process.validation.UProcessValidator;
+import upe.resource.testprocess.action.ActSelectedAdressOK;
 
 import java.io.Serializable;
 import java.util.Map;
 
 @UpeProcess("Person")
 public class PersonProcess extends AbstractUProcessImpl {
+    @UpeProcessField("name")
     private UProcessTextField name;
+    @UpeProcessComponent("adress")
     private AdressEditor adressEditor;
+    @UpeProcessComponent(value="addressList", listType = AdressEditor.class)
+    private UProcessComponentList<AdressEditor> adressList;
+
+    @UpeProcessAction("actSelectedAdressOK")
+    private ActSelectedAdressOK actSelectedAdressOK;
 
     public PersonProcess(UProcessEngine pe, String name) {
         super(pe, name);
-        UProcessElementFactory ef =  UProcessElementSystem.getProcessElementFactory();
-        this.name = ef.newTextField(this, "name");
-        this.adressEditor = new AdressEditor(this, "adress");
         this.addValidator(new NameValidator());
     }
 

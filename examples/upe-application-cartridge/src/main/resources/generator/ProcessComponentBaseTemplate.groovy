@@ -50,7 +50,9 @@ class UProcessComponentBaseGenerator {
 package ${mClass.getPackage().getFQName()};
 
 import upe.annotations.*;
+import upe.common.MasterProcessComponent;
 import upe.process.UProcessComponent;
+import upe.process.UProcessComponentList;
 import upe.process.impl.UProcessComponentImpl;
 import upe.process.validation.impl.MandantoryValidator;
 

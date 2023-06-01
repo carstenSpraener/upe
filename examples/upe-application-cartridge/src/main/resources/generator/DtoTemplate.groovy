@@ -161,7 +161,7 @@ def associationAccessMethods(MClass modelElement, MAssociation attr ) {
         this.${attr.name}.add(value);
     }
         
-    public void add${accessName}(${attr.type} value) {
+    public void remove${accessName}(${attr.type} value) {
         if( this.${attr.name} == null ) {
             return;
         }
@@ -188,6 +188,9 @@ def accessMethods(MClass modelElement) {
 
 return """// ${ProtectionStrategie.GENERATED_LINE}
 package ${pkgName};
+
+import java.util.List;
+import java.util.ArrayList;
 ${importList(modelElement)}
 ${elementAnnotations(modelElement)}public class ${cName}${extendsExpr(modelElement)} implements java.io.Serializable {
     private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(${cName}.class.getName());

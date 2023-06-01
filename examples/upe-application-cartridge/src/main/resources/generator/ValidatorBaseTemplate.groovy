@@ -19,6 +19,17 @@ String msgLevel = sType.getTaggedValue("msgLevel")
 String msgTxt = sType.getTaggedValue("msgText")
 
 
+def argList(MClass op) {
+    StringBuilder sb = new StringBuilder();
+    op.attributes.forEach {
+        if( sb.length() > 0 ) {
+            sb.append( ", " )
+        }
+        sb.append( "${it.type} ${it.name}")
+    }
+    return sb.toString()
+}
+
 def readValues(MClass mc) {
     StringBuilder sb = new StringBuilder();
     mc.attributes.forEach {
@@ -96,6 +107,6 @@ ${listFields(orgClass)}
         }
     }
 
-    protected abstract boolean hasError( String name, String firstName);
+    protected abstract boolean hasError(${argList(orgClass)});
 }
 """

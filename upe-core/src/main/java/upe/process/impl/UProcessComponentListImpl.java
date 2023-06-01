@@ -23,6 +23,15 @@ public class UProcessComponentListImpl<T extends UProcessComponent> extends UPro
     }
 
     @Override
+    public List<UProcessElement> getProcessElements(List<UProcessElement> resultList) {
+        for( UProcessComponent listElement : this.elementList ) {
+            resultList.add(listElement);
+            listElement.getProcessElements(resultList);
+        }
+        return resultList;
+    }
+
+    @Override
     public void add(T element) {
         elementList.add(element);
     }
@@ -39,7 +48,7 @@ public class UProcessComponentListImpl<T extends UProcessComponent> extends UPro
 
     @Override
     public int size() {
-        return 0;
+        return elementList.size();
     }
 
     public T createNewInstance() {
@@ -55,5 +64,10 @@ public class UProcessComponentListImpl<T extends UProcessComponent> extends UPro
     @Override
     public int indexOf(UProcessElement member) {
         return elementList.indexOf(member);
+    }
+
+    @Override
+    public List<T> getComponentList() {
+        return this.elementList;
     }
 }

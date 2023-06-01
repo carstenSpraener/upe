@@ -34,4 +34,31 @@ public class ProcessElementDelta {
         return this;
     }
 
+    public String getElementPath() {
+        return elementPath;
+    }
+
+    public Boolean getVisible() {
+        return isVisible;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public String getValueForFrontend() {
+        return valueForFrontend;
+    }
+
+    public List<UProcessMessage> getNewMessages() {
+        return newMessages;
+    }
+
+    public List<UProcessMessage> getRemovedMessages() {
+        return removedMessages;
+    }
+
+    public Integer getSeverity() {
+        return severity;
+    }
 }

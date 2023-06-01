@@ -10,6 +10,7 @@ import upe.process.UProcessField;
 import upe.process.messages.UProcessMessage;
 import upe.process.messages.UProcessMessageImpl;
 import upe.process.messages.UProcessMessageStorage;
+import upe.process.rules.UProcessRule;
 import upe.process.validation.UProcessValidator;
 
 import java.io.Serializable;
@@ -30,6 +31,7 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
     private TreeMap<String, UProcessElement> name2processElementMap = new TreeMap<>();
 
     private List<UProcessValidator> myValidators = new ArrayList<>();
+    private List<UProcessRule> myRules = new ArrayList<>();
 
     public UProcessComponentImpl(UProcessComponent parent, String name) {
         super(parent, name);
@@ -38,6 +40,12 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
 
     public UProcessComponentImpl(String name) {
         this(null, name);
+    }
+
+    public List<UProcessElement> getProcessElements() {
+        List<UProcessElement>result = new ArrayList<>();
+        getProcessElements(result);
+        return result;
     }
 
     public List<UProcessElement> getProcessElements(List<UProcessElement> resultList) {
@@ -76,6 +84,11 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
         } else {
             return readChildByName(name);
         }
+    }
+
+    @Override
+    public <C extends UProcessElement> C getProcessElement(String name, Class<C> clazz) {
+        return (C) getProcessElement(name);
     }
 
     private String compressPath(String aPath) {
@@ -390,6 +403,22 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
                 pc.doValidation();
             }
         }
+    }
+
+    @Override
+    public void addRule(UProcessRule rule) {
+        this.myRules.add(rule);
+    }
+
+    @Override
+    public List<UProcessRule> getRulesRecursive(List<UProcessRule> collectorList) {
+        collectorList.addAll(this.myRules);
+        for( UProcessElement pe : name2processElementMap.values() ) {
+            if( pe instanceof UProcessComponent upc ) {
+                upc.getRulesRecursive(collectorList);
+            }
+        }
+        return collectorList;
     }
 
     public void setFieldValue(String path, String valueFromFrontend) {

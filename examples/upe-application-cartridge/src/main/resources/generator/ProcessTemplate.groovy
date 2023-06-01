@@ -24,10 +24,11 @@ import java.util.Map;
 
 @UpeProcess("${JavaHelper.firstToLowerCase(mClass.getName())}")
 public class ${mClass.getName()} extends ${mClass.getName()}Base {
-
-     public ${mClass.getName()}(UProcessEngine pe, String name) {
-        super(pe, name);
-     }
+    public static final String NAME = "${JavaHelper.firstToLowerCase(mClass.getName())}";
+ 
+    public ${mClass.getName()}(UProcessEngine pe, String name) {
+       super(pe, name);
+    }
      
     @Override
     public void initialize(Map<String, Serializable> args) {

@@ -19,43 +19,52 @@ public class ProcessElementState {
         this.enabled = pField.isEnabled();
         this.valueForFrontend = pField.getValueForFrontend();
         this.newMessages = new ArrayList<>();
-        for( UProcessMessage msg : pField.getMessages() ) {
+        for (UProcessMessage msg : pField.getMessages()) {
             this.newMessages.add(msg);
         }
     }
 
+    private ProcessElementState(String fieldPath) {
+        this.fieldPath = fieldPath;
+        this.newMessages = new ArrayList<>();
+    }
+
+    public static ProcessElementState fromNewField(String elementPath) {
+        return new ProcessElementState(elementPath);
+    }
+
     public ProcessElementDelta getDelta(UProcessField pField) {
-        if( !pField.getElementPath().equals(this.fieldPath) ) {
-            throw new IllegalArgumentException("Recorded field "+this.fieldPath+" and compared field "+pField.getElementPath()+" do not match");
+        if (!pField.getElementPath().equals(this.fieldPath)) {
+            throw new IllegalArgumentException("Recorded field " + this.fieldPath + " and compared field " + pField.getElementPath() + " do not match");
         }
         ProcessElementDelta delta = new ProcessElementDelta();
-        if(pField.isEnabled()!=this.enabled ) {
+        if (this.enabled == null || pField.isEnabled() != this.enabled) {
             delta.enabled = pField.isEnabled();
         }
-        if( pField.isVisible()!= visible ) {
+        if (this.visible == null || pField.isVisible() != visible) {
             delta.isVisible = pField.isVisible();
         }
-        if( hasValueChanged(pField.getValueForFrontend(),this.valueForFrontend) ) {
+        if (hasValueChanged(pField.getValueForFrontend(), this.valueForFrontend)) {
             delta.valueForFrontend = pField.getValueForFrontend();
         }
-        for( UProcessMessage msg : pField.getMessages() ) {
-            if( !this.newMessages.contains(msg) ) {
+        for (UProcessMessage msg : pField.getMessages()) {
+            if (!this.newMessages.contains(msg)) {
                 delta.newMessages.add(msg);
             }
         }
-        for( UProcessMessage msg : this.newMessages ) {
-            if( !pField.getMessages().contains(msg) ) {
+        for (UProcessMessage msg : this.newMessages) {
+            if (!pField.getMessages().contains(msg)) {
                 delta.removedMessages.add(msg);
             }
         }
         int severity = 0;
-        for( var msg : pField.getMessages() ) {
-            if( msg.getMessageLevel() > severity ) {
+        for (var msg : pField.getMessages()) {
+            if (msg.getMessageLevel() > severity) {
                 severity = msg.getMessageLevel();
             }
         }
         delta.severity = severity;
-        if( delta.hasDelta() ) {
+        if (delta.hasDelta()) {
             delta.elementPath = pField.getElementPath();
             return delta;
         } else {
@@ -64,13 +73,13 @@ public class ProcessElementState {
     }
 
     private boolean hasValueChanged(String actualValue, String oldValue) {
-        if( actualValue==null && oldValue != null) {
+        if (actualValue == null && oldValue != null) {
             return true;
         }
-        if( actualValue!=null && oldValue==null) {
+        if (actualValue != null && oldValue == null) {
             return true;
         }
-        if( actualValue==null && oldValue==null ) {
+        if (actualValue == null && oldValue == null) {
             return false;
         }
         return !actualValue.equals(oldValue);

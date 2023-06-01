@@ -1,13 +1,7 @@
 package upe.process.testapp;
 
-import upe.annotations.UpeProcess;
-import upe.annotations.UpeProcessAction;
-import upe.annotations.UpeProcessComponent;
-import upe.annotations.UpeProcessField;
-import upe.process.UProcessAction;
-import upe.process.UProcessComponentList;
-import upe.process.UProcessEngine;
-import upe.process.UProcessTextField;
+import upe.annotations.*;
+import upe.process.*;
 
 import java.io.Serializable;
 import java.util.List;
@@ -17,6 +11,9 @@ import java.util.Map;
 public class DerivedUProcess extends BaseUProcess {
     @UpeProcessField("name")
     private UProcessTextField myName;
+
+    @UpeProcessField()
+    private UProcessTextField myNameLC;
 
     @UpeProcessField("result")
     private UProcessTextField resultFromSubProcess;
@@ -45,5 +42,15 @@ public class DerivedUProcess extends BaseUProcess {
     public Serializable returnFromSubProcess(Map<String, Serializable> args) {
         this.resultFromSubProcess.setValue(args.get("result"));
         return null;
+    }
+
+    @UpeRule
+    public void rulNameChanged(@UProcessValue("/name")String name) {
+        UProcessTextField mameLC = getProcessElement("myNameLC", UProcessTextField.class);
+        if( name==null ) {
+            mameLC.setStringValue("null");
+        } else {
+            mameLC.setStringValue(name.toLowerCase());
+        }
     }
 }
