@@ -3,6 +3,7 @@ package upe.resource.model;
 import upe.process.UProcess;
 import upe.process.UProcessElement;
 import upe.process.UProcessField;
+import upe.process.messages.UProcessMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ public class ProcessDelta {
     private List<ProcessElementState> elementStateList = new ArrayList<>();
     private List<ProcessElementDelta> elementDeltaList = new ArrayList<>();
     private String processName;
+    private List<UProcessMessage> queuedMessages;
 
     public ProcessDelta(UpeDialogState state) {
         this.state = state;
@@ -95,5 +97,13 @@ public class ProcessDelta {
 
     public UpeDialogState getState() {
         return state;
+    }
+
+    public void setGlobalMessages(List<UProcessMessage> queuedMessages) {
+        this.queuedMessages = queuedMessages;
+    }
+
+    public List<UProcessMessage> getQueuedMessages() {
+        return queuedMessages;
     }
 }

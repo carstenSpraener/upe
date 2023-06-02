@@ -16,7 +16,7 @@ public class AbstractUProcessElementImpl implements UProcessElement {
 	private String name = null;
 	private boolean visible = true;
 	private boolean enabled = true;
-	protected long lastModified = Long.MAX_VALUE;
+	protected long lastModified = Long.MIN_VALUE;
 
 	public UProcess getProcess() {
 		return parent.getProcess();
@@ -148,12 +148,12 @@ public class AbstractUProcessElementImpl implements UProcessElement {
 
 	@Override
 	public boolean modifiedSince(long timeStamp) {
-		return this.lastModified-100 > timeStamp;
+		return this.lastModified > timeStamp;
 	}
 
 	@Override
 	public void resetModificationTracking() {
-		this.lastModified = System.currentTimeMillis();
+		this.lastModified = Long.MIN_VALUE;
 	}
 
 	protected void setLastModified(long lmTS) {

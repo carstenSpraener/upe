@@ -48,4 +48,13 @@ public interface UProcessEngine extends Serializable {
 	 */
 	public void setLocale( Locale l );
 
+	/**
+	 * Returns the currently running process. That can differ to the process a
+	 * ProcessElement belongs to. So it is important in an (Return)-Action
+	 * to request the actvice process and not to use this.getParent() or a cached
+	 * reference to some process when the currently runing process is needed.
+	 *
+	 * @return the currently running process instance.
+	 */
+	public UProcess getActiveProcess();
 }

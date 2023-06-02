@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Stack;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 @SuppressWarnings("java:S1149")
@@ -24,15 +25,24 @@ public class BaseUProcessEngine implements UProcessEngine, Serializable {
 	private final UProcessCmdQueue cmdQueue     = new UProcessCmdQueue();
 	private UProcessSession session      = new UProcessSession();
 	private Locale             processLocale = Locale.getDefault();
-	
+	private Consumer<UProcessMessage> queuedMessageConsumer = null;
+
 	protected AbstractUUProcessCmd getCallProcessCmd() {
 		return new CallUProcessCmd();
 	}
 
 	public void queueProcessMessage( UProcessMessage msg ) {
+		if( this.queuedMessageConsumer != null ) {
+			this.queuedMessageConsumer.accept(msg);
+		}
 		LOGGER.info( msg.getMessageText() );
 	}
-	
+
+	public BaseUProcessEngine withQueuedMessageConsumer(Consumer<UProcessMessage> queuedMessageConsumer) {
+		this.queuedMessageConsumer = queuedMessageConsumer;
+		return this;
+	}
+
 	protected AbstractUUProcessCmd getJump2ProcessCmd() {
 		return new Jump2UProcessCmd();
 	}
@@ -135,5 +145,10 @@ public class BaseUProcessEngine implements UProcessEngine, Serializable {
 	@Override
 	public void setLocale(Locale l) {
 		processLocale = l;
+	}
+
+	@Override
+	public UProcess getActiveProcess() {
+		return this.getActiveProcessInfo().getProcess();
 	}
 }

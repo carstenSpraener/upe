@@ -10,25 +10,43 @@ import upe.process.UProcessAction;
 import upe.process.UProcessEngine;
 import upe.process.UProcessField;
 import upe.process.engine.BaseUProcessEngine;
+import upe.process.messages.UProcessMessage;
 import upe.resource.model.ProcessDelta;
 import upe.resource.model.UpeDialogState;
 import upe.resource.model.UpeStep;
 import upe.resource.persistorimpl.UpeDialogPersistorJdbcImpl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class UpeDialog {
-    private BaseUProcessEngine engine = new BaseUProcessEngine();
+    private UProcessEngine engine;
+    private List<UProcessMessage> queuedMessages = new ArrayList<>();
+
+    public UpeDialog() {
+        engine = new BaseUProcessEngine()
+                .withQueuedMessageConsumer(this::recordMessage);
+    }
+
+    private void recordMessage(UProcessMessage uProcessMessage) {
+        this.queuedMessages.add(uProcessMessage);
+    }
+
+    public UpeDialog(UProcessEngine engine) {
+        this.engine = engine;
+    }
 
     private class ModificationResult {
         UpeDialogState state;
         ProcessDelta delta;
         String oldValue;
 
-        public ModificationResult(UpeDialogState state, ProcessDelta delta, String oldValue) {
+        public ModificationResult(UpeDialogState state, ProcessDelta delta, String oldValue, List<UProcessMessage> queuedMessages) {
             this.state = state;
             this.delta = delta;
             this.oldValue = oldValue;
@@ -58,12 +76,22 @@ public class UpeDialog {
         UpeDialogState state = UpeDialogPersistorJdbcImpl.intance().restore(dialogID);
         UpeStep initialStep = state.getSteps().get(0);
         UProcess p = buildFromInitialStep(engine, initialStep);
-        state.getSteps().stream()
+        List<UpeStep> stepList = state.getSteps().stream()
                 .skip(1)
                 .filter(step -> step.getStepNr() <= stepNr)
-                .forEach(step -> {
-                    handleStep(engine, step);
-                });
+                .collect(Collectors.toList());
+        if( !stepList.isEmpty() ) {
+            for (int i = 0; i < stepList.size() - 1; i++) {
+                UpeStep step = stepList.get(i);
+                handleStep(engine, step);
+                engine.getActiveProcess().resetModificationTracking();
+            }
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException xc) {
+            }
+            handleStep(engine, stepList.get(stepList.size() - 1));
+        }
         if( stepNr <= state.getStepCount() ) {
             state.setStepCount(stepNr);
         }
@@ -106,8 +134,9 @@ public class UpeDialog {
         procConsumer.accept(p);
         p.inputStops();
         delta.stopRecording(p);
+        delta.setGlobalMessages(this.queuedMessages);
         state.setStepCount(state.getStepCount()+1);
-        return new ModificationResult(state, delta, oldValue);
+        return new ModificationResult(state, delta, oldValue, this.queuedMessages);
     }
 
     public ProcessDelta triggerAction(String dialogID, int stepCount, String actionPath) {
@@ -142,6 +171,7 @@ public class UpeDialog {
                 break;
         }
         p.inputStops();
+        this.queuedMessages.clear();
     }
 
     private UProcess buildFromInitialStep(UProcessEngine pe, UpeStep initialStep) {
@@ -162,6 +192,6 @@ public class UpeDialog {
     }
 
     public UProcess getActiveProcess() {
-        return this.engine.getActiveProcessInfo().getProcess();
+        return this.engine.getActiveProcess();
     }
 }
