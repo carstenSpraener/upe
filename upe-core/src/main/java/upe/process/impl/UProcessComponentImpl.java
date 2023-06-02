@@ -28,6 +28,8 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
      */
     private static final long serialVersionUID = 1L;
 
+    private long lastLoadTS = Long.MAX_VALUE;
+
     private TreeMap<String, UProcessElement> name2processElementMap = new TreeMap<>();
 
     private List<UProcessValidator> myValidators = new ArrayList<>();
@@ -365,6 +367,47 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
         return pm;
     }
 
+    /**
+     * Takes the data from the other component but checks before if the data inside
+     * this component may be changed since last load.
+     *
+     * The data is copied by the names from this component. The other component needs to have
+     * at least the same child names and each child has to be compatible in that way that a
+     *
+     * @code {
+     * myChild.setValue(otherChild.getVaue())
+     * }
+     *
+     * can succeed.
+     *
+     * @param otherComponent The component with data to take over
+     * @throws UProcessComponentOverwriteException the component contains modified data.
+     */
+    public void copyFrom(UProcessComponent otherComponent) throws UProcessComponentOverwriteException {
+        if (modifiedSinceLastDataLoad()) {
+            throw new UProcessComponentOverwriteException();
+        }
+        overwriteFrom(otherComponent);
+    }
+
+    /**
+     * The same as copyFrom but without checking for modifications.
+     * @see copyFrom
+     * @param otherComponent The component with data to take over
+     */
+    public void overwriteFrom(UProcessComponent otherComponent) {
+        for( String childPath : name2processElementMap.keySet() ) {
+            UProcessElement myChild = name2processElementMap.get(childPath);
+            if( myChild instanceof UProcessField myField ) {
+                UProcessElement otherChild = otherComponent.getProcessElement(childPath);
+                if( otherChild != null && otherChild instanceof UProcessField otherField) {
+                    myField.setValue(otherField.getValue());
+                }
+            }
+        }
+        this.lastLoadTS = System.currentTimeMillis();
+    }
+
     public void mapFromScaffolded(Class<?> scaffoldedInterface, Object obj) {
         try {
             Method[] methods = scaffoldedInterface.getDeclaredMethods();
@@ -379,6 +422,7 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
 					setProcessValue(obj, m, e);
                 }
             }
+            this.lastLoadTS = System.currentTimeMillis();
         } catch (Exception e) {
             throw new UProcessMappingException(e.getMessage(), e);
         }
@@ -425,8 +469,28 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
         ((UProcessField) getProcessElement(path)).setValueFromFrontend(valueFromFrontend);
     }
 
-
     public String getFieldValue(String path) {
         return ((UProcessField) getProcessElement(path)).getValueForFrontend();
+    }
+
+    @Override
+    public boolean modifiedSince(long timeStamp) {
+        if( super.modifiedSince(timeStamp) ) {
+            return true;
+        }
+        for( UProcessElement child : this.name2processElementMap.values() ) {
+            if( child.modifiedSince(timeStamp) ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public long getLastLoadTS() {
+        return lastLoadTS;
+    }
+
+    public boolean modifiedSinceLastDataLoad() {
+        return modifiedSince(getLastLoadTS());
     }
 }

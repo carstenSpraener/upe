@@ -89,4 +89,12 @@ public interface UProcessElement extends java.io.Serializable {
 	 * @param pel an instance of UProcessElementListener
 	 */
 	void removeProcessElementListener( UProcessElementListener pel );
+
+	/**
+	 * Returns if the process element wos changed since the given timestamp.
+	 *
+	 * @param timeStamp
+	 * @return
+	 */
+	public boolean modifiedSince(long timeStamp);
 }

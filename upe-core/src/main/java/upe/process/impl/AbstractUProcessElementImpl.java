@@ -16,7 +16,8 @@ public class AbstractUProcessElementImpl implements UProcessElement {
 	private String name = null;
 	private boolean visible = true;
 	private boolean enabled = true;
-	
+	protected long lastModified = Long.MAX_VALUE;
+
 	public UProcess getProcess() {
 		return parent.getProcess();
 	}
@@ -72,6 +73,9 @@ public class AbstractUProcessElementImpl implements UProcessElement {
 	}
 
 	public void setVisible(boolean value) {
+		if( this.visible != value ) {
+			this.lastModified = System.currentTimeMillis();
+		}
 		this.visible = value;
 	}
 
@@ -122,6 +126,9 @@ public class AbstractUProcessElementImpl implements UProcessElement {
 	}
 
 	public void setEnabled(boolean enabled) {
+		if( this.enabled != enabled ) {
+			this.lastModified = System.currentTimeMillis();
+		}
 		this.enabled = enabled;
 	}
 	
@@ -137,5 +144,9 @@ public class AbstractUProcessElementImpl implements UProcessElement {
 		for( UProcessElementListener pel : listenerList ) {
 			pel.elementChanged(this);
 		}
+	}
+
+	public boolean modifiedSince(long timeStamp) {
+		return this.lastModified > timeStamp;
 	}
 }

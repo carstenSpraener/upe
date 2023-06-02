@@ -42,10 +42,14 @@ public class AbstractUProcessFieldImpl extends AbstractUProcessElementImpl
 		}
 		if(value == null) {
 			value = newValue;
+			this.lastModified = System.currentTimeMillis();
 			setNeedsRendering( true );
 			return;
 		}
-		setNeedsRendering(!value.equals(newValue));
+		if(!value.equals(newValue) ){
+			setNeedsRendering(true);
+			this.lastModified = System.currentTimeMillis();
+		}
 		value = newValue;
 	}
 
