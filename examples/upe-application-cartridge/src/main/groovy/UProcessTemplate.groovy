@@ -22,6 +22,32 @@ class UProcessBaseTemplate {
         this.model = orgClass.getModel()
     }
 
+    String getScaffoldsTarget() {
+        String target = null;
+        orgClass.dependencies.forEach {
+            if (StereotypeHelper.hasStereotye(it, "Scaffolds")) {
+                target = it.target;
+            }
+        }
+        return target;
+    }
+
+    String scaffoldsDefinition() {
+        StringBuilder sb = new StringBuilder();
+        orgClass.dependencies.forEach {
+            if( StereotypeHelper.hasStereotye(it, "Scaffolds") ) {
+                String target = it.getTarget();
+                sb.append(
+                        """
+@UpeScaffolds(${target}.class)
+"""
+                )
+            }
+        }
+        return sb.toString();
+    }
+
+
     String masterDetailImports() {
         if( MyModelHelper.MDHelper.hasMasterDetailReference(orgClass)) {
             return """import upe.common.MasterDetailConfiguration;
@@ -47,6 +73,80 @@ import upe.common.MasterProcessComponent;
     private ${target.getFQName()} ${assoc.getName()};
 """
         }
+    }
+
+    String generateFieldMethods(String fieldName, String fieldType) {
+        String accessName = MyModelHelper.toJavaAccessorName(fieldName);
+        String upeType = MyModelHelper.upeTypeFor(fieldType);
+        String upeFieldType = MyModelHelper.upeFieldTypeFor(fieldType);
+        String upeJavaType = MyModelHelper.upeJavaTypeFor(fieldType);
+        return """
+    public ${upeJavaType} get${accessName}Value() {
+        return get${accessName}Field().get${upeFieldType}Value();
+    }
+
+    public void set${accessName}Value(${upeJavaType} value) {
+        get${accessName}Field().set${upeFieldType}Value(value);
+    }
+
+    public ${upeType} get${accessName}Field() {
+        return getProcessElement("${fieldName}", ${upeType}.class);
+    }
+"""
+    }
+
+    String generateFieldAccessMethods() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("    // Access-Methods for fields and their values")
+        for( MAttribute attr : orgClass.attributes ) {
+            String fieldName = attr.getName();
+            String javaType = attr.getType();
+            sb.append(generateFieldMethods(fieldName, javaType));
+        }
+        String scaffolded = getScaffoldsTarget();
+        if( scaffolded != null ) {
+            MClass scaffClass = this.model.findClassByName(scaffolded);
+            scaffClass.attributes.forEach {
+                String fieldName = it.getName();
+                String javaType = it.getType();
+                sb.append(generateFieldMethods(fieldName, javaType));
+            }
+        } else {
+            sb.append( "    // No scaffold defined." );
+        }
+        return sb.toString();
+    }
+
+    String generateSubComponentsGetter() {
+        StringBuilder sb = new StringBuilder();
+        orgClass.associations.forEach {
+            String accessor = MyModelHelper.toJavaAccessorName(it.getName());
+            if( MyModelHelper.MDHelper.isMasterDetailAssociation(it) ) {
+                sb.append("""
+    public MasterProcessComponent get${accessor}Master() {
+        return  getProcessElement("${it.getName()}Master", MasterProcessComponent.class);
+    }
+""")
+            }
+            sb.append("    // Association to "+it.type+"\n");
+            MClass target = MyModelHelper.Assoc.getTargetClass(it);
+            if( StereotypeHelper.hasStereotye(target, UPEStereotypes.UPROCESSCOMPONENT.name)) {
+                if( MyModelHelper.Assoc.isToN(it) ) {
+                    sb.append("""
+    public UProcessComponentList<${it.type}> get${accessor}() {
+        return getProcessElement("${it.name}", UProcessComponentList.class);
+    }
+""")
+                } else {
+                    sb.append("""
+    public ${target.getFQName()} get${accessor}() {
+        return getProcessElement("${it.name}",${target.getFQName()}.class);
+    }
+""")
+                }
+            }
+        }
+        return sb.toString();
     }
 
     String peReferences() {

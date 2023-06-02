@@ -141,7 +141,6 @@ def isToN(MAssociation assoc) {
 }
 
 def associationAccessMethods(MClass modelElement, MAssociation attr ) {
-    System.out.println("Generating access for attribute "+attr.name+" and Type "+attr.type)
     String accessName = JavaHelper.firstToUpperCase(attr.name);
     String result;
     if( isToN(attr) ) {

@@ -22,6 +22,66 @@ public class MyModelHelper {
         return aName.substring(0, 1).toUpperCase() + aName.substring(1);
     }
 
+    public static String upeTypeFor(String javaType) {
+        switch( javaType.toLowerCase() ) {
+            case "string":
+                return "UProcessTextField";
+            case "int":
+            case "integer":
+            case "long":
+            case "double":
+            case "float":
+            case "bigdecimal":
+                return "UProcessDecimalField";
+            case "boolean":
+                return "UProcessBooleanField";
+            case "date":
+                return "UProcessDateField";
+            default:
+                return "UProcessField";
+        }
+    }
+
+    public static String upeFieldTypeFor(String type) {
+        switch(type.toLowerCase()) {
+            case "string":
+                return "String";
+            case "int":
+            case "integer":
+            case "long":
+            case "double":
+            case "float":
+            case "bigdecimal":
+                return "Decimal";
+            case "boolean":
+                return "Boolean";
+            case "date":
+                return "Date";
+            default:
+                return type;
+        }
+    }
+
+    public static String upeJavaTypeFor(String type) {
+        switch(type.toLowerCase()) {
+            case "string":
+                return "String";
+            case "int":
+            case "integer":
+            case "long":
+            case "double":
+            case "float":
+            case "bigdecimal":
+                return "java.math.BigDecimal";
+            case "boolean":
+                return "Boolean";
+            case "date":
+                return "java.util.Date";
+            default:
+                return type;
+        }
+    }
+
     public static class Assoc {
         public static boolean isToN(MAssociation association) {
             if (association == null || association.getMultiplicity() == null) {
@@ -49,10 +109,8 @@ public class MyModelHelper {
         public static List<MAssociation> getMasterDetailReferences(de.spraener.nxtgen.oom.model.MClass mClass) {
             List<MAssociation> resultLiIst = new ArrayList<>();
             for (MAssociation assoc : mClass.getAssociations()) {
-                System.out.println("Checking for MD-Assoc "+assoc.getName()+" in class "+mClass.getFQName());
                 if (StereotypeHelper.hasStereotye(assoc, UPEStereotypes.MASTERLIST.getName())) {
                     resultLiIst.add(assoc);
-                    System.out.println("added MD-Assoc in class "+mClass.getFQName()+" to found. Size: "+resultLiIst.size()+" elements.");
                 }
             }
             return resultLiIst;

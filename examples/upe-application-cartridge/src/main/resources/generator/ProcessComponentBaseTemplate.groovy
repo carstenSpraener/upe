@@ -30,38 +30,24 @@ class UProcessComponentBaseGenerator {
 """
     }
 
-    protected String scaffoldsDefinition() {
-        StringBuilder sb = new StringBuilder();
-        orgClass.dependencies.forEach {
-            if( StereotypeHelper.hasStereotye(it, "Scaffolds") ) {
-                String target = it.getTarget();
-                sb.append(
-"""
-@UpeScaffolds(${target}.class)
-"""
-                )
-            }
-        }
-        return sb.toString();
-    }
-
     String generate() {
         """//${ProtectionStrategieDefaultImpl.GENERATED_LINE}
 package ${mClass.getPackage().getFQName()};
 
 import upe.annotations.*;
 import upe.common.MasterProcessComponent;
-import upe.process.UProcessComponent;
-import upe.process.UProcessComponentList;
+import upe.process.*;
 import upe.process.impl.UProcessComponentImpl;
 import upe.process.validation.impl.MandantoryValidator;
 
-${scaffoldsDefinition()}public class ${mClass.getName()} extends UProcessComponentImpl {
+${this.pbTemplate.scaffoldsDefinition()}public class ${mClass.getName()} extends UProcessComponentImpl {
 ${this.pbTemplate.peFields()}${this.pbTemplate.peReferences()}
     public ${mClass.getName()}(UProcessComponent parent, String name) {
         super(parent, name);
 ${this.pbTemplate.validations()}
     }
+${this.pbTemplate.generateFieldAccessMethods()}
+${this.pbTemplate.generateSubComponentsGetter()}
 ${this.pbTemplate.generateActionGetters()}
 }
 """
