@@ -97,4 +97,9 @@ public interface UProcessElement extends java.io.Serializable {
 	 * @return
 	 */
 	public boolean modifiedSince(long timeStamp);
+
+	/**
+	 * Resets the last modification time stamp so the element looks untouched.
+	 */
+	public void resetModificationTracking();
 }

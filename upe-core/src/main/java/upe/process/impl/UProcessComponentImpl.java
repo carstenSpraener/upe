@@ -45,7 +45,7 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
     }
 
     public List<UProcessElement> getProcessElements() {
-        List<UProcessElement>result = new ArrayList<>();
+        List<UProcessElement> result = new ArrayList<>();
         getProcessElements(result);
         return result;
     }
@@ -81,7 +81,7 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
             if ("..".equals(roleName)) {
                 return parent.getProcessElement(name.substring(idx + 1));
             }
-            UProcessComponent subPC = (UProcessComponent)readChildByName(roleName);
+            UProcessComponent subPC = (UProcessComponent) readChildByName(roleName);
             return subPC.getProcessElement(name.substring(idx + 1));
         } else {
             return readChildByName(name);
@@ -94,11 +94,11 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
     }
 
     private String compressPath(String aPath) {
-        int idx=0;
-        while( (idx = aPath.indexOf("/..")) != -1 ) {
+        int idx = 0;
+        while ((idx = aPath.indexOf("/..")) != -1) {
             String prefix = aPath.substring(0, idx);
-            String posfix = aPath.substring(idx+3);
-            if( prefix.indexOf("/") == -1 ) {
+            String posfix = aPath.substring(idx + 3);
+            if (prefix.indexOf("/") == -1) {
                 aPath = posfix;
             } else {
                 aPath = prefix.substring(0, prefix.lastIndexOf('/')) + posfix;
@@ -109,7 +109,7 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
 
     private UProcessElement readChildByName(final String name) {
         UProcessElement child = null;
-        if( isIndexedName(name) ){
+        if (isIndexedName(name)) {
             String mapName = removeIndex(name);
             int index = getIndexFromName(name);
             UProcessComponentList<? extends UProcessComponent> list = (UProcessComponentList) name2processElementMap.get(mapName);
@@ -124,7 +124,7 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
     }
 
     private int getIndexFromName(String name) {
-        String number = name.substring(name.indexOf('[')+1, name.length()-1);
+        String number = name.substring(name.indexOf('[') + 1, name.length() - 1);
         return Integer.valueOf(number);
     }
 
@@ -132,8 +132,8 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
         return name.endsWith("]") && name.contains("[");
     }
 
-    private String removeIndex( String name ) {
-        if( name.indexOf('[') == -1 ) {
+    private String removeIndex(String name) {
+        if (name.indexOf('[') == -1) {
             return name;
         }
         return name.substring(0, name.indexOf('['));
@@ -258,8 +258,8 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
             Method[] methods = scaffoldedInterface.getDeclaredMethods();
             for (int i = 0; i < methods.length; i++) {
                 Method m = methods[i];
-				hasErrors |= mapToScaffolded(obj, m);
-			}
+                hasErrors |= mapToScaffolded(obj, m);
+            }
             if (hasErrors) {
                 throw new UProcessMappingException("error while mapping from process to scaffolded class", null);
             }
@@ -268,39 +268,39 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
         }
     }
 
-	private boolean mapToScaffolded(Object obj, Method m) throws IllegalAccessException, InvocationTargetException {
-		if (isPropertySetMehtod(m)) {
-			try {
-				return exportProcessValue(obj, m);
-			} catch (IllegalArgumentException iaExc) {
-				throw new UPERuntimeException(iaExc);
-			}
-		}
+    private boolean mapToScaffolded(Object obj, Method m) throws IllegalAccessException, InvocationTargetException {
+        if (isPropertySetMehtod(m)) {
+            try {
+                return exportProcessValue(obj, m);
+            } catch (IllegalArgumentException iaExc) {
+                throw new UPERuntimeException(iaExc);
+            }
+        }
         return false;
-	}
+    }
 
-	private boolean exportProcessValue(Object obj, Method m) throws IllegalAccessException, InvocationTargetException {
-		String fieldName = toFieldName(m);
-		UProcessElement pe = getProcessElement(fieldName);
-		if (pe != null) {
-			if (pe instanceof UProcessField field) {
-				Object value = field.getValue();
-				Serializable serValue = convertToScaffoldedValue((Serializable) value, m.getParameterTypes()[0]);
-				try {
-					m.invoke(obj, serValue);
-				} catch (IllegalArgumentException iaExc) {
-					field.addProcessMessage(getIllegalValueMessage(value.toString()));
-					return true;
-				}
-			} else if (pe instanceof UProcessComponentImpl component) {
-				Object childObj = readChildObject(fieldName, obj);
-				component.mapToScaffolded(childObj.getClass(), childObj);
-			}
-		}
-		return false;
-	}
+    private boolean exportProcessValue(Object obj, Method m) throws IllegalAccessException, InvocationTargetException {
+        String fieldName = toFieldName(m);
+        UProcessElement pe = getProcessElement(fieldName);
+        if (pe != null) {
+            if (pe instanceof UProcessField field) {
+                Object value = field.getValue();
+                Serializable serValue = convertToScaffoldedValue((Serializable) value, m.getParameterTypes()[0]);
+                try {
+                    m.invoke(obj, serValue);
+                } catch (IllegalArgumentException iaExc) {
+                    field.addProcessMessage(getIllegalValueMessage(value.toString()));
+                    return true;
+                }
+            } else if (pe instanceof UProcessComponentImpl component) {
+                Object childObj = readChildObject(fieldName, obj);
+                component.mapToScaffolded(childObj.getClass(), childObj);
+            }
+        }
+        return false;
+    }
 
-	private Object readChildObject(String fieldName, Object obj) {
+    private Object readChildObject(String fieldName, Object obj) {
         try {
             String getterName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
             Method mGetter = obj.getClass().getMethod(getterName);
@@ -344,11 +344,11 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
                 && valueClass.equals(BigDecimal.class)) {
             return Integer.valueOf(((BigDecimal) value).intValue());
         }
-        if( Long.class.equals(paramClass) || long.class.equals(paramClass)) {
+        if (Long.class.equals(paramClass) || long.class.equals(paramClass)) {
             return Long.valueOf(value.toString());
         }
         if (BigDecimal.class.equals(paramClass) && valueClass.equals(String.class)) {
-			return new BigDecimal((String) value);
+            return new BigDecimal((String) value);
         }
         if (Double.class.equals(paramClass)) {
             return Double.valueOf(value.toString());
@@ -361,8 +361,8 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
         UProcessMessage pm = UProcessMessageStorage.getInstance().getMessage("ILLEGAL_VALUE_MESSAGE");
         if (pm == null) {
             UProcessMessageStorage.getInstance().storeMessage(
-					new UProcessMessageImpl("ILLEGAL_VALUE_MESSAGE",
-					"Value '"+valueAsString+"' could not  be converted.", UProcessMessage.MESSAGE_LEVEL_ERROR));
+                    new UProcessMessageImpl("ILLEGAL_VALUE_MESSAGE",
+                            "Value '" + valueAsString + "' could not  be converted.", UProcessMessage.MESSAGE_LEVEL_ERROR));
         }
         return pm;
     }
@@ -370,14 +370,15 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
     /**
      * Takes the data from the other component but checks before if the data inside
      * this component may be changed since last load.
-     *
+     * <p>
      * The data is copied by the names from this component. The other component needs to have
      * at least the same child names and each child has to be compatible in that way that a
-     *
-     * @code {
+     * <p>
+     * {@code
      * myChild.setValue(otherChild.getVaue())
      * }
-     *
+     * <p>
+     * <p>
      * can succeed.
      *
      * @param otherComponent The component with data to take over
@@ -392,20 +393,25 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
 
     /**
      * The same as copyFrom but without checking for modifications.
-     * @see copyFrom
+     *
      * @param otherComponent The component with data to take over
+     * @see copyFrom
      */
     public void overwriteFrom(UProcessComponent otherComponent) {
-        for( String childPath : name2processElementMap.keySet() ) {
+        for (String childPath : name2processElementMap.keySet()) {
             UProcessElement myChild = name2processElementMap.get(childPath);
-            if( myChild instanceof UProcessField myField ) {
+            if (myChild instanceof UProcessField myField) {
                 UProcessElement otherChild = otherComponent.getProcessElement(childPath);
-                if( otherChild != null && otherChild instanceof UProcessField otherField) {
+                if (otherChild != null && otherChild instanceof UProcessField otherField) {
                     myField.setValue(otherField.getValue());
                 }
             }
         }
         this.lastLoadTS = System.currentTimeMillis();
+        for (UProcessElement child : name2processElementMap.values()) {
+            ((AbstractUProcessElementImpl) child).setLastModified(this.lastLoadTS);
+        }
+        this.setLastModified(this.lastLoadTS);
     }
 
     public void mapFromScaffolded(Class<?> scaffoldedInterface, Object obj) {
@@ -419,7 +425,7 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
                     if (e == null) {
                         continue;
                     }
-					setProcessValue(obj, m, e);
+                    setProcessValue(obj, m, e);
                 }
             }
             this.lastLoadTS = System.currentTimeMillis();
@@ -428,16 +434,16 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
         }
     }
 
-	private void setProcessValue(Object obj, Method m, UProcessElement e) throws IllegalAccessException, InvocationTargetException {
-		Object value = m.invoke(obj);
-		if (e instanceof UProcessField field) {
-			field.setValue((Serializable) value);
-		} else if (e instanceof UProcessComponentImpl pc) {
-			pc.mapFromScaffolded(value.getClass(), value);
-		}
-	}
+    private void setProcessValue(Object obj, Method m, UProcessElement e) throws IllegalAccessException, InvocationTargetException {
+        Object value = m.invoke(obj);
+        if (e instanceof UProcessField field) {
+            field.setValue((Serializable) value);
+        } else if (e instanceof UProcessComponentImpl pc) {
+            pc.mapFromScaffolded(value.getClass(), value);
+        }
+    }
 
-	@Override
+    @Override
     public void doValidation() {
         for (UProcessValidator pv : getValidators()) {
             pv.validate(this);
@@ -457,8 +463,8 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
     @Override
     public List<UProcessRule> getRulesRecursive(List<UProcessRule> collectorList) {
         collectorList.addAll(this.myRules);
-        for( UProcessElement pe : name2processElementMap.values() ) {
-            if( pe instanceof UProcessComponent upc ) {
+        for (UProcessElement pe : name2processElementMap.values()) {
+            if (pe instanceof UProcessComponent upc) {
                 upc.getRulesRecursive(collectorList);
             }
         }
@@ -475,11 +481,11 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
 
     @Override
     public boolean modifiedSince(long timeStamp) {
-        if( super.modifiedSince(timeStamp) ) {
+        if (super.modifiedSince(timeStamp)) {
             return true;
         }
-        for( UProcessElement child : this.name2processElementMap.values() ) {
-            if( child.modifiedSince(timeStamp) ) {
+        for (UProcessElement child : this.name2processElementMap.values()) {
+            if (child.modifiedSince(timeStamp)) {
                 return true;
             }
         }
@@ -492,5 +498,13 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
 
     public boolean modifiedSinceLastDataLoad() {
         return modifiedSince(getLastLoadTS());
+    }
+
+    @Override
+    public void resetModificationTracking() {
+        super.resetModificationTracking();
+        for (UProcessElement child : this.name2processElementMap.values()) {
+            child.resetModificationTracking();
+        }
     }
 }

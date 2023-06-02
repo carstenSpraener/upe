@@ -146,7 +146,17 @@ public class AbstractUProcessElementImpl implements UProcessElement {
 		}
 	}
 
+	@Override
 	public boolean modifiedSince(long timeStamp) {
-		return this.lastModified > timeStamp;
+		return this.lastModified-100 > timeStamp;
+	}
+
+	@Override
+	public void resetModificationTracking() {
+		this.lastModified = System.currentTimeMillis();
+	}
+
+	protected void setLastModified(long lmTS) {
+		this.lastModified = lmTS;
 	}
 }
