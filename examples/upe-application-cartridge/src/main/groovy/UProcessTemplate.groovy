@@ -75,6 +75,17 @@ import upe.common.MasterProcessComponent;
         }
     }
 
+    String generateDecimalFieldExtras(String accessName, String upeFieldType,String upeJavaType) {
+        if( !upeJavaType.equals("java.math.BigDecimal") ) {
+            return "";
+        }
+        return """
+
+    public void set${accessName}Value(Number value) {
+        get${accessName}Field().set${upeFieldType}Value(new java.math.BigDecimal(value.doubleValue()));
+    }"""
+    }
+
     String generateFieldMethods(String fieldName, String fieldType) {
         String accessName = MyModelHelper.toJavaAccessorName(fieldName);
         String upeType = MyModelHelper.upeTypeFor(fieldType);
@@ -87,7 +98,7 @@ import upe.common.MasterProcessComponent;
 
     public void set${accessName}Value(${upeJavaType} value) {
         get${accessName}Field().set${upeFieldType}Value(value);
-    }
+    }${generateDecimalFieldExtras(accessName, upeFieldType, upeJavaType)}
 
     public ${upeType} get${accessName}Field() {
         return getProcessElement("${fieldName}", ${upeType}.class);
@@ -314,4 +325,5 @@ ${mdLoadDataMethods()}
 }
 """
     }
+
 }

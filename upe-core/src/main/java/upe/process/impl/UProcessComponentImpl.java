@@ -118,7 +118,7 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
             child = name2processElementMap.get(name);
         }
         if (child == null) {
-            throw new IllegalArgumentException("no such child with name '" + name + "' in process(component) " + getName());
+            throw new IllegalArgumentException("no such child with name '" + name + "' in process(component) " + getElementPath());
         }
         return child;
     }
@@ -229,6 +229,8 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
             return new UProcessTextFieldImpl(this, toFieldName(m));
         } else if (typeName.endsWith("Integer") || "int".equals(typeName)) {
             return new UProcessDecimalFieldImpl(this, toFieldName(m), UProcessDecimalFieldImpl.INTEGER_FORMAT);
+        } else if (typeName.endsWith("Long") || "long".equals(typeName)) {
+            return new UProcessDecimalFieldImpl(this, toFieldName(m), UProcessDecimalFieldImpl.INTEGER_FORMAT);
         } else if (typeName.endsWith("BigDecimal")) {
             return new UProcessDecimalFieldImpl(this, toFieldName(m), UProcessDecimalFieldImpl.MONEY_FORMAT);
         } else if (typeName.endsWith("Double") || "double".equals(typeName)) {
@@ -289,7 +291,7 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
                 try {
                     m.invoke(obj, serValue);
                 } catch (IllegalArgumentException iaExc) {
-                    field.addProcessMessage(getIllegalValueMessage(value.toString()));
+                    field.addProcessMessage(getIllegalValueMessage(""+value));
                     return true;
                 }
             } else if (pe instanceof UProcessComponentImpl component) {
@@ -414,6 +416,10 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
         this.setLastModified(this.lastLoadTS);
     }
 
+    public void mapFromScaffolded(Object obj) {
+        mapFromScaffolded(obj.getClass(), obj);
+    }
+
     public void mapFromScaffolded(Class<?> scaffoldedInterface, Object obj) {
         try {
             Method[] methods = scaffoldedInterface.getDeclaredMethods();
@@ -440,6 +446,16 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
             field.setValue((Serializable) value);
         } else if (e instanceof UProcessComponentImpl pc) {
             pc.mapFromScaffolded(value.getClass(), value);
+        } else if (e instanceof UProcessComponentListImpl pList) {
+            if( value instanceof Iterable<?> it ) {
+                for( Object listItem : it ) {
+                    if( it != null ) {
+                        ((UProcessComponentImpl) pList.createNewInstance()).mapFromScaffolded(it);
+                    }
+                }
+            } else {
+                throw new UProcessMappingException("Try to mapp not iterable "+value.getClass()+" into process list "+e.getElementPath());
+            }
         }
     }
 
@@ -506,5 +522,14 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
         for (UProcessElement child : this.name2processElementMap.values()) {
             child.resetModificationTracking();
         }
+    }
+
+    public void resetAllValues() {
+        for( UProcessElement pe : this.name2processElementMap.values() ) {
+            if( pe instanceof UProcessField field ) {
+                field.setValue(null);
+            }
+        }
+        this.resetModificationTracking();
     }
 }

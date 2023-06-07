@@ -10,4 +10,8 @@ public class UProcessMappingException extends UPERuntimeException {
 		super(message, t);
 	}
 
+	public UProcessMappingException(String message) {
+		super(message);
+	}
+
 }

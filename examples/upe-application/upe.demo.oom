@@ -281,12 +281,14 @@ ModelDSL.make {
               documentation ''
               id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:abOd2BGGAqACRB50$0q8cBBGGAqACRApU$DTKcBBGGAqACRAph'
               metaType 'Parameter'
+              type 'String'
             }
             mParameter {  //Exported by ParameterExporterBase
               name 'firstName'
               documentation ''
               id 'QtXw2BGGAqACRAyZ:G0vw2BGGAqACRAyg:TT_w2BGGAqACRAyn:abOd2BGGAqACRB50$0q8cBBGGAqACRApU$4f6cBBGGAqACRApj'
               metaType 'Parameter'
+              type 'String'
             }
           }
         }

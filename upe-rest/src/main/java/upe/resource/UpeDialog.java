@@ -5,10 +5,7 @@ package upe.resource;
 
 import com.google.gson.Gson;
 import upe.exception.UPERuntimeException;
-import upe.process.UProcess;
-import upe.process.UProcessAction;
-import upe.process.UProcessEngine;
-import upe.process.UProcessField;
+import upe.process.*;
 import upe.process.engine.BaseUProcessEngine;
 import upe.process.messages.UProcessMessage;
 import upe.resource.model.ProcessDelta;
@@ -17,10 +14,8 @@ import upe.resource.model.UpeStep;
 import upe.resource.persistorimpl.UpeDialogPersistorJdbcImpl;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
-import java.util.List;
-import java.util.Map;
+import java.nio.channels.SelectableChannel;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -45,11 +40,12 @@ public class UpeDialog {
         UpeDialogState state;
         ProcessDelta delta;
         String oldValue;
-
-        public ModificationResult(UpeDialogState state, ProcessDelta delta, String oldValue, List<UProcessMessage> queuedMessages) {
+        String newValue;
+        public ModificationResult(UpeDialogState state, ProcessDelta delta, String oldValue, String newValue, List<UProcessMessage> queuedMessages) {
             this.state = state;
             this.delta = delta;
             this.oldValue = oldValue;
+            this.newValue = newValue;
         }
     }
 
@@ -111,7 +107,7 @@ public class UpeDialog {
                 result.state.getStepCount(),
                 valuePath,
                 result.oldValue,
-                newValueFromFrontend
+                result.newValue
         );
         return result.delta;
     }
@@ -126,7 +122,8 @@ public class UpeDialog {
         ProcessDelta delta = new ProcessDelta(state);
         UProcess p = getActiveProcess();
         String oldValue = null;
-        if( p.getProcessElement(valuePath) instanceof UProcessField field) {
+        UProcessElement elementToModify = p.getProcessElement(valuePath);
+        if( elementToModify instanceof UProcessField field) {
             oldValue = field.getValueForFrontend();
         }
         delta.startRecording(p);
@@ -136,7 +133,11 @@ public class UpeDialog {
         delta.stopRecording(p);
         delta.setGlobalMessages(this.queuedMessages);
         state.setStepCount(state.getStepCount()+1);
-        return new ModificationResult(state, delta, oldValue, this.queuedMessages);
+        String newValue = null;
+        if( elementToModify instanceof UProcessField field) {
+            newValue = field.getValueForFrontend();
+        }
+        return new ModificationResult(state, delta, oldValue, newValue, this.queuedMessages);
     }
 
     public ProcessDelta triggerAction(String dialogID, int stepCount, String actionPath) {
@@ -180,15 +181,24 @@ public class UpeDialog {
         if( cmd.startsWith("@") ) {
             String instruction = cmd.substring(1, cmd.indexOf(';'));
             String param = cmd.substring(cmd.indexOf(';')+1);
+            Map<String, Serializable>argsMap = buildArgsMap(initialStep);
             switch (instruction) {
                 case "INIT":
-                    pe.callProcess(param, null, null);
+                    pe.callProcess(param, argsMap, null);
                     break;
                 default:
                     break;
             }
         }
         return ((BaseUProcessEngine)pe).getActiveProcessInfo().getProcess();
+    }
+
+    private Map<String, Serializable> buildArgsMap(UpeStep initialStep) {
+        Map<String, Serializable> args = new HashMap<>();
+        if( initialStep.getNewValue() != null ) {
+            args = new Gson().fromJson(initialStep.getNewValue(), Map.class);
+        }
+        return args;
     }
 
     public UProcess getActiveProcess() {

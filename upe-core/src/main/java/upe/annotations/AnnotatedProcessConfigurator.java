@@ -60,7 +60,7 @@ public class AnnotatedProcessConfigurator {
         for (Method m : collecRuleMethods(p)) {
             UpeRule ruleConfig = m.getAnnotation(UpeRule.class);
             UMethodURule rule = new UMethodURule(p, m);
-            p.addRule(rule);
+            rule.bindToProcess(p);
         }
     }
 

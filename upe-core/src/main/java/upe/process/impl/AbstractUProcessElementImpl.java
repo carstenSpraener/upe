@@ -2,6 +2,7 @@ package upe.process.impl;
 
 import upe.process.*;
 import upe.process.messages.UProcessMessage;
+import upe.process.rules.UpeRuleVetoException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -140,7 +141,7 @@ public class AbstractUProcessElementImpl implements UProcessElement {
 		listenerList.remove(pel);
 	}
 	
-	protected void fireElementChanged() {
+	protected void fireElementChanged() throws UpeRuleVetoException {
 		for( UProcessElementListener pel : listenerList ) {
 			pel.elementChanged(this);
 		}

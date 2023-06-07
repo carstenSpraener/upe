@@ -1,8 +1,7 @@
 package upe.process.rules;
 
 import upe.process.UProcess;
+import upe.process.UProcessElementListener;
 
-public interface UProcessRule {
-    void valuesChanged(UProcess activeProcess);
-    boolean interestedIn(String elementPath);
+public interface UProcessRule extends UProcessElementListener {
 }

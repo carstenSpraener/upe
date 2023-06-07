@@ -7,7 +7,9 @@ import upe.process.UProcessComponent;
 import upe.process.UProcessElement;
 import upe.process.UProcessField;
 import upe.process.rules.UProcessRule;
+import upe.process.rules.UpeRuleVetoException;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
@@ -26,47 +28,43 @@ public class UMethodURule implements UProcessRule {
     }
 
     @Override
-    public void valuesChanged(UProcess activeProcess) {
+    public void elementChanged(UProcessElement processElement) throws UpeRuleVetoException {
         List<Object> argList = new ArrayList<>();
         for( Parameter p : this.method.getParameters() ) {
-            argList.add(readProcessValue(activeProcess, p));
+            argList.add(readProcessValue(processElement.getProcess(), p));
         }
         try {
             this.method.invoke(this.containingProcessComponent, argList.toArray());
-        }catch( ReflectiveOperationException roXC ) {
+        } catch( InvocationTargetException itXC ) {
+          if( itXC.getTargetException() instanceof UpeRuleVetoException rvXC ) {
+              throw rvXC;
+          }
+          throw new UPERuntimeException(itXC);
+        } catch( ReflectiveOperationException roXC ) {
             throw new UPERuntimeException("Error while triggering ruleMethod "+this.method.getName()+": "+roXC.getMessage(), roXC);
         }
     }
 
     private Object readProcessValue(UProcess activeProcess, Parameter p) {
-        return activeProcess.getProcessElement(getElementPathForParameter(p), UProcessField.class).getValue();
+        UProcessElement pElement = this.containingProcessComponent.getProcessElement(getElementPathForParameter(p));
+        String fqPath = pElement.getElementPath();
+        return activeProcess.getProcessElement(
+                fqPath,
+                UProcessField.class
+        ).getValue();
     }
+
     private String getElementPathForParameter(Parameter p) {
         String elementPath = p.getName();
         if( p.isAnnotationPresent(UProcessValue.class)) {
             elementPath = p.getAnnotation(UProcessValue.class).value();
         }
-        UProcessElement element =  this.containingProcessComponent.getProcessElement(elementPath);
-        if( element == null ) {
-            throw new UPERuntimeException("Unknown element '"+elementPath+"' specified in method "+ method.getName()+" for parameter "+p.getName());
-        }
-        element.getElementPath();
-        return this.containingProcessComponent.getProcessElement(elementPath).getElementPath();
+        return elementPath;
     }
 
-    private Set<String> getElementPaths() {
-        // Fill this lazy, because at construction not all the process tree is build.
-        if( this.elementPaths == null ) {
-            this.elementPaths = new HashSet<>();
-            for( Parameter param : this.method.getParameters() ) {
-                elementPaths.add(getElementPathForParameter(param));
-            }
+    public void bindToProcess(UProcessComponent p) {
+        for( Parameter param : this.method.getParameters() ) {
+            p.getProcessElement(getElementPathForParameter(param)).addProcessElementListener(this);
         }
-        return this.elementPaths;
-    }
-
-    @Override
-    public boolean interestedIn(String elementPath) {
-        return getElementPaths().contains(elementPath);
     }
 }

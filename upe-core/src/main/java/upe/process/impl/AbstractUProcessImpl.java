@@ -46,29 +46,7 @@ public abstract class AbstractUProcessImpl extends UProcessComponentImpl impleme
 
     @Override
     public void inputStops() {
-        trigerRules();
         doValidation();
-    }
-
-    private void trigerRules() {
-        Set<String> changedValues = collectChangedValuePaths();
-        int nofChanged = changedValues.size();
-        do {
-            nofChanged = changedValues.size();
-            Set<UProcessRule> rulesToTrigger = new HashSet<>();
-            for (UProcessRule r : this.getRulesRecursive(new ArrayList<>())) {
-                for (String path : changedValues) {
-                    if (r.interestedIn(path)) {
-                        rulesToTrigger.add(r);
-                        break;
-                    }
-                }
-            }
-            for (UProcessRule r : rulesToTrigger) {
-                r.valuesChanged(this);
-            }
-            changedValues = collectChangedValuePaths();
-        }while( changedValues.size() > nofChanged);
     }
 
     private Set<String> collectChangedValuePaths() {

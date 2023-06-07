@@ -21,4 +21,6 @@ public interface UProcessComponent extends UProcessElement {
 
 	void addRule(UProcessRule rule);
 	List<UProcessRule> getRulesRecursive(List<UProcessRule> collectorList);
+
+	void resetAllValues();
 }
