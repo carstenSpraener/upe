@@ -1,11 +1,8 @@
 package upe.resource;
 
-import com.google.gson.Gson;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import upe.annotations.UpeApplication;
-import upe.process.ApplicationConfiguration;
 import upe.process.UProcessElement;
 import upe.resource.model.ProcessDelta;
 import upe.resource.testprocess.PersonProcess;
@@ -31,10 +28,6 @@ public class UpeLifecycleTest {
 
     @UpeProcessToTest("Person")
     private PersonProcess personProcess;
-
-    public void setup() {
-        ApplicationConfiguration.getInstance().addProcessClass("Person", PersonProcess.class.getName());
-    }
 
     @Test
     public void testInitializationAndRebuild() throws Exception {
@@ -75,7 +68,7 @@ public class UpeLifecycleTest {
         delta = dialog.putValueChange(delta.getState().getDialogID(),delta.getState().getStepCount(),
                 "/selectedAddress/street", "Kirchesch 6");
         delta = dialog.triggerAction(delta.getState().getDialogID(), delta.getState().getStepCount(),
-                "actSelectedAdressOK");
+                "actSelectedAddressOK");
         PersonProcess pp = (PersonProcess)dialog.getActiveProcess();
         assertNotNull(pp);
         assertEquals(3, delta.getElementDeltaList().size());
@@ -92,7 +85,7 @@ public class UpeLifecycleTest {
         delta = dialog.putValueChange(delta.getState().getDialogID(),delta.getState().getStepCount(),
                 "/selectedAddress/street", "Kirchesch 7");
         delta = dialog.triggerAction(delta.getState().getDialogID(), delta.getState().getStepCount(),
-                "actSelectedAdressOK");
+                "actSelectedAddressOK");
         List<UProcessElement> elementList = new ArrayList<>();
         assertEquals(3, delta.getElementDeltaList().size());
         assertThat(delta.getElementDeltaList())

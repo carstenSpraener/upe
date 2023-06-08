@@ -12,6 +12,7 @@ import upe.process.UProcessModification;
 import upe.process.impl.AbstractUProcessImpl;
 import upe.resource.testprocess.action.ActSelectedAdressOK;
 import upe.resource.testprocess.backend.PersonService;
+import upe.resource.testprocess.dto.AddressDTO;
 import upe.resource.testprocess.dto.PersonDTO;
 
 import java.io.Serializable;
@@ -24,7 +25,10 @@ public class PersonProcess extends AbstractUProcessImpl {
     @UpeProcessComponent("selectedAddress")
     private AdressEditor adressEditor;
 
-    @UpeProcessAction("actSelectedAdressOK")
+    @UpeProcessComponent(value = "addressList", listType = AdressEditor.class)
+    private UProcessComponentList<AdressEditor> addressList;
+
+    @UpeProcessAction("actSelectedAddressOK")
     private ActSelectedAdressOK actSelectedAdressOK;
 
     public PersonProcess(UProcessEngine pe, String name) {
