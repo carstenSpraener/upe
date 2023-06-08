@@ -444,18 +444,18 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
         Object value = m.invoke(obj);
         if (e instanceof UProcessField field) {
             field.setValue((Serializable) value);
-        } else if (e instanceof UProcessComponentImpl pc) {
-            pc.mapFromScaffolded(value.getClass(), value);
         } else if (e instanceof UProcessComponentListImpl pList) {
             if( value instanceof Iterable<?> it ) {
-                for( Object listItem : it ) {
-                    if( it != null ) {
-                        ((UProcessComponentImpl) pList.createNewInstance()).mapFromScaffolded(it);
+                it.forEach(listItem ->  {
+                    if( listItem != null ) {
+                        ((UProcessComponentImpl) pList.createNewInstance()).mapFromScaffolded(listItem);
                     }
-                }
+                });
             } else {
                 throw new UProcessMappingException("Try to mapp not iterable "+value.getClass()+" into process list "+e.getElementPath());
             }
+        } else if (e instanceof UProcessComponentImpl pc) {
+            pc.mapFromScaffolded(value.getClass(), value);
         }
     }
 

@@ -57,7 +57,8 @@ public class UpeDialog {
                 state.getStepCount(),
                 "@INIT;"+name,
                 null,
-                jsonArgs);
+                jsonArgs,
+                null);
         engine.callProcess(name, args, null);
         ProcessDelta delta = new ProcessDelta(state);
         delta.buildCompleteState(getActiveProcess());
@@ -107,7 +108,8 @@ public class UpeDialog {
                 result.state.getStepCount(),
                 valuePath,
                 result.oldValue,
-                result.newValue
+                result.newValue,
+                new Gson().toJson(result.delta)
         );
         return result.delta;
     }
@@ -151,7 +153,8 @@ public class UpeDialog {
         UpeDialogPersistorJdbcImpl.intance().storeAction(
                 result.state.getDialogID(),
                 result.state.getStepCount(),
-                actionPath
+                actionPath,
+                new Gson().toJson(result.delta)
         );
         return result.delta;
     }

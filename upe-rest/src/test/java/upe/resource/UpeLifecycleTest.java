@@ -73,35 +73,37 @@ public class UpeLifecycleTest {
         delta = dialog.putValueChange(delta.getState().getDialogID(),delta.getState().getStepCount(),
                 "/name", "Carsten");
         delta = dialog.putValueChange(delta.getState().getDialogID(),delta.getState().getStepCount(),
-                "/adress/strasse", "Kirchesch 6");
+                "/selectedAddress/street", "Kirchesch 6");
         delta = dialog.triggerAction(delta.getState().getDialogID(), delta.getState().getStepCount(),
                 "actSelectedAdressOK");
         PersonProcess pp = (PersonProcess)dialog.getActiveProcess();
         assertNotNull(pp);
-        assertEquals(2, delta.getElementDeltaList().size());
+        assertEquals(3, delta.getElementDeltaList().size());
         assertThat(delta.getElementDeltaList())
                 .map( ped -> {
                     System.out.println(ped.getElementPath());
                     return ped.getElementPath();
                 })
                 .contains(
-                        "/adress/strasse",
-                        "/addressList[0]/strasse"
+                        "/selectedAddress/street",
+                        "/addressList[0]/rowID",
+                        "/addressList[0]/street"
                 );
         delta = dialog.putValueChange(delta.getState().getDialogID(),delta.getState().getStepCount(),
-                "/adress/strasse", "Kirchesch 7");
+                "/selectedAddress/street", "Kirchesch 7");
         delta = dialog.triggerAction(delta.getState().getDialogID(), delta.getState().getStepCount(),
                 "actSelectedAdressOK");
         List<UProcessElement> elementList = new ArrayList<>();
-        assertEquals(2, delta.getElementDeltaList().size());
+        assertEquals(3, delta.getElementDeltaList().size());
         assertThat(delta.getElementDeltaList())
                 .map( ped -> {
                     System.out.println(ped.getElementPath());
                     return ped.getElementPath();
                 })
                 .contains(
-                        "/adress/strasse",
-                        "/addressList[1]/strasse"
+                        "/selectedAddress/street",
+                        "/addressList[1]/rowID",
+                        "/addressList[1]/street"
                 );
     }
 }

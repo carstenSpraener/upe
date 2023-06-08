@@ -3,7 +3,7 @@ package upe.resource;
 import upe.resource.model.UpeDialogState;
 
 public interface UpeDialogPersistor {
-    UpeDialogState storeAction(String dialogID, int stepCount, String changedFieldPath);
+    UpeDialogState storeAction(String dialogID, int stepCount, String changedFieldPath, String deltaJSon);
 
     /**
      * Speichert den Change am Dialog und liefert eine Dialog-Instanz. Dieser ist im normalfall
@@ -19,7 +19,7 @@ public interface UpeDialogPersistor {
      * @param newValue
      * @return
      */
-    UpeDialogState storeStep(String dialogID, int stepCount, String changedFieldPath, String oldValue, String newValue);
+    UpeDialogState storeStep(String dialogID, int stepCount, String changedFieldPath, String oldValue, String newValue, String deltaJson);
 
     UpeDialogState restore(String dialogID);
 

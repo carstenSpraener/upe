@@ -3,25 +3,26 @@ package upe.resource.testprocess;
 import upe.annotations.UpeProcess;
 import upe.annotations.UpeProcessAction;
 import upe.annotations.UpeProcessComponent;
-import upe.annotations.UpeProcessField;
+import upe.annotations.UpeScaffolds;
+import upe.backend.UProcessBackend;
+import upe.process.UProcessAction;
 import upe.process.UProcessComponentList;
 import upe.process.UProcessEngine;
 import upe.process.UProcessModification;
-import upe.process.UProcessTextField;
 import upe.process.impl.AbstractUProcessImpl;
 import upe.resource.testprocess.action.ActSelectedAdressOK;
+import upe.resource.testprocess.backend.PersonService;
+import upe.resource.testprocess.dto.PersonDTO;
 
 import java.io.Serializable;
 import java.util.Map;
 
 @UpeProcess("Person")
+@UpeScaffolds(PersonDTO.class)
 public class PersonProcess extends AbstractUProcessImpl {
-    @UpeProcessField("name")
-    private UProcessTextField name;
-    @UpeProcessComponent("adress")
+    public static final String ARG_PERSON_ID = "ID";
+    @UpeProcessComponent("selectedAddress")
     private AdressEditor adressEditor;
-    @UpeProcessComponent(value="addressList", listType = AdressEditor.class)
-    private UProcessComponentList<AdressEditor> adressList;
 
     @UpeProcessAction("actSelectedAdressOK")
     private ActSelectedAdressOK actSelectedAdressOK;
@@ -35,7 +36,10 @@ public class PersonProcess extends AbstractUProcessImpl {
     @Override
     public void initialize(Map<String, Serializable> args) {
         try(UProcessModification mod = new UProcessModification(this)) {
-            this.name.setStringValue(null);
+            resetAllValues();
+            if( args.get(ARG_PERSON_ID) != null ) {
+                getProcessElement("actLoadPerson", UProcessAction.class).execute(args);
+            }
         }
     }
 
@@ -47,5 +51,12 @@ public class PersonProcess extends AbstractUProcessImpl {
     @Override
     public Map<String, Serializable> cancel() {
         return null;
+    }
+
+    @UpeProcessAction("actLoadPerson")
+    public void loadPerson(Map<String, Serializable> args) {
+        PersonService srv = UProcessBackend.getInstance().provide(PersonService.class);
+        PersonDTO personFromBackend = srv.loadByID(args.get(ARG_PERSON_ID));
+        mapFromScaffolded(personFromBackend);
     }
 }

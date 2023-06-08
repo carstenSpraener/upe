@@ -1,6 +1,8 @@
 package upe.process.testapp.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class PersonDto {
     private String name;
@@ -8,6 +10,7 @@ public class PersonDto {
     private Integer heightCM;
     private Date dateOfBirth;
     private AddressDto address;
+    private List<AddressDto> otherAddresses = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -47,5 +50,13 @@ public class PersonDto {
 
     public void setAddress(AddressDto address) {
         this.address = address;
+    }
+
+    public List<AddressDto> getOtherAddresses() {
+        return otherAddresses;
+    }
+
+    public void setOtherAddresses(List<AddressDto> otherAddresses) {
+        this.otherAddresses = otherAddresses;
     }
 }

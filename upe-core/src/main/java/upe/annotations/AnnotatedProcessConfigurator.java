@@ -179,7 +179,7 @@ public class AnnotatedProcessConfigurator {
         UProcessComponent pc;
         if( fType.equals(UProcessComponentList.class) ) {
             Class<? extends UProcessComponent> clazz = pcConfig.listType();
-            pc = factory.newProcessComponentList(parent, pcConfig.value(), clazz);
+            pc = factory.newProcessComponentList(parent, name, clazz);
         } else {
             pc = (UProcessComponent) fType.getConstructor(UProcessComponent.class, String.class).newInstance(parent, name);
         }

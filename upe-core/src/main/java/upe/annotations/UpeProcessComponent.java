@@ -1,5 +1,6 @@
 package upe.annotations;
 
+import upe.incubator.process.impl.GenericUProcessImpl;
 import upe.process.UProcess;
 import upe.process.UProcessComponent;
 
@@ -26,5 +27,5 @@ public @interface UpeProcessComponent {
      * @return
      */
     String value() default "";
-    Class<? extends UProcessComponent> listType() default UProcessComponent.class;
+    Class<? extends UProcessComponent> listType() default GenericUProcessImpl.class;
 }

@@ -3,6 +3,7 @@
  */
 package upe.resource;
 
+import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import upe.resource.model.UpeDialogState;
 import upe.resource.persistorimpl.UpeDialogPersistorJdbcImpl;
@@ -31,11 +32,12 @@ public class UpePersistorTests {
 
     @Test
     public void testStepInsertion() throws Exception {
+        Gson gson = new Gson();
         UpeDialogState state = UpeDialogPersistorJdbcImpl.intance().initiate();
         assertNotNull(state);
-        state = UpeDialogPersistorJdbcImpl.intance().storeStep(state.getDialogID(), state.getStepCount(), "/login", null, "xgadcsp");
-        state = UpeDialogPersistorJdbcImpl.intance().storeStep(state.getDialogID(), state.getStepCount()+1, "/pwd", null, "s****t");
-        state = UpeDialogPersistorJdbcImpl.intance().storeAction(state.getDialogID(), state.getStepCount()+1, "/actLogin");
+        state = UpeDialogPersistorJdbcImpl.intance().storeStep(state.getDialogID(), state.getStepCount(), "/login", null, "xgadcsp", "");
+        state = UpeDialogPersistorJdbcImpl.intance().storeStep(state.getDialogID(), state.getStepCount()+1, "/pwd", null, "s****t", "");
+        state = UpeDialogPersistorJdbcImpl.intance().storeAction(state.getDialogID(), state.getStepCount()+1, "/actLogin", "");
         UpeDialogState state2 = UpeDialogPersistorJdbcImpl.intance().restore(state.getDialogID());
         assertNotNull(state2);
         assertEquals(state.getDialogID(), state2.getDialogID());

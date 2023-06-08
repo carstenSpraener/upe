@@ -1,6 +1,9 @@
 package upe.resource.persistorimpl;
 
+import com.google.gson.Gson;
+import upe.exception.UPERuntimeException;
 import upe.resource.UpeDialogPersistor;
+import upe.resource.model.ProcessDelta;
 import upe.resource.model.UpeDialogState;
 import upe.resource.model.UpeStep;
 
@@ -9,6 +12,7 @@ import java.sql.*;
 public class UpeDialogPersistorJdbcImpl implements UpeDialogPersistor {
     private static UpeDialogPersistorJdbcImpl instance = null;
     private static boolean INITIALIZED = Boolean.FALSE;
+    private static int MAX_DELTA_SIZE = 8192;
 
     private String driverClass;
     private String jdbcURL;
@@ -57,6 +61,7 @@ public class UpeDialogPersistorJdbcImpl implements UpeDialogPersistor {
                                 "  FIELD VARCHAR(1024)," +
                                 "  NEW_VALUE VARCHAR(1024),"+
                                 "  OLD_VALUE VARCHAR(1024)," +
+                                "  DELTA_JSON VARCHAR("+MAX_DELTA_SIZE+")," +
                                 "  PRIMARY KEY (DIALOG_ID,STEP_NR)" +
                                 ");");
                         INITIALIZED = true;
@@ -88,12 +93,12 @@ public class UpeDialogPersistorJdbcImpl implements UpeDialogPersistor {
 
 
     @Override
-    public UpeDialogState storeAction(String dialogID, int stepCount, String changedFieldPath) {
-        return storeStep(dialogID,stepCount,changedFieldPath,null,null);
+    public UpeDialogState storeAction(String dialogID, int stepCount, String changedFieldPath, String deltaSjon) {
+        return storeStep(dialogID,stepCount,changedFieldPath,null,null, deltaSjon);
     }
 
     @Override
-    public UpeDialogState storeStep(String dialogID, int stepCount, String changedFieldPath, String oldValue, String newValue) {
+    public UpeDialogState storeStep(String dialogID, int stepCount, String changedFieldPath, String oldValue, String newValue, String deltaJson) {
         try {
             Connection con = getConnection();
             con.setAutoCommit(false);
@@ -104,7 +109,7 @@ public class UpeDialogPersistorJdbcImpl implements UpeDialogPersistor {
             String type = UpeStep.typeOf(changedFieldPath,oldValue,newValue);
             String insertQL = "insert into UPE_DIALOG_STEP (" + UpeStep.FIELD_LIST+") "+
                     "values (" +
-                    "'"+dialogID+"', "+stepCount+" , '"+type+"', '"+changedFieldPath+"', '"+newValue+"', '"+oldValue+"')";
+                    "'"+dialogID+"', "+stepCount+" , '"+type+"', '"+changedFieldPath+"', '"+newValue+"', '"+oldValue+"', '"+deltaJson+"')";
             getConnection().createStatement().execute(insertQL);
             getConnection().createStatement().execute("update UPE_DIALOG_STATE set STEP_COUNT="+stepCount+" where DIALOG_ID='"+dialogID+"' and STEP_COUNT="+(stepCount-1));
             getConnection().commit();
@@ -178,5 +183,4 @@ public class UpeDialogPersistorJdbcImpl implements UpeDialogPersistor {
             return 1;
         }
     }
-
 }
