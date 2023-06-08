@@ -42,7 +42,7 @@ public class TestProcessListHandling {
         delta = dialog.putValueChange(delta.getState().getDialogID(), delta.getState().getStepCount(), "selectedAddress/street", "Kirchesch 6");
 
         // when: triggering action actSelectedAdressOK
-        delta = dialog.triggerAction(delta.getState().getDialogID(), delta.getState().getStepCount(), "actSelectedAdressOK");
+        delta = dialog.triggerAction(delta.getState().getDialogID(), delta.getState().getStepCount(), "actSelectedAddressOK");
 
         // then: /address/strasse should empty and addressList[0]/strasse should take the value
         // this changes shall apear in the delta.
