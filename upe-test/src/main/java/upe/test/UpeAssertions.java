@@ -22,7 +22,7 @@ public class UpeAssertions {
      * @param elementPath the path to the element that should hold the error.
      * @param msgID the msgID of the error.
      */
-    public void assertHasError(String elementPath, String msgID) {
+    public UpeAssertions assertHasError(String elementPath, String msgID) {
         String containedMessageID = pc.getProcessElement(elementPath).getMessages().stream()
                 .filter(msg -> msg.getMessageID().equals(msgID))
                 .map(msg->msg.getMessageID())
@@ -30,6 +30,7 @@ public class UpeAssertions {
         if( containedMessageID==null ) {
             throw new UPEAssertionException("ProcessField '"+elementPath+"' does not contain message with id '"+msgID+"'.");
         }
+        return this;
     }
 
     /**
@@ -38,11 +39,12 @@ public class UpeAssertions {
      * @param elementPath The path to the element that should be asserted
      * @param messageLevelError the messageLevel expected.
      */
-    public void assertMaxMsgLevel(String elementPath, int messageLevelError) {
+    public UpeAssertions assertMaxMsgLevel(String elementPath, int messageLevelError) {
         if( messageLevelError != this.pc.getProcessElement(elementPath).getMaximumMessageLevel() ) {
             int level = this.pc.getProcessElement(elementPath).getMaximumMessageLevel();
             throw new UPEAssertionException("ProcessField '"+elementPath+"' has unexpected maximum message level of '"+level+"' expected was '"+messageLevelError+"'.");
         }
+        return this;
     }
 
     /**
@@ -50,23 +52,24 @@ public class UpeAssertions {
      * @param elementPath the path to the element that should hold the error.
      * @param msgID the msgID of the error.
      */
-    public void assertNotHasError(String elementPath, String msgID) {
+    public UpeAssertions assertNotHasError(String elementPath, String msgID) {
         try {
             assertHasError(elementPath, msgID);
             throw new UPEAssertionException("ProcesField '" + elementPath + "' has unexpected message '" + msgID);
         } catch( UPEAssertionException axc ) {
         }
+        return this;
     }
 
     /**
      * Check that during processing a message with the given msgID was queued.
      * @param msgID The id of the message that should have been queued.
      */
-    public void assertProcessMessageQueued(String msgID) {
+    public UpeAssertions assertProcessMessageQueued(String msgID) {
         TestUProcessEngine testPE = ((TestUProcessEngine)this.pc.getProcess().getProcessEngine());
         if( !testPE.containsQueuedMessage(msgID) ) {
             throw new UPEAssertionException("Expected process message'" + msgID + "' is not queued.");
         }
-
+        return this;
     }
 }
