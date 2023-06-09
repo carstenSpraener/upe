@@ -1,8 +1,8 @@
 	package upe.process.messages;
 
-import java.io.Serializable;
 
-public interface UProcessMessage extends Serializable {
+
+public interface UProcessMessage  {
 	public static final int MESSAGE_LEVEL_ERROR   = 3;
 	public static final int MESSAGE_LEVEL_WARNING = 2;
 	public static final int MESSAGE_LEVEL_INFO    = 1;

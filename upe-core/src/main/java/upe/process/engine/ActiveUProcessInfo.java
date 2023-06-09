@@ -2,9 +2,9 @@ package upe.process.engine;
 
 import upe.process.UProcessAction;
 
-import java.io.Serializable;
 
-public class ActiveUProcessInfo implements Serializable {
+
+public class ActiveUProcessInfo {
 	/**
 	 * 
 	 */

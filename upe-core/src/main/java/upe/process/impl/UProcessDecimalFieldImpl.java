@@ -5,7 +5,7 @@ import upe.process.UProcessComponent;
 import upe.process.UProcessDecimalField;
 import upe.process.UProcessEngine;
 
-import java.io.Serializable;
+
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -35,7 +35,7 @@ public class UProcessDecimalFieldImpl extends AbstractUProcessFieldImpl implemen
 	}
 
 	@Override
-	public void setValue( Serializable value ) {
+	public void setValue( Object value ) {
 		if( value == null ) {
 			super.setValue(null);
 			return;

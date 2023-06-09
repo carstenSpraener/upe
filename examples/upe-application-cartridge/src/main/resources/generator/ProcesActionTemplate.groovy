@@ -15,7 +15,7 @@ package ${mClass.getPackage().getFQName()};
 
 import upe.process.UProcessComponent;
 
-import java.io.Serializable;
+
 import java.util.Map;
 
 
@@ -25,7 +25,7 @@ public class ${mClass.getName()} extends ${mClass.getName()}Base {
         super(parent, name);
     }
 
-    public Serializable internalExecute( Map<String, Serializable> args ) {
+    public Object internalExecute( Map<String, Object> args ) {
         // TODO: Remove generator protection line and implement this method
         return null;
     }

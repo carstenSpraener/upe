@@ -19,7 +19,7 @@
  *     ...
  *
  *     &commat;UpeProcessAction("AktSayHello")
- *     private Serializable aktSayHello(Map&lt;String, Serializable&gt; args) {
+ *     private Object aktSayHello(Map&lt;String, Object&gt; args) {
  * </pre>
  */
 package upe.annotations;

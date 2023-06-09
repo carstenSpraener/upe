@@ -1,6 +1,6 @@
 package upe.process.choices;
 
-import java.io.Serializable;
+
 
 public class ChoiceableValueImpl implements ChoiceableValue {
 	/**
@@ -8,10 +8,10 @@ public class ChoiceableValueImpl implements ChoiceableValue {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private Serializable key;
+	private Object key;
 	private String[] displayValues;
 	
-	public ChoiceableValueImpl(Serializable key, String[] displayValues) {
+	public ChoiceableValueImpl(Object key, String[] displayValues) {
 		this.key = key;
 		this.displayValues = displayValues;
 	}
@@ -22,7 +22,7 @@ public class ChoiceableValueImpl implements ChoiceableValue {
 	}
 
 	@Override
-	public Serializable getKeyValue() {
+	public Object getKeyValue() {
 		return key;
 	}
 

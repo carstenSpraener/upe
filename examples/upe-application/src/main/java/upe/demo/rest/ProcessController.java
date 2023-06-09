@@ -23,7 +23,7 @@ public abstract class ProcessController {
     @GetMapping("/init")
     @ResponseBody
     public String startNewProcess(HttpServletRequest request) {
-        Map<String,java.io.Serializable> args = new HashMap<>();
+        Map<String,Object> args = new HashMap<>();
         for(Map.Entry<String, String[]> e : request.getParameterMap().entrySet() ) {
             String key = e.getKey();
             String value = "";

@@ -1,11 +1,11 @@
 package upe.incubator.process.action.annotations;
 
-import java.io.Serializable;
+
 import java.lang.reflect.Method;
 import java.util.Map;
 
 
-public class ActionState implements Serializable {
+public class ActionState {
 	String name = null;
 	transient Method method = null;
 	

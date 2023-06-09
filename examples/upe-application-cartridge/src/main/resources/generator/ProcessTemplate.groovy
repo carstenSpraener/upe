@@ -16,11 +16,10 @@ class UProcessTemplate {
         return """//${ProtectionStrategieDefaultImpl.GENERATED_LINE}
 package ${mClass.getPackage().getFQName()};
 
+import java.util.Map;
+
 import upe.annotations.*;
 import upe.process.*;
-
-import java.io.Serializable;
-import java.util.Map;
 
 @UpeProcess("${JavaHelper.firstToLowerCase(mClass.getName())}")
 public class ${mClass.getName()} extends ${mClass.getName()}Base {
@@ -31,7 +30,7 @@ public class ${mClass.getName()} extends ${mClass.getName()}Base {
     }
      
     @Override
-    public void initialize(Map<String, Serializable> args) {
+    public void initialize(Map<String, Object> args) {
         super.initialize(args);
         try(UProcessModification mod = new UProcessModification(this)) {
         }

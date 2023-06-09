@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class UpeDialogProcessEngine extends BaseUProcessEngine {
 
-    public void callProcessForRestore(String processName, Map<String, Serializable> processArgs, UProcessAction returnAction) {
+    public void callProcessForRestore(String processName, Map<String, Object> processArgs, UProcessAction returnAction) {
         AbstractUUProcessCmd cmd = new CallUProcessCmd() {
             @Override
             public void internalExecute() {

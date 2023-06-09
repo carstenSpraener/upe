@@ -1,6 +1,6 @@
 package upe.process.choices;
 
-import java.io.Serializable;
+
 
 /**
  * represents a choice in a ChoiceSet. The key value is a identifier 
@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @author casi
  *
  */
-public interface ChoiceableValue extends Serializable {
+public interface ChoiceableValue  {
 
 	/**
 	 * returns a unique identifier for this value. It must be unique
@@ -18,7 +18,7 @@ public interface ChoiceableValue extends Serializable {
 	 * 
 	 * @return the unique identifier.
 	 */
-	public Serializable getKeyValue();
+	public Object getKeyValue();
 	
 	/**
 	 * returns all string values to represent this value on the 

@@ -4,7 +4,7 @@ import upe.process.UProcessComponent;
 import upe.process.UProcessComponentList;
 import upe.process.impl.UProcessComponentImpl;
 
-import java.io.Serializable;
+
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +15,7 @@ public class ActLoadData extends ActLoadDataBase {
         super(parent, name);
     }
 
-    public Serializable internalExecute( Map<String, Serializable> args ) {
+    public Object internalExecute( Map<String, Object> args ) {
         MasterProcessComponent master = (MasterProcessComponent)getParent();
         MasterDetailConfiguration config = master.getMasterDetailConfig();
         UProcessComponentList<?> list = (UProcessComponentList<?>)master

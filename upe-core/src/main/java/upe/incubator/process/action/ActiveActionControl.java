@@ -2,10 +2,10 @@ package upe.incubator.process.action;
 
 import upe.incubator.process.action.annotations.ActionState;
 
-import java.io.Serializable;
+
 import java.util.Map;
 
-public class ActiveActionControl implements Serializable {
+public class ActiveActionControl {
 	/**
 	 * 
 	 */

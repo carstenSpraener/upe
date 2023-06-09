@@ -2,7 +2,7 @@ package upe.common;
 
 import upe.process.UProcessComponent;
 
-import java.io.Serializable;
+
 import java.util.Map;
 
 
@@ -12,7 +12,7 @@ public class ActOpenDetail extends ActOpenDetailBase {
         super(parent, name);
     }
 
-    public Serializable internalExecute( Map<String, Serializable> args ) {
+    public Object internalExecute( Map<String, Object> args ) {
         MasterProcessComponent master = getParent();
         MasterDetailConfiguration config = master.getMasterDetailConfig();
 

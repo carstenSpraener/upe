@@ -9,7 +9,7 @@ import upe.process.UProcess;
 import upe.process.UProcessEngine;
 import upe.process.impl.UProcessTextFieldImpl;
 
-import java.io.Serializable;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -20,9 +20,9 @@ public class ProcessBuilder {
     private Class<?> clazz;
     private UProcessEngine engine;
     private String name;
-    private BiConsumer<UProcess, Map<String, Serializable>> onInitialize;
-    private Function<UProcess, Map<String, Serializable>> onFinish;
-    private Function<UProcess, Map<String, Serializable>> onCancel;
+    private BiConsumer<UProcess, Map<String, Object>> onInitialize;
+    private Function<UProcess, Map<String, Object>> onFinish;
+    private Function<UProcess, Map<String, Object>> onCancel;
 
     public ProcessBuilder(Class<?> clazz) {
         this.clazz = clazz;
@@ -38,17 +38,17 @@ public class ProcessBuilder {
         return this;
     }
 
-    public ProcessBuilder withOnInitialize(BiConsumer<UProcess, Map<String, Serializable>> onInitialize) {
+    public ProcessBuilder withOnInitialize(BiConsumer<UProcess, Map<String, Object>> onInitialize) {
         this.onInitialize = onInitialize;
         return this;
     }
 
-    public ProcessBuilder withOnFinish(Function<UProcess, Map<String, Serializable>> onFinish) {
+    public ProcessBuilder withOnFinish(Function<UProcess, Map<String, Object>> onFinish) {
         this.onFinish = onFinish;
         return this;
     }
 
-    public ProcessBuilder withOnCancel(Function<UProcess, Map<String, Serializable>> onCancel) {
+    public ProcessBuilder withOnCancel(Function<UProcess, Map<String, Object>> onCancel) {
         this.onCancel = onCancel;
         return this;
     }
@@ -90,7 +90,7 @@ public class ProcessBuilder {
             if (m.getReturnType().isAssignableFrom(Map.class) && m.getParameterTypes().length == 0) {
                 this.onCancel = process -> {
                     try {
-                        return (Map<String, Serializable>) m.invoke(process);
+                        return (Map<String, Object>) m.invoke(process);
                     } catch (Exception e) {
                         throw new UPERuntimeException(e);
                     }
@@ -107,7 +107,7 @@ public class ProcessBuilder {
             if (m.getReturnType().isAssignableFrom(Map.class) && m.getParameterTypes().length == 0) {
                 this.onFinish = process -> {
                     try {
-                        return (Map<String, Serializable>) m.invoke(process);
+                        return (Map<String, Object>) m.invoke(process);
                     } catch (Exception e) {
                         throw new UPERuntimeException(e);
                     }

@@ -1,6 +1,6 @@
 package upe.converter;
 
-import java.io.Serializable;
+
 
 /**
  * Converters are mainly used to convert a value from the frontend, which is mostly a string,
@@ -11,6 +11,6 @@ import java.io.Serializable;
  * @param <I> the input type of this converter
  * @param <O> the output type of this converter
  */
-public interface Converter<I extends Serializable, O extends Serializable> {
+public interface Converter<I , O > {
     O convert(I value) throws ConversionException;
 }

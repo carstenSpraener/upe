@@ -4,7 +4,7 @@ import upe.exception.UPERuntimeException;
 import upe.process.UProcessComponent;
 import upe.process.UProcessDateField;
 
-import java.io.Serializable;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
@@ -28,7 +28,7 @@ public class UProcessDateFieldImpl extends AbstractUProcessFieldImpl implements 
 	}
 
 	@Override
-	public void setValue( Serializable value ) {
+	public void setValue( Object value ) {
 		if( value == null ) {
 			super.setValue(null);
 			return;

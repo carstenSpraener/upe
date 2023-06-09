@@ -1,6 +1,6 @@
 package upe.process;
 
-import java.io.Serializable;
+
 import java.util.Map;
 
 public interface UProcess extends UProcessComponent {
@@ -13,7 +13,7 @@ public interface UProcess extends UProcessComponent {
 	 * once and the process can be used for many sessions. That means, the
 	 * settings of default values has to be done HERE. 
 	 */
-	public void initialize( Map<String,Serializable> args );
+	public void initialize( Map<String,Object> args );
 	
 	/**
 	 * Someone wants to finish this process. You can not veto this finish. The 
@@ -22,7 +22,7 @@ public interface UProcess extends UProcessComponent {
 	 * 
 	 * @return A map with result values, that is given to the calling process.
 	 */
-	public Map<String,Serializable> finish();
+	public Map<String,Object> finish();
 	/**
 	 * Someone wants to cancel this process. You can not veto this cancel. The 
 	 * Method should return result values in the map. This map is given to
@@ -30,7 +30,7 @@ public interface UProcess extends UProcessComponent {
 	 * 
 	 * @return A map with result values, that is given to the calling process.
 	 */
-	public Map<String,Serializable> cancel();
+	public Map<String,Object> cancel();
 	
 	// ************ User Transaction Methods ********************************
 	/**

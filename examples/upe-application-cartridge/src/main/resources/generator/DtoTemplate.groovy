@@ -191,7 +191,7 @@ package ${pkgName};
 import java.util.List;
 import java.util.ArrayList;
 ${importList(modelElement)}
-${elementAnnotations(modelElement)}public class ${cName}${extendsExpr(modelElement)} implements java.io.Serializable {
+${elementAnnotations(modelElement)}public class ${cName}${extendsExpr(modelElement)}  {
     private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(${cName}.class.getName());
 ${attributeDeclaration(modelElement)}
 ${referenceDeclaration(modelElement)}

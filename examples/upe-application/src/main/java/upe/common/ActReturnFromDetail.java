@@ -2,7 +2,7 @@ package upe.common;
 
 import upe.process.UProcessComponent;
 
-import java.io.Serializable;
+
 import java.util.Map;
 
 
@@ -12,7 +12,7 @@ public class ActReturnFromDetail extends ActReturnFromDetailBase {
         super(parent, name);
     }
 
-    public Serializable internalExecute( Map<String, Serializable> args ) {
+    public Object internalExecute( Map<String, Object> args ) {
         ((MasterProcessComponent)getParent()).getActLoadData().internalExecute(args);
         return Boolean.TRUE;
     }

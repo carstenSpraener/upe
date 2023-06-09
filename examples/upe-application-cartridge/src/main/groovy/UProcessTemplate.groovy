@@ -295,7 +295,7 @@ import upe.process.*;
 import upe.process.impl.AbstractUProcessImpl;
 ${masterDetailImports()}
 
-import java.io.Serializable;
+
 import java.util.Map;
 
 public abstract class ${mClass.getName()} extends AbstractUProcessImpl {
@@ -306,19 +306,19 @@ ${peFields()}${peReferences()}
      }
 
     @Override
-    public void initialize(Map<String, Serializable> args) {
+    public void initialize(Map<String, Object> args) {
         try(UProcessModification mod = new UProcessModification(this)) {
 ${initializations()}
         }
     }
 
     @Override
-    public Map<String, Serializable> finish() {
+    public Map<String, Object> finish() {
         return null;
     }
 
     @Override
-    public Map<String, Serializable> cancel() {
+    public Map<String, Object> cancel() {
         return null;
     }
 ${mdLoadDataMethods()}

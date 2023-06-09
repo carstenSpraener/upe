@@ -3,12 +3,12 @@ package upe.process.impl;
 import upe.exception.UPERuntimeException;
 import upe.process.UProcessComponent;
 
-import java.io.Serializable;
+
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.function.Function;
 
-public class UActionMethodInvoker implements Function<Map<String, Serializable>, Serializable> {
+public class UActionMethodInvoker implements Function<Map<String, Object>, Object> {
     private UProcessComponent p;
     private Method m;
 
@@ -18,9 +18,9 @@ public class UActionMethodInvoker implements Function<Map<String, Serializable>,
     }
 
     @Override
-    public Serializable apply(Map<String, Serializable> stringSerializableMap) {
+    public Object apply(Map<String, Object> stringObjectMap) {
         try {
-            return (Serializable)this.m.invoke(p, stringSerializableMap);
+            return (Object)this.m.invoke(p, stringObjectMap);
         } catch( ReflectiveOperationException e ) {
             throw new UPERuntimeException(e);
         }

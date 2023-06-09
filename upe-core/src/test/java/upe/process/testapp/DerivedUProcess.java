@@ -3,7 +3,7 @@ package upe.process.testapp;
 import upe.annotations.*;
 import upe.process.*;
 
-import java.io.Serializable;
+
 import java.util.List;
 import java.util.Map;
 
@@ -26,20 +26,20 @@ public class DerivedUProcess extends BaseUProcess {
     }
 
     @Override
-    public void initialize(Map<String, Serializable> args) {
+    public void initialize(Map<String, Object> args) {
         super.initialize(args);
         this.personList.add(this.personList.createNewInstance());
     }
 
     @UpeProcessAction("actCallSubprocess")
-    public Serializable callSubProcess(Map<String, Serializable> args) {
+    public Object callSubProcess(Map<String, Object> args) {
         UProcessAction retAct = (UProcessAction)getProcessElement("/actReturnFromCubProcess");
         getProcessEngine().callProcess("SubProcess", args, retAct);
         return null;
     }
 
     @UpeProcessAction("actReturnFromCubProcess")
-    public Serializable returnFromSubProcess(Map<String, Serializable> args) {
+    public Object returnFromSubProcess(Map<String, Object> args) {
         this.resultFromSubProcess.setValue(args.get("result"));
         return null;
     }

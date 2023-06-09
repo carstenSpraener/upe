@@ -13,7 +13,7 @@ import upe.process.messages.UProcessMessageStorage;
 import upe.process.rules.UProcessRule;
 import upe.process.validation.UProcessValidator;
 
-import java.io.Serializable;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -304,7 +304,7 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
         if (pe != null) {
             if (pe instanceof UProcessField field) {
                 Object value = field.getValue();
-                Serializable serValue = convertToScaffoldedValue((Serializable) value, m.getParameterTypes()[0]);
+                Object serValue = convertToScaffoldedValue((Object) value, m.getParameterTypes()[0]);
                 try {
                     m.invoke(obj, serValue);
                 } catch (IllegalArgumentException iaExc) {
@@ -372,7 +372,7 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
         }
     }
 
-    protected Serializable convertToScaffoldedValue(Serializable value,
+    protected Object convertToScaffoldedValue(Object value,
                                                     Class<?> paramClass) {
         if (value == null) {
             return null;
@@ -488,7 +488,7 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
     private void setProcessValue(Object obj, Method m, UProcessElement e) throws IllegalAccessException, InvocationTargetException {
         Object value = m.invoke(obj);
         if (e instanceof UProcessField field) {
-            field.setValue((Serializable) value);
+            field.setValue((Object) value);
         } else if (e instanceof UProcessComponentListImpl pList) {
             if (value instanceof Iterable<?> it) {
                 it.forEach(listItem -> {

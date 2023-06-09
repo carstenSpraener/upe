@@ -2,24 +2,24 @@ package upe.process;
 
 import upe.process.messages.UProcessMessage;
 
-import java.io.Serializable;
+
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public interface UProcessEngine extends Serializable {
+public interface UProcessEngine  {
 	public static final Logger LOGGER = Logger.getLogger(UProcessEngine.class.getName());
 	public static String PROCESS_RESULT_STATE = "processResultState";
 	public static String PROCESS_CANCEL       = "processCancel";
 	public static String PROCESS_FINISH       = "processFinish";
 
-    public void jumpToProcess( String processName, Map<String,Serializable> processArgs );
+    public void jumpToProcess( String processName, Map<String,Object> processArgs );
 	
-	public void callProcess( String processName, Map<String,Serializable> processArgs, UProcessAction returnAction );
+	public void callProcess( String processName, Map<String,Object> processArgs, UProcessAction returnAction );
 	
-	public Map<String,Serializable> finishProcess();
+	public Map<String,Object> finishProcess();
 	
-	public Map<String,Serializable> cancelProcess();
+	public Map<String,Object> cancelProcess();
 
 	/**
 	 * Returns the session for this process.

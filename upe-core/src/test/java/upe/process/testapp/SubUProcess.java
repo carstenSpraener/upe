@@ -5,7 +5,7 @@ import upe.annotations.UpeProcessAction;
 import upe.process.UProcessEngine;
 import upe.process.impl.AbstractUProcessImpl;
 
-import java.io.Serializable;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -30,35 +30,35 @@ public class SubUProcess extends AbstractUProcessImpl {
     }
 
     @Override
-    public void initialize(Map<String, Serializable> args) {
+    public void initialize(Map<String, Object> args) {
         LOGGER.info("initialize() called");
     }
 
     @Override
-    public Map<String, Serializable> finish() {
+    public Map<String, Object> finish() {
         LOGGER.info("finish() called");
-        Map<String, Serializable> resultMap = new HashMap();
+        Map<String, Object> resultMap = new HashMap();
         resultMap.put("result", "FINISHED");
         return resultMap;
     }
 
     @Override
-    public Map<String, Serializable> cancel() {
+    public Map<String, Object> cancel() {
         LOGGER.info("cancel() called");
-        Map<String, Serializable> resultMap = new HashMap();
+        Map<String, Object> resultMap = new HashMap();
         resultMap.put("result", "CANCELED");
         return resultMap;
     }
 
     @UpeProcessAction("actClose")
-    public Serializable actClose(Map<String, Serializable> args) {
+    public Object actClose(Map<String, Object> args) {
         getProcessEngine().finishProcess();
         return null;
     }
 
 
     @UpeProcessAction("actCancel")
-    public Serializable actCancel(Map<String, Serializable> args) {
+    public Object actCancel(Map<String, Object> args) {
         getProcessEngine().cancelProcess();
         return null;
     }

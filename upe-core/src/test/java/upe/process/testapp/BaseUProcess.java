@@ -7,7 +7,7 @@ import upe.process.UProcessField;
 import upe.process.UProcessTextField;
 import upe.process.impl.AbstractUProcessImpl;
 
-import java.io.Serializable;
+
 import java.util.Map;
 
 @UpeProcess("TestProcess")
@@ -20,7 +20,7 @@ public class BaseUProcess extends AbstractUProcessImpl {
     }
 
     @Override
-    public void initialize(Map<String, Serializable> args) {
+    public void initialize(Map<String, Object> args) {
         this.name.setValueFromFrontend("Base-Hallo");
         ((UProcessField)getProcessElement("/name")).setValueFromFrontend("Hallo");
     }
@@ -30,12 +30,12 @@ public class BaseUProcess extends AbstractUProcessImpl {
     }
 
     @Override
-    public Map<String, Serializable> finish() {
+    public Map<String, Object> finish() {
         return null;
     }
 
     @Override
-    public Map<String, Serializable> cancel() {
+    public Map<String, Object> cancel() {
         return null;
     }
 }

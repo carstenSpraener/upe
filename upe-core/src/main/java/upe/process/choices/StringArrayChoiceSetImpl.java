@@ -1,6 +1,6 @@
 package upe.process.choices;
 
-import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,11 +23,11 @@ public class StringArrayChoiceSetImpl implements ChoiceSet {
 		return myValueList;
 	}
 
-	public void addChoiceableValue( Serializable key, String displayValue ) {
+	public void addChoiceableValue( Object key, String displayValue ) {
 		addChoiceableValue(key, new String[]{displayValue} );
 	}
 	
-	public void addChoiceableValue( Serializable key, String[] displayValues ) {
+	public void addChoiceableValue( Object key, String[] displayValues ) {
 		myValueList.add( new ChoiceableValueImpl(key, displayValues) );
 	}
 }

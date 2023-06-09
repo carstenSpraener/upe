@@ -4,7 +4,7 @@ import upe.exception.UPERuntimeException;
 import upe.process.UProcessAction;
 import upe.process.UProcessComponent;
 
-import java.io.Serializable;
+
 import java.util.Map;
 
 public abstract class AbstractUActionImpl extends AbstractUProcessElementImpl implements UProcessAction {
@@ -19,7 +19,7 @@ public abstract class AbstractUActionImpl extends AbstractUProcessElementImpl im
 		super(parent, name);
 	}
 
-	public Serializable execute(Map<String, Serializable> args) {
+	public Object execute(Map<String, Object> args) {
 		try {
 			return internalExecute(args);
 		} catch( Exception e ) {
@@ -37,5 +37,5 @@ public abstract class AbstractUActionImpl extends AbstractUProcessElementImpl im
 		this.isEnabled = value;
 	}
 	
-	public abstract Serializable internalExecute( Map<String, Serializable> args );
+	public abstract Object internalExecute( Map<String, Object> args );
 }

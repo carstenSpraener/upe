@@ -1,8 +1,8 @@
 package upe.process.engine;
 
-import java.io.Serializable;
 
 
-public interface UProcessCommand extends Serializable {
+
+public interface UProcessCommand  {
 	void execute( UProcessCmdQueue queue );
 }

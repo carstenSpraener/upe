@@ -3,7 +3,7 @@ package upe.demo.process;
 import upe.annotations.*;
 import upe.process.*;
 
-import java.io.Serializable;
+
 import java.util.Map;
 
 @UpeProcess("clientBrowserDispatcherProcess")
@@ -14,7 +14,7 @@ public class ClientBrowserDispatcherProcess extends ClientBrowserDispatcherProce
      }
      
     @Override
-    public void initialize(Map<String, Serializable> args) {
+    public void initialize(Map<String, Object> args) {
         super.initialize(args);
         try(UProcessModification mod = new UProcessModification(this)) {
             String personID = (String)args.get("personID");

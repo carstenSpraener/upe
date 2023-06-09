@@ -6,14 +6,14 @@ import upe.process.UProcess;
 import upe.process.UProcessAction;
 import upe.process.UProcessEngine;
 
-import java.io.Serializable;
+
 import java.lang.reflect.Constructor;
 import java.util.Map;
 
 public abstract class AbstractUUProcessCmd implements UProcessCommand {
 
 	protected UProcess callingUProcess = null;
-	private Map<String, Serializable> processArgs;
+	private Map<String, Object> processArgs;
 	protected BaseUProcessEngine processEngine = null;
 	protected String processName;
 	protected UProcessAction returnAction;
@@ -28,7 +28,7 @@ public abstract class AbstractUUProcessCmd implements UProcessCommand {
 		}
 	}
 
-	public Map<String, Serializable> getProcessArgs() {
+	public Map<String, Object> getProcessArgs() {
 		return processArgs;
 	}
 
@@ -38,7 +38,7 @@ public abstract class AbstractUUProcessCmd implements UProcessCommand {
 		this.callingUProcess = callingUProcess;
 	}
 
-	public void setProcessArgs(Map<String, Serializable> processArgs) {
+	public void setProcessArgs(Map<String, Object> processArgs) {
 		this.processArgs = processArgs;
 	}
 

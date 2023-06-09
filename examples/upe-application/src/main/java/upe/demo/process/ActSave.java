@@ -8,7 +8,7 @@ import upe.process.UProcessComponent;
 import upe.process.messages.UProcessMessage;
 import upe.process.messages.UProcessMessageStorage;
 
-import java.io.Serializable;
+
 import java.util.Map;
 
 
@@ -18,7 +18,7 @@ public class ActSave extends ActSaveBase {
         super(parent, name);
     }
 
-    public Serializable internalExecute( Map<String, Serializable> args ) {
+    public Object internalExecute( Map<String, Object> args ) {
         if( getProcess().getMaximumMessageLevel()>= UProcessMessage.MESSAGE_LEVEL_ERROR) {
             getProcess().getProcessEngine().queueProcessMessage(
                     UProcessMessageStorage.getInstance().getMessage("PE-002")

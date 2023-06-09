@@ -6,7 +6,7 @@ import upe.process.UProcessAction;
 import upe.process.UProcessComponent;
 import upe.process.impl.AbstractUActionImpl;
 
-import java.io.Serializable;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -86,7 +86,7 @@ public class ControllingAction extends AbstractUActionImpl {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Serializable internalExecute(Map<String, Serializable> args) {
+	public Object internalExecute(Map<String, Object> args) {
 		try {
 			// The first call to a cascade of Controlled Actions has to
 			// push itself to the control stack.
@@ -103,12 +103,12 @@ public class ControllingAction extends AbstractUActionImpl {
 				// handle the different method types
 				// Call to another process
 				if (activeState.getMethod().isAnnotationPresent(ProcessCall.class) ) {
-					handleCallProcessAction(activeCntrl, activeState, name2StateMap, (Map<String, Serializable>) result);
+					handleCallProcessAction(activeCntrl, activeState, name2StateMap, (Map<String, Object>) result);
 					break;
 				}
 				// Call to another action
 				if (activeState.getMethod().isAnnotationPresent(ActionCall.class) ) {
-					boolean subActionStarted = handleActionCallAction(activeCntrl, activeState, name2StateMap, (Map<String, Serializable>) result);
+					boolean subActionStarted = handleActionCallAction(activeCntrl, activeState, name2StateMap, (Map<String, Object>) result);
 					if (!subActionStarted) {
 						// temination of a controled action
 						if (activeState.getMethod().isAnnotationPresent(TerminationState.class)) {
@@ -125,7 +125,7 @@ public class ControllingAction extends AbstractUActionImpl {
 		}
 	}
 
-	private boolean handleActionCallAction(ActiveActionControl activeCntrl, ActionState activeState, Map<String, ActionState> name2StateMap, Map<String, Serializable> result) {
+	private boolean handleActionCallAction(ActiveActionControl activeCntrl, ActionState activeState, Map<String, ActionState> name2StateMap, Map<String, Object> result) {
 		ActionCall actionCall = activeState.getMethod().getAnnotation(ActionCall.class);
 		UProcessAction act = (UProcessAction) getProcess().getProcessElement(actionCall.actionName());
 		activeCntrl.setActiveState(name2StateMap.get(actionCall.returnState()));
@@ -140,14 +140,14 @@ public class ControllingAction extends AbstractUActionImpl {
 		return false;
 	}
 
-	private void handleCallProcessAction(ActiveActionControl activeCntrl, ActionState activeState, Map<String, ActionState> name2StateMap, Map<String, Serializable> result) {
+	private void handleCallProcessAction(ActiveActionControl activeCntrl, ActionState activeState, Map<String, ActionState> name2StateMap, Map<String, Object> result) {
 		ProcessCall procCall = activeState.getMethod().getAnnotation(ProcessCall.class);
 		String processName = procCall.processName();
 		activeCntrl.setActiveState(name2StateMap.get(procCall.returnState()));
 		getProcess().getProcessEngine().callProcess(processName, result, this);
 	}
 
-	private static Object callStateMethod(Map<String, Serializable> args, ActionState activeState, ControlableAction actionToControll) throws IllegalAccessException, InvocationTargetException {
+	private static Object callStateMethod(Map<String, Object> args, ActionState activeState, ControlableAction actionToControll) throws IllegalAccessException, InvocationTargetException {
 		Object result = null;
 		if (activeState.getMethod().getParameterTypes().length > 0) {
 			result = activeState.getMethod().invoke(actionToControll, args);

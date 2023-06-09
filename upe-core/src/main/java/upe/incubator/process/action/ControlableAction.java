@@ -2,9 +2,9 @@ package upe.incubator.process.action;
 
 import upe.process.UProcess;
 
-import java.io.Serializable;
 
-public interface ControlableAction extends Serializable{
+
+public interface ControlableAction {
 	void initialize( UProcess p );
-	Serializable terminate();
+	Object terminate();
 }

@@ -2,11 +2,11 @@ package upe.process.engine;
 
 import upe.exception.UPERuntimeException;
 
-import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class UProcessCmdQueue implements Runnable, Serializable {
+public class UProcessCmdQueue implements Runnable {
 
 	/**
 	 * 

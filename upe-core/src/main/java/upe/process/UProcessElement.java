@@ -4,7 +4,7 @@ import upe.process.messages.UProcessMessage;
 
 import java.util.List;
 
-public interface UProcessElement extends java.io.Serializable {
+public interface UProcessElement {
 	
 	UProcess getProcess();
 

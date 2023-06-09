@@ -5,12 +5,12 @@ import upe.process.UProcessComponent;
 import upe.process.UProcessField;
 import upe.process.rules.UpeRuleVetoException;
 
-import java.io.Serializable;
+
 
 public class AbstractUProcessFieldImpl extends AbstractUProcessElementImpl
 		implements UProcessField {
 
-	private Serializable value = null;
+	private Object value = null;
 	/**
 	 * 
 	 */
@@ -28,7 +28,7 @@ public class AbstractUProcessFieldImpl extends AbstractUProcessElementImpl
 		}
 	}
 
-	public Serializable getValue() {
+	public Object getValue() {
 		return value;
 	}
 
@@ -37,11 +37,11 @@ public class AbstractUProcessFieldImpl extends AbstractUProcessElementImpl
 	}
 
 	@Override
-	public void setValue(Serializable newValue) {
+	public void setValue(Object newValue) {
 		if( value==null && newValue == null) {
 			return;
 		}
-		Serializable oldValue = this.value;
+		Object oldValue = this.value;
 		try {
 			if (value == null) {
 				value = newValue;

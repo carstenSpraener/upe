@@ -4,7 +4,7 @@ import upe.exception.UPERuntimeException;
 import upe.process.*;
 import upe.process.messages.UProcessMessage;
 
-import java.io.Serializable;
+
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Locale;
@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 @SuppressWarnings("java:S1149")
-public class BaseUProcessEngine implements UProcessEngine, Serializable {
+public class BaseUProcessEngine implements UProcessEngine {
 	private static final Logger LOGGER = Logger.getLogger(BaseUProcessEngine.class.getTypeName());
 	/**
 	 * 
@@ -47,7 +47,7 @@ public class BaseUProcessEngine implements UProcessEngine, Serializable {
 	}
 
 	protected void setupProcessCmd(AbstractUUProcessCmd cmd,
-								   String processName, Map<String, Serializable> processArgs,
+								   String processName, Map<String, Object> processArgs,
 								   UProcessAction returnAction) {
 		cmd.setProcessName( processName );
 		cmd.setProcessArgs(  processArgs );
@@ -62,25 +62,25 @@ public class BaseUProcessEngine implements UProcessEngine, Serializable {
 
 	@Override
 	public void callProcess(String processName,
-			Map<String, Serializable> processArgs, UProcessAction returnAction) {
+			Map<String, Object> processArgs, UProcessAction returnAction) {
 		AbstractUUProcessCmd cmd = getCallProcessCmd();
 		setupProcessCmd(cmd, processName, processArgs, returnAction);
 		queueCommand(cmd);
 	}
 
 	@Override
-	public Map<String, Serializable> cancelProcess() {
+	public Map<String, Object> cancelProcess() {
 		ActiveUProcessInfo pc = popProcess();
-		Map<String,Serializable> result = pc.getProcess().cancel();
+		Map<String,Object> result = pc.getProcess().cancel();
 		result.put( PROCESS_RESULT_STATE, PROCESS_CANCEL);
 		pc.getReturnAction().execute(result);
 		return result;
 	}
 
 	@Override
-	public Map<String, Serializable> finishProcess() {
+	public Map<String, Object> finishProcess() {
 		ActiveUProcessInfo pc = peekProcess();
-		Map<String,Serializable> result = pc.getProcess().finish();
+		Map<String,Object> result = pc.getProcess().finish();
 		if( result==null ) {
 			result = new HashMap<>();
 		}
@@ -99,7 +99,7 @@ public class BaseUProcessEngine implements UProcessEngine, Serializable {
 
 	@Override
 	public void jumpToProcess(String processName,
-			Map<String, Serializable> processArgs) {
+			Map<String, Object> processArgs) {
 		AbstractUUProcessCmd cmd = getJump2ProcessCmd();
 		setupProcessCmd(cmd, processName, processArgs, null);
 		queueCommand(cmd);

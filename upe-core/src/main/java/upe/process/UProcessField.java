@@ -1,10 +1,10 @@
 package upe.process;
 
-import java.io.Serializable;
+
 
 public interface UProcessField extends UProcessElement {
-	void setValue( Serializable value );
-	Serializable getValue();
+	void setValue( Object value );
+	Object getValue();
 	
 	String getValueForFrontend();
 	

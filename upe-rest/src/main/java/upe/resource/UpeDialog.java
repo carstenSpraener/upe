@@ -69,7 +69,7 @@ public class UpeDialog {
         }
     }
 
-    public ProcessDelta initiateProcess(String name, Map<String, Serializable> args) {
+    public ProcessDelta initiateProcess(String name, Map<String, Object> args) {
         try( TimeLogger tl = new TimeLogger("initiateProcess") ) {
             UpeDialogState state = UpeDialogPersistorJdbcImpl.intance(getGson()).initiate();
             String jsonArgs = new Gson().toJson(args);

@@ -1,11 +1,11 @@
 package upe.process;
 
-import java.io.Serializable;
+
 import java.util.Map;
 
 public interface UProcessAction extends UProcessElement {
 
-	public Serializable execute( Map<String, Serializable> args );
+	public Object execute( Map<String, Object> args );
 
 	public boolean isEnabled();
 	
