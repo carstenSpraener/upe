@@ -10,10 +10,9 @@ public class UProcessTextFieldImpl extends AbstractUProcessFieldImpl implements
 	 */
 	private static final long serialVersionUID = 1L;
 
-	boolean isEnabled = true;
-
 	public UProcessTextFieldImpl(UProcessComponent parent, String name) {
 		super(parent, name);
+
 	}
 
 	@Override
@@ -24,15 +23,5 @@ public class UProcessTextFieldImpl extends AbstractUProcessFieldImpl implements
 	@Override
 	public void setStringValue(String value) {
 		setValue(value);
-	}
-
-	@Override
-	public void setEnabled( boolean value ) {
-		isEnabled = value;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return isEnabled;
 	}
 }

@@ -15,16 +15,16 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UpePersistorTests {
     @Test
     public void testConnection() throws Exception {
-        Connection con  = UpeDialogPersistorJdbcImpl.intance().getConnection();
+        Connection con  = UpeDialogPersistorJdbcImpl.intance(UpeDialog.getGson()).getConnection();
         assertNotNull(con);
     }
 
     @Test
     public void testInitiate() throws Exception {
-        UpeDialogState state = UpeDialogPersistorJdbcImpl.intance().initiate();
+        UpeDialogState state = UpeDialogPersistorJdbcImpl.intance(UpeDialog.getGson()).initiate();
         assertNotNull(state);
         assertNotNull(state.getDialogID());
-        UpeDialogState state2 = UpeDialogPersistorJdbcImpl.intance().initiate();
+        UpeDialogState state2 = UpeDialogPersistorJdbcImpl.intance(UpeDialog.getGson()).initiate();
         assertNotNull(state2);
         assertNotNull(state2.getDialogID());
         assertNotEquals(state.getDialogID(), state2.getDialogID());
@@ -33,12 +33,12 @@ public class UpePersistorTests {
     @Test
     public void testStepInsertion() throws Exception {
         Gson gson = new Gson();
-        UpeDialogState state = UpeDialogPersistorJdbcImpl.intance().initiate();
+        UpeDialogState state = UpeDialogPersistorJdbcImpl.intance(UpeDialog.getGson()).initiate();
         assertNotNull(state);
-        state = UpeDialogPersistorJdbcImpl.intance().storeStep(state.getDialogID(), state.getStepCount(), "/login", null, "xgadcsp", "");
-        state = UpeDialogPersistorJdbcImpl.intance().storeStep(state.getDialogID(), state.getStepCount()+1, "/pwd", null, "s****t", "");
-        state = UpeDialogPersistorJdbcImpl.intance().storeAction(state.getDialogID(), state.getStepCount()+1, "/actLogin", "");
-        UpeDialogState state2 = UpeDialogPersistorJdbcImpl.intance().restore(state.getDialogID());
+        state = UpeDialogPersistorJdbcImpl.intance(UpeDialog.getGson()).storeStep(state.getDialogID(), state.getStepCount(), "/login", null, "xgadcsp", "");
+        state = UpeDialogPersistorJdbcImpl.intance(UpeDialog.getGson()).storeStep(state.getDialogID(), state.getStepCount()+1, "/pwd", null, "s****t", "");
+        state = UpeDialogPersistorJdbcImpl.intance(UpeDialog.getGson()).storeAction(state.getDialogID(), state.getStepCount()+1, "/actLogin", "");
+        UpeDialogState state2 = UpeDialogPersistorJdbcImpl.intance(UpeDialog.getGson()).restore(state.getDialogID(), UpeDialog.getGson());
         assertNotNull(state2);
         assertEquals(state.getDialogID(), state2.getDialogID());
         assertTrue(state2.getSteps().size()==3);

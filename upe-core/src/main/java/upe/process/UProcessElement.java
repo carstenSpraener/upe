@@ -21,14 +21,14 @@ public interface UProcessElement extends java.io.Serializable {
 	 * set this process element to visible or not visible.
 	 * @param value
 	 */
-	void setVisible( boolean value );
+	void setVisible( Boolean value );
 	
 	/**
 	 * Returns true, if this process element should be visible
 	 * on the front end.
 	 * @return
 	 */
-	boolean isVisible();
+	Boolean isVisible();
 	
 	/**
 	 * returns the highest message level. 
@@ -69,11 +69,11 @@ public interface UProcessElement extends java.io.Serializable {
 	 * no more UI updates are necessary until the process element is re changed.
 	 * @param b
 	 */
-	void setNeedsRendering(boolean b);
+	void setNeedsRendering(Boolean b);
 
 	boolean isEnabled();
 
-	void setEnabled( boolean value );
+	void setEnabled( Boolean value );
 	
 	/**
 	 * Adds a listener to this process element. The element will call the listener

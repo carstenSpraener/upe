@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -60,4 +61,20 @@ public class TestStartWithPersonID {
                         "/addressList[0]/street"
                 );
     }
+
+    @Test
+    void testRestoreLoadPersonProcessNoActionCalled() throws Exception {
+        UpeDialog dialog = new UpeDialog();
+        Map<String, Serializable> argsMap = new HashMap<>();
+        argsMap.put("ID", "17");
+        ProcessDelta delta = dialog.initiateProcess("Person", argsMap);
+        String dialogID = delta.getState().getDialogID();
+        when(this.prsSrv.loadByID(any())).thenThrow(new RuntimeException("Now initialize when restoring from protocol!"));
+        delta = dialog.rebuild(dialogID);
+        assertNotNull(delta);
+        assertThat(delta.getElementDeltaList())
+                .map(peDelta -> peDelta.getElementPath()+"='"+peDelta.getValueForFrontend()+"'")
+                .contains("/addressList[0]/street='5th Avenue'");
+    }
 }
+

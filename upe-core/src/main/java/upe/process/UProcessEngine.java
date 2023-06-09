@@ -57,4 +57,6 @@ public interface UProcessEngine extends Serializable {
 	 * @return the currently running process instance.
 	 */
 	public UProcess getActiveProcess();
+
+    UProcess getProcessInstance(String processName);
 }

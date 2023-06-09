@@ -3,36 +3,56 @@
  */
 package upe.resource;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
 import upe.exception.UPERuntimeException;
 import upe.process.*;
 import upe.process.engine.BaseUProcessEngine;
 import upe.process.messages.UProcessMessage;
+import upe.process.messages.UProcessMessageImpl;
+import upe.process.messages.UProcessMessageStorage;
 import upe.resource.model.ProcessDelta;
 import upe.resource.model.UpeDialogState;
 import upe.resource.model.UpeStep;
 import upe.resource.persistorimpl.UpeDialogPersistorJdbcImpl;
 
 import java.io.Serializable;
-import java.nio.channels.SelectableChannel;
+import java.lang.reflect.Type;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class UpeDialog {
-    private UProcessEngine engine;
+    private UpeDialogProcessEngine engine;
     private List<UProcessMessage> queuedMessages = new ArrayList<>();
 
     public UpeDialog() {
-        engine = new BaseUProcessEngine()
+        engine = (UpeDialogProcessEngine)new UpeDialogProcessEngine()
                 .withQueuedMessageConsumer(this::recordMessage);
+    }
+
+    public static Gson getGson() {
+        return new GsonBuilder()
+                .registerTypeAdapter(UProcessMessage.class, (JsonSerializer)UpeDialog::jsonizeMessage)
+                .registerTypeAdapter(UProcessMessage.class, (JsonDeserializer<UProcessMessage>)UpeDialog::deserializeMessage)
+                .create();
+    }
+
+    private static UProcessMessage deserializeMessage(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
+        UProcessMessageImpl msgIn = jsonDeserializationContext.deserialize(jsonElement, UProcessMessageImpl.class);
+        return UProcessMessageStorage.getInstance().getMessage(msgIn.getMessageID());
+    }
+
+    private static JsonElement jsonizeMessage(Object o, Type type, JsonSerializationContext jsonSerializationContext) {
+        UProcessMessage msgIn = (UProcessMessage)o;
+        UProcessMessageImpl msg = new UProcessMessageImpl(msgIn.getMessageID(), null, msgIn.getMessageLevel());
+        return jsonSerializationContext.serialize(msg);
     }
 
     private void recordMessage(UProcessMessage uProcessMessage) {
         this.queuedMessages.add(uProcessMessage);
     }
 
-    public UpeDialog(UProcessEngine engine) {
+    public UpeDialog(UpeDialogProcessEngine engine) {
         this.engine = engine;
     }
 
@@ -50,18 +70,21 @@ public class UpeDialog {
     }
 
     public ProcessDelta initiateProcess(String name, Map<String, Serializable> args) {
-        UpeDialogState state = UpeDialogPersistorJdbcImpl.intance().initiate();
+        UpeDialogState state = UpeDialogPersistorJdbcImpl.intance(getGson()).initiate();
         String jsonArgs = new Gson().toJson(args);
-        state = UpeDialogPersistorJdbcImpl.intance().storeStep(
+
+        engine.callProcess(name, args, null);
+        ProcessDelta delta = new ProcessDelta(state);
+        delta.buildCompleteState(getActiveProcess());
+
+        UpeDialogPersistorJdbcImpl.intance(getGson()).storeStep(
                 state.getDialogID(),
                 state.getStepCount(),
                 "@INIT;"+name,
                 null,
                 jsonArgs,
-                null);
-        engine.callProcess(name, args, null);
-        ProcessDelta delta = new ProcessDelta(state);
-        delta.buildCompleteState(getActiveProcess());
+                getGson().toJson(delta));
+
         return delta;
     }
 
@@ -70,7 +93,7 @@ public class UpeDialog {
     }
 
     public ProcessDelta rebuild(String dialogID, int stepNr) {
-        UpeDialogState state = UpeDialogPersistorJdbcImpl.intance().restore(dialogID);
+        UpeDialogState state = UpeDialogPersistorJdbcImpl.intance(getGson()).restore(dialogID, getGson());
         UpeStep initialStep = state.getSteps().get(0);
         UProcess p = buildFromInitialStep(engine, initialStep);
         List<UpeStep> stepList = state.getSteps().stream()
@@ -103,13 +126,13 @@ public class UpeDialog {
             ((UProcessField)p.getProcessElement(valuePath)).setValueFromFrontend(newValueFromFrontend);
         };
         ModificationResult result = doProcessModification(dialogID, stepCount, valuePath, procConsumer);
-        UpeDialogPersistorJdbcImpl.intance().storeStep(
+        UpeDialogPersistorJdbcImpl.intance(getGson()).storeStep(
                 result.state.getDialogID(),
                 result.state.getStepCount(),
                 valuePath,
                 result.oldValue,
                 result.newValue,
-                new Gson().toJson(result.delta)
+                getGson().toJson(result.delta)
         );
         return result.delta;
     }
@@ -150,11 +173,11 @@ public class UpeDialog {
                 throw new UPERuntimeException("Illegal action path '"+actionPath+"' in trigger action");
             }
         });
-        UpeDialogPersistorJdbcImpl.intance().storeAction(
+        UpeDialogPersistorJdbcImpl.intance(getGson()).storeAction(
                 result.state.getDialogID(),
                 result.state.getStepCount(),
                 actionPath,
-                new Gson().toJson(result.delta)
+                getGson().toJson(result.delta)
         );
         return result.delta;
     }
@@ -169,7 +192,7 @@ public class UpeDialog {
                 ((UProcessField)p.getProcessElement(step.getFieldPath())).setValueFromFrontend(step.getNewValue());
                 break;
             case "AC":
-                ((UProcessAction)p.getProcessElement(step.getFieldPath())).execute(null);
+                new UProcessDeltaApplier().applyDelta(p.getProcessEngine().getActiveProcess(), step.getDelta());
                 break;
             default:
                 break;
@@ -178,7 +201,7 @@ public class UpeDialog {
         this.queuedMessages.clear();
     }
 
-    private UProcess buildFromInitialStep(UProcessEngine pe, UpeStep initialStep) {
+    private UProcess buildFromInitialStep(UpeDialogProcessEngine pe, UpeStep initialStep) {
         String cmd = initialStep.getFieldPath();
         UProcess p = null;
         if( cmd.startsWith("@") ) {
@@ -187,7 +210,8 @@ public class UpeDialog {
             Map<String, Serializable>argsMap = buildArgsMap(initialStep);
             switch (instruction) {
                 case "INIT":
-                    pe.callProcess(param, argsMap, null);
+                    pe.callProcessForRestore(param, new HashMap<>(), null);
+                    new UProcessDeltaApplier().applyDelta(pe.getActiveProcess(), initialStep.getDelta());
                     break;
                 default:
                     break;
@@ -199,7 +223,7 @@ public class UpeDialog {
     private Map<String, Serializable> buildArgsMap(UpeStep initialStep) {
         Map<String, Serializable> args = new HashMap<>();
         if( initialStep.getNewValue() != null ) {
-            args = new Gson().fromJson(initialStep.getNewValue(), Map.class);
+            args = getGson().fromJson(initialStep.getNewValue(), Map.class);
         }
         return args;
     }

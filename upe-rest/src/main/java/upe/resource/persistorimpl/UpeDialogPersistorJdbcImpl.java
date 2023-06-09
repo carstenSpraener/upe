@@ -12,13 +12,13 @@ import java.sql.*;
 public class UpeDialogPersistorJdbcImpl implements UpeDialogPersistor {
     private static UpeDialogPersistorJdbcImpl instance = null;
     private static boolean INITIALIZED = Boolean.FALSE;
-    private static int MAX_DELTA_SIZE = 8192;
+    private static int MAX_DELTA_SIZE = 8192*2;
 
     private String driverClass;
     private String jdbcURL;
     private String user;
     private String password;
-
+    private Gson deltaGson;
     private Connection connection;
 
     private UpeDialogPersistorJdbcImpl() {
@@ -28,9 +28,10 @@ public class UpeDialogPersistorJdbcImpl implements UpeDialogPersistor {
         //this.password = System.getProperty("upe.persistor.jdbc.password", "sa");
     }
 
-    public static final UpeDialogPersistorJdbcImpl intance() {
+    public static final UpeDialogPersistorJdbcImpl intance(Gson deltaGson) {
         if( instance==null ) {
             instance = new UpeDialogPersistorJdbcImpl();
+            instance.deltaGson = deltaGson;
             try {
                 Class.forName(instance.driverClass);
                 initiateDataModel(instance.getConnection());
@@ -113,7 +114,7 @@ public class UpeDialogPersistorJdbcImpl implements UpeDialogPersistor {
             getConnection().createStatement().execute(insertQL);
             getConnection().createStatement().execute("update UPE_DIALOG_STATE set STEP_COUNT="+stepCount+" where DIALOG_ID='"+dialogID+"' and STEP_COUNT="+(stepCount-1));
             getConnection().commit();
-            return restore(dialogID);
+            return restore(dialogID, deltaGson);
         } catch( SQLException sqlXC ) {
             throw new RuntimeException("Exception while storing step: "+sqlXC.getMessage(), sqlXC);
         }
@@ -128,7 +129,7 @@ public class UpeDialogPersistorJdbcImpl implements UpeDialogPersistor {
     }
 
     @Override
-    public UpeDialogState restore(String dialogID) {
+    public UpeDialogState restore(String dialogID, Gson deltaGson) {
         try {
             Connection con = getConnection();
             con.setAutoCommit(false);
@@ -140,7 +141,7 @@ public class UpeDialogPersistorJdbcImpl implements UpeDialogPersistor {
             ResultSet rsSteps = con.createStatement().executeQuery("select "+UpeStep.FIELD_LIST+" from UPE_DIALOG_STEP " +
                     "where DIALOG_ID='"+dialogID+"' order by STEP_NR");
             while( rsSteps.next( ) ) {
-                dialogState.getSteps().add(createUpeStep(rsSteps));
+                dialogState.getSteps().add(createUpeStep(rsSteps, deltaGson));
             }
             con.commit();
             return dialogState;
@@ -149,8 +150,8 @@ public class UpeDialogPersistorJdbcImpl implements UpeDialogPersistor {
         }
     }
 
-    private UpeStep createUpeStep(ResultSet rs) throws SQLException {
-        UpeStep step = new UpeStep(rs);
+    private UpeStep createUpeStep(ResultSet rs, Gson deltaGson) throws SQLException {
+        UpeStep step = new UpeStep(rs, deltaGson);
         return step;
     }
 
@@ -163,7 +164,7 @@ public class UpeDialogPersistorJdbcImpl implements UpeDialogPersistor {
             UpeDialogState result = new UpeDialogState("DIALOGSTATE_"+id);
             con.createStatement().execute("insert into UPE_DIALOG_STATE (DIALOG_ID,STEP_COUNT) values ('"+result.getDialogID()+"',0)");
             con.commit();
-            return restore(result.getDialogID());
+            return restore(result.getDialogID(), deltaGson);
         }  catch( SQLException sXC ) {
         throw new RuntimeException(sXC);
         }

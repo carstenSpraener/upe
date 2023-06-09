@@ -49,8 +49,7 @@ public class TestProcessListHandling {
         assertThat(delta.getElementDeltaList())
                 .map(peDelta -> peDelta.getElementPath()+"='"+peDelta.getValueForFrontend()+"'")
                 .contains("/selectedAddress/street=''", "/addressList[0]/street='Kirchesch 6'");
-
-        UpeDialogState upeState = UpeDialogPersistorJdbcImpl.intance().restore(delta.getState().getDialogID());
+        UpeDialogState upeState = UpeDialogPersistorJdbcImpl.intance(UpeDialog.getGson()).restore(delta.getState().getDialogID(), UpeDialog.getGson());
         assertEquals(upeState.getStepCount() + 1, upeState.getSteps().size());
         assertNotNull(upeState.getSteps().get(upeState.getStepCount()));
         UpeStep lastState = upeState.getSteps().get(upeState.getStepCount());

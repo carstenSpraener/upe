@@ -20,9 +20,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.logging.Logger;
 
 public class UProcessComponentImpl extends AbstractUProcessElementImpl implements UProcessComponent {
-
+    private static final Logger LOGGER = Logger.getLogger(UProcessComponentImpl.class.getName());
     /**
      *
      */
@@ -169,7 +170,10 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
                 if (isPropertyAccessMehtod(m)) {
                     String fieldName = toFieldName(m);
                     if (!hasProcessElement(fieldName)) {
-                        addProcessElement(fieldName, createField(m));
+                        UProcessElement pElement = createField(m);
+                        if( pElement != null ) {
+                            addProcessElement(fieldName, pElement);
+                        }
                     }
                 }
             }
@@ -246,7 +250,8 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
             subPC.scaffold(m.getReturnType());
             return subPC;
         } else {
-            return new UProcessTextFieldImpl(this, toFieldName(m));
+            LOGGER.warning("Don't know how to scaffold method "+m.getName()+" with return type "+m.getReturnType()+"  to element "+getName());
+            return null;
         }
     }
 
@@ -283,7 +288,14 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
 
     private boolean exportProcessValue(Object obj, Method m) throws IllegalAccessException, InvocationTargetException {
         String fieldName = toFieldName(m);
-        UProcessElement pe = getProcessElement(fieldName);
+        UProcessElement pe = null;
+        try {
+             pe = getProcessElement(fieldName);
+        } catch( IllegalArgumentException iaXC ) {
+            LOGGER.fine("There is now child with name "+fieldName+" in process element "+getElementPath());
+            return false;
+        }
+
         if (pe != null) {
             if (pe instanceof UProcessField field) {
                 Object value = field.getValue();
@@ -291,8 +303,20 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
                 try {
                     m.invoke(obj, serValue);
                 } catch (IllegalArgumentException iaExc) {
+                    LOGGER.warning("Could not set value "+value+" to scaffolded class with method "+m.getName()+". Error: "+iaExc.getMessage());
                     field.addProcessMessage(getIllegalValueMessage(""+value));
                     return true;
+                }
+            } else if(pe instanceof UProcessComponentListImpl componentList) {
+                if( componentList.getScaffoldedClass() == null ) {
+                    LOGGER.warning("Tried to map component list "+componentList.getElementPath()+" to scaffold class. But the list does not have a scaffolded class set.");
+                    return true;
+                }
+                for( int rowID = 0; rowID < componentList.size(); rowID++ ) {
+                    Object valueReceiver = componentList.createScaffolded();
+                    UProcessComponentImpl pCompImpl = (UProcessComponentImpl) componentList.getAt(rowID);
+                    pCompImpl.mapToScaffolded(componentList.getScaffoldedClass(), valueReceiver);
+                    addScaffoldedTo(obj, fieldName, valueReceiver);
                 }
             } else if (pe instanceof UProcessComponentImpl component) {
                 Object childObj = readChildObject(fieldName, obj);
@@ -300,6 +324,16 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
             }
         }
         return false;
+    }
+
+    private void addScaffoldedTo(Object obj, String fieldName, Object valueReceiver) {
+        try {
+            String getterName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+            Method listGetter = obj.getClass().getDeclaredMethod(getterName);
+            ((List) listGetter.invoke(obj)).add(valueReceiver);
+        } catch( ReflectiveOperationException roXC ){
+            throw new UpeScaffoldingException("Setting of value "+valueReceiver+" to Object "+obj.getClass()+" not possible. Reaseon: "+roXC.getMessage(), roXC);
+        }
     }
 
     private Object readChildObject(String fieldName, Object obj) {
@@ -427,7 +461,13 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
                 Method m = methods[i];
                 if (isPropertyAccessMehtod(m)) {
                     String fieldName = toFieldName(m);
-                    UProcessElement e = getProcessElement(fieldName);
+                    UProcessElement e = null;
+                    try {
+                        e = getProcessElement(fieldName);
+                    } catch( IllegalArgumentException iaXC ) {
+                        LOGGER.fine("Therer is no process element in "+getElementPath()+" to receive values from "+obj);
+                        return;
+                    }
                     if (e == null) {
                         continue;
                     }

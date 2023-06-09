@@ -24,10 +24,7 @@ public class UpeStep {
 
     public static final String FIELD_LIST= "DIALOG_ID, STEP_NR, TYPE, FIELD, OLD_VALUE, NEW_VALUE, DELTA_JSON";
 
-    public UpeStep(int stepNr, String fieldPath, String oldValue, String newValue, String delta) {
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(UProcessMessage.class, new UpeMessageClassTypeAdapter())
-                .create();
+    public UpeStep(int stepNr, String fieldPath, String oldValue, String newValue, String delta, Gson gson) {
         this.type="VC";
         this.stepNr = stepNr;
         this.fieldPath = fieldPath;
@@ -36,20 +33,16 @@ public class UpeStep {
         this.delta = gson.fromJson(delta, ProcessDelta.class);
     }
 
-    public UpeStep(ResultSet rs) throws SQLException {
+    public UpeStep(ResultSet rs, Gson gson) throws SQLException {
         this(
                 rs.getInt(2),    // StepNr
                 rs.getString(4), // FieldPath
                 rs.getString(6), // oldValue
                 rs.getString(5), // newValue
-                rs.getString(7)  // ProcessDelta post applied
+                rs.getString(7),  // ProcessDelta post applied
+                gson
         );
         this.type = rs.getString(3); //Type
-    }
-
-    public UpeStep(int stepNr, String fieldPath) {
-        this(stepNr,fieldPath,null,null, null);
-        this.type = "AC";
     }
 
     public static String typeOf(String changedFieldPath, String oldValue, String newValue) {

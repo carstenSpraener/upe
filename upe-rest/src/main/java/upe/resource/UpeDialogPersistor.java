@@ -1,5 +1,6 @@
 package upe.resource;
 
+import com.google.gson.Gson;
 import upe.resource.model.UpeDialogState;
 
 public interface UpeDialogPersistor {
@@ -21,7 +22,7 @@ public interface UpeDialogPersistor {
      */
     UpeDialogState storeStep(String dialogID, int stepCount, String changedFieldPath, String oldValue, String newValue, String deltaJson);
 
-    UpeDialogState restore(String dialogID);
+    UpeDialogState restore(String dialogID, Gson deltaGson);
 
     UpeDialogState initiate();
 }

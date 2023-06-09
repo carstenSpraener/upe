@@ -1,12 +1,11 @@
 package upe.process.engine;
 
-import upe.process.UProcess;
-import upe.process.UProcessAction;
-import upe.process.UProcessEngine;
-import upe.process.UProcessSession;
+import upe.exception.UPERuntimeException;
+import upe.process.*;
 import upe.process.messages.UProcessMessage;
 
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -24,7 +23,7 @@ public class BaseUProcessEngine implements UProcessEngine, Serializable {
 	private Stack<ActiveUProcessInfo> processStack = new Stack<>();
 	private final UProcessCmdQueue cmdQueue     = new UProcessCmdQueue();
 	private UProcessSession session      = new UProcessSession();
-	private Locale             processLocale = Locale.getDefault();
+	private Locale processLocale = Locale.getDefault();
 	private Consumer<UProcessMessage> queuedMessageConsumer = null;
 
 	protected AbstractUUProcessCmd getCallProcessCmd() {
@@ -66,10 +65,7 @@ public class BaseUProcessEngine implements UProcessEngine, Serializable {
 			Map<String, Serializable> processArgs, UProcessAction returnAction) {
 		AbstractUUProcessCmd cmd = getCallProcessCmd();
 		setupProcessCmd(cmd, processName, processArgs, returnAction);
-		cmdQueue.appendCmd(cmd);
-		if( !cmdQueue.isProcessing() ) {
-			cmdQueue.run();
-		}
+		queueCommand(cmd);
 	}
 
 	@Override
@@ -106,13 +102,17 @@ public class BaseUProcessEngine implements UProcessEngine, Serializable {
 			Map<String, Serializable> processArgs) {
 		AbstractUUProcessCmd cmd = getJump2ProcessCmd();
 		setupProcessCmd(cmd, processName, processArgs, null);
+		queueCommand(cmd);
+	}
+
+	protected void queueCommand(AbstractUUProcessCmd cmd) {
 		cmdQueue.appendCmd(cmd);
 		if( !cmdQueue.isProcessing() ) {
 			cmdQueue.run();
 		}
 	}
 
-	void pushProcess(UProcess p, UProcessAction returnAction, UProcess callingUProcess) {
+	protected void pushProcess(UProcess p, UProcessAction returnAction, UProcess callingUProcess) {
 		processStack.push( createActiveProcessInfo(p,returnAction, callingUProcess) );
 	}
 
@@ -150,5 +150,19 @@ public class BaseUProcessEngine implements UProcessEngine, Serializable {
 	@Override
 	public UProcess getActiveProcess() {
 		return this.getActiveProcessInfo().getProcess();
+	}
+
+	@Override
+	public UProcess getProcessInstance(String processName) {
+		try {
+			Class<? extends UProcess> processClass = ApplicationConfiguration
+					.getInstance()
+					.getProcessClass(processName);
+			Constructor<? extends UProcess> processConstructor = processClass
+					.getConstructor(UProcessEngine.class, String.class);
+			return processConstructor.newInstance(this, processName);
+		} catch( ReflectiveOperationException roXC ) {
+			throw new UPERuntimeException(roXC);
+		}
 	}
 }

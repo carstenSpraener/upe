@@ -15,8 +15,8 @@ public class AbstractUProcessElementImpl implements UProcessElement {
 
 	protected UProcessComponent parent = null;
 	private String name = null;
-	private boolean visible = true;
-	private boolean enabled = true;
+	private Boolean visible = true;
+	private Boolean enabled = true;
 	protected long lastModified = Long.MIN_VALUE;
 
 	public UProcess getProcess() {
@@ -26,7 +26,7 @@ public class AbstractUProcessElementImpl implements UProcessElement {
 	private List<UProcessMessage> msgList = new ArrayList<>();
 	private transient List<UProcessElementListener> listenerList = new ArrayList<>();
 	
-	boolean needsRenderung = false;
+	Boolean needsRenderung = false;
 	/**
 	 * Creates a new process element under the parent process component 
 	 * and the given name. The constructor connects this new element as
@@ -69,11 +69,11 @@ public class AbstractUProcessElementImpl implements UProcessElement {
 		this.name = name;
 	}
 
-	public boolean isVisible() {
-		return this.visible;
+	public Boolean isVisible() {
+		return this.visible!=null && this.visible;
 	}
 
-	public void setVisible(boolean value) {
+	public void setVisible(Boolean value) {
 		if( this.visible != value ) {
 			this.lastModified = System.currentTimeMillis();
 		}
@@ -118,15 +118,15 @@ public class AbstractUProcessElementImpl implements UProcessElement {
 		return needsRenderung;		
 	}
 	
-	public void setNeedsRendering( boolean value ) {
+	public void setNeedsRendering(Boolean value) {
 		needsRenderung = value;
 	}
 
 	public boolean isEnabled() {
-		return enabled;
+		return enabled != null && enabled;
 	}
 
-	public void setEnabled(boolean enabled) {
+	public void setEnabled(Boolean enabled) {
 		if( this.enabled != enabled ) {
 			this.lastModified = System.currentTimeMillis();
 		}

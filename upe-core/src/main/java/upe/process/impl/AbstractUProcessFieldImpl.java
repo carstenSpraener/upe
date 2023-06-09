@@ -11,7 +11,6 @@ public class AbstractUProcessFieldImpl extends AbstractUProcessElementImpl
 		implements UProcessField {
 
 	private Serializable value = null;
-	
 	/**
 	 * 
 	 */

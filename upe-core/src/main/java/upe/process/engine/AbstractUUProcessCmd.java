@@ -55,16 +55,7 @@ public abstract class AbstractUUProcessCmd implements UProcessCommand {
 	}
 
 	protected UProcess createProcess() {
-		try {
-			Class<? extends UProcess> processClass = ApplicationConfiguration
-					.getInstance()
-					.getProcessClass(processName);
-			Constructor<? extends UProcess> processConstructor = processClass
-					.getConstructor(UProcessEngine.class, String.class);
-			return processConstructor.newInstance(processEngine, processName);
-		} catch( ReflectiveOperationException roXC ) {
-			throw new UPERuntimeException(roXC);
-		}
+		return processEngine.getProcessInstance(processName);
 	}
 
 }
