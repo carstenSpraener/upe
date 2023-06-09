@@ -38,7 +38,7 @@ public class PersonProcess extends AbstractUProcessImpl {
 
 
     @Override
-    public void initialize(Map<String, Serializable> args) {
+    public void initialize(Map<String, Object> args) {
         try(UProcessModification mod = new UProcessModification(this)) {
             resetAllValues();
             if( args.get(ARG_PERSON_ID) != null ) {
@@ -48,17 +48,17 @@ public class PersonProcess extends AbstractUProcessImpl {
     }
 
     @Override
-    public Map<String, Serializable> finish() {
+    public Map<String, Object> finish() {
         return null;
     }
 
     @Override
-    public Map<String, Serializable> cancel() {
+    public Map<String, Object> cancel() {
         return null;
     }
 
     @UpeProcessAction("actLoadPerson")
-    public void loadPerson(Map<String, Serializable> args) {
+    public void loadPerson(Map<String, Object> args) {
         PersonService srv = UProcessBackend.getInstance().provide(PersonService.class);
         PersonDTO personFromBackend = srv.loadByID(args.get(ARG_PERSON_ID));
         mapFromScaffolded(personFromBackend);

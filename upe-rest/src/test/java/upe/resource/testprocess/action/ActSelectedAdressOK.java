@@ -19,7 +19,7 @@ public class ActSelectedAdressOK extends AbstractUActionImpl  {
     }
 
     @Override
-    public Serializable internalExecute(Map<String, Serializable> args) {
+    public Object internalExecute(Map<String, Object> args) {
         PersonProcess prsP = getPersonProcess();
         AdressEditor adrEd = getAdressEditor();
         UProcessComponentList<AdressEditor> addressList = (UProcessComponentListImpl<AdressEditor>) getPersonProcess().getProcessElement("addressList");

@@ -24,18 +24,18 @@ public class ASimpleProcess extends AbstractUProcessImpl {
     }
 
     @Override
-    public void initialize(Map<String, Serializable> args) {
+    public void initialize(Map<String, Object> args) {
         String value = UProcessBackend.getInstance().provide(BackendService.class).get();
         this.getProcessElement("name", UProcessTextField.class).setStringValue(value);
     }
 
     @Override
-    public Map<String, Serializable> finish() {
+    public Map<String, Object> finish() {
         return null;
     }
 
     @Override
-    public Map<String, Serializable> cancel() {
+    public Map<String, Object> cancel() {
         return null;
     }
 }

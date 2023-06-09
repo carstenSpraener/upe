@@ -35,7 +35,7 @@ public class TestProcessListHandling {
     public void testAddressAdding() throws Exception {
         // Given: A person process with addressEditor and adressList
         UpeDialog dialog = new UpeDialog();
-        Map<String, Serializable> argsMap = new HashMap<>();
+        Map<String, Object> argsMap = new HashMap<>();
         ProcessDelta delta = dialog.initiateProcess("Person", argsMap);
         PersonProcess pp = (PersonProcess) dialog.getActiveProcess();
         // setting the address/strasse field to some value

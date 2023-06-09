@@ -51,7 +51,7 @@ public class TestStartWithPersonID {
     @Test
     void testStartWithPersonID() throws Exception {
         UpeDialog dialog = new UpeDialog();
-        Map<String, Serializable> argsMap = new HashMap<>();
+        Map<String, Object> argsMap = new HashMap<>();
         argsMap.put("ID", "17");
         ProcessDelta delta = dialog.initiateProcess("Person", argsMap);
         assertThat(delta.getElementDeltaList())
@@ -65,7 +65,7 @@ public class TestStartWithPersonID {
     @Test
     void testRestoreLoadPersonProcessNoActionCalled() throws Exception {
         UpeDialog dialog = new UpeDialog();
-        Map<String, Serializable> argsMap = new HashMap<>();
+        Map<String, Object> argsMap = new HashMap<>();
         argsMap.put("ID", "17");
         ProcessDelta delta = dialog.initiateProcess("Person", argsMap);
         String dialogID = delta.getState().getDialogID();

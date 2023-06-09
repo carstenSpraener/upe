@@ -32,7 +32,7 @@ public class UpeLifecycleTest {
     @Test
     public void testInitializationAndRebuild() throws Exception {
         UpeDialog dialog = new UpeDialog();
-        Map<String, Serializable> argsMap = new HashMap<>();
+        Map<String, Object> argsMap = new HashMap<>();
         ProcessDelta delta = dialog.initiateProcess("Person", argsMap);
         PersonProcess pp = (PersonProcess)dialog.getActiveProcess();
         assertNotNull(pp);
@@ -47,7 +47,7 @@ public class UpeLifecycleTest {
     @Test
     public void testValueChange() throws Exception {
         UpeDialog dialog = new UpeDialog();
-        Map<String, Serializable> argsMap = new HashMap<>();
+        Map<String, Object> argsMap = new HashMap<>();
         ProcessDelta delta = dialog.initiateProcess("Person", argsMap);
         PersonProcess pp = (PersonProcess)dialog.getActiveProcess();
         assertNotNull(pp);
@@ -61,7 +61,7 @@ public class UpeLifecycleTest {
     @Test
     public void testActionTrigger() throws Exception {
         UpeDialog dialog = new UpeDialog();
-        Map<String, Serializable> argsMap = new HashMap<>();
+        Map<String, Object> argsMap = new HashMap<>();
         ProcessDelta delta = dialog.initiateProcess("Person", argsMap);
         delta = dialog.putValueChange(delta.getState().getDialogID(),delta.getState().getStepCount(),
                 "/name", "Carsten");
