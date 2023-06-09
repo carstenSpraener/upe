@@ -72,4 +72,18 @@ public class UpeAssertions {
         }
         return this;
     }
+
+    public UpeAssertions assertDisabled(String elementPath) {
+        if( this.pc.getProcess().getProcessElement(elementPath).isEnabled() ) {
+            throw new UPEAssertionException("Expected process element "+elementPath+" to be disable, but it is enabled.");
+        }
+        return this;
+    }
+
+    public UpeAssertions assertEnabled(String elementPath) {
+        if( !this.pc.getProcess().getProcessElement(elementPath).isEnabled() ) {
+            throw new UPEAssertionException("Expected process element "+elementPath+" to be enabled, but it is disabled.");
+        }
+        return this;
+    }
 }

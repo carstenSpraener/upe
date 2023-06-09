@@ -1,4 +1,6 @@
 include ':upe-core'
 include ':upe-test'
 include ':upe-rest'
+include ':sample-step1'
 
+project(':sample-step1').projectDir = file('examples/upe-sample-application/sample-step1')
