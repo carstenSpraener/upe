@@ -16,6 +16,8 @@ import upe.process.validation.UProcessValidator;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -171,7 +173,7 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
                     String fieldName = toFieldName(m);
                     if (!hasProcessElement(fieldName)) {
                         UProcessElement pElement = createField(m);
-                        if( pElement != null ) {
+                        if (pElement != null) {
                             addProcessElement(fieldName, pElement);
                         }
                     }
@@ -249,8 +251,11 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
             GenericUProcessImpl subPC = new GenericUProcessImpl(getProcess().getProcessEngine(), toFieldName(m));
             subPC.scaffold(m.getReturnType());
             return subPC;
+        } else if (java.util.List.class.isAssignableFrom(m.getReturnType())) {
+            LOGGER.warning("Try to scaffold list "+toFieldName(m)+" which is currently not supported. You need to declare the list in the parent component "+this.getName() );
+            return null;
         } else {
-            LOGGER.warning("Don't know how to scaffold method "+m.getName()+" with return type "+m.getReturnType()+"  to element "+getName());
+            LOGGER.warning("Don't know how to scaffold method " + m.getName() + " with return type " + m.getReturnType() + "  to element " + getName());
             return null;
         }
     }
@@ -290,9 +295,9 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
         String fieldName = toFieldName(m);
         UProcessElement pe = null;
         try {
-             pe = getProcessElement(fieldName);
-        } catch( IllegalArgumentException iaXC ) {
-            LOGGER.fine("There is now child with name "+fieldName+" in process element "+getElementPath());
+            pe = getProcessElement(fieldName);
+        } catch (IllegalArgumentException iaXC) {
+            LOGGER.fine("There is now child with name " + fieldName + " in process element " + getElementPath());
             return false;
         }
 
@@ -303,16 +308,16 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
                 try {
                     m.invoke(obj, serValue);
                 } catch (IllegalArgumentException iaExc) {
-                    LOGGER.warning("Could not set value "+value+" to scaffolded class with method "+m.getName()+". Error: "+iaExc.getMessage());
-                    field.addProcessMessage(getIllegalValueMessage(""+value));
+                    LOGGER.warning("Could not set value " + value + " to scaffolded class with method " + m.getName() + ". Error: " + iaExc.getMessage());
+                    field.addProcessMessage(getIllegalValueMessage("" + value));
                     return true;
                 }
-            } else if(pe instanceof UProcessComponentListImpl componentList) {
-                if( componentList.getScaffoldedClass() == null ) {
-                    LOGGER.warning("Tried to map component list "+componentList.getElementPath()+" to scaffold class. But the list does not have a scaffolded class set.");
+            } else if (pe instanceof UProcessComponentListImpl componentList) {
+                if (componentList.getScaffoldedClass() == null) {
+                    LOGGER.warning("Tried to map component list " + componentList.getElementPath() + " to scaffold class. But the list does not have a scaffolded class set.");
                     return true;
                 }
-                for( int rowID = 0; rowID < componentList.size(); rowID++ ) {
+                for (int rowID = 0; rowID < componentList.size(); rowID++) {
                     Object valueReceiver = componentList.createScaffolded();
                     UProcessComponentImpl pCompImpl = (UProcessComponentImpl) componentList.getAt(rowID);
                     pCompImpl.mapToScaffolded(componentList.getScaffoldedClass(), valueReceiver);
@@ -331,8 +336,8 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
             String getterName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
             Method listGetter = obj.getClass().getDeclaredMethod(getterName);
             ((List) listGetter.invoke(obj)).add(valueReceiver);
-        } catch( ReflectiveOperationException roXC ){
-            throw new UpeScaffoldingException("Setting of value "+valueReceiver+" to Object "+obj.getClass()+" not possible. Reaseon: "+roXC.getMessage(), roXC);
+        } catch (ReflectiveOperationException roXC) {
+            throw new UpeScaffoldingException("Setting of value " + valueReceiver + " to Object " + obj.getClass() + " not possible. Reaseon: " + roXC.getMessage(), roXC);
         }
     }
 
@@ -464,8 +469,8 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
                     UProcessElement e = null;
                     try {
                         e = getProcessElement(fieldName);
-                    } catch( IllegalArgumentException iaXC ) {
-                        LOGGER.fine("Therer is no process element in "+getElementPath()+" to receive values from "+obj);
+                    } catch (IllegalArgumentException iaXC) {
+                        LOGGER.info("Therer is no process element in " + getElementPath() + " to receive values from " + obj);
                         return;
                     }
                     if (e == null) {
@@ -485,14 +490,14 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
         if (e instanceof UProcessField field) {
             field.setValue((Serializable) value);
         } else if (e instanceof UProcessComponentListImpl pList) {
-            if( value instanceof Iterable<?> it ) {
-                it.forEach(listItem ->  {
-                    if( listItem != null ) {
+            if (value instanceof Iterable<?> it) {
+                it.forEach(listItem -> {
+                    if (listItem != null) {
                         ((UProcessComponentImpl) pList.createNewInstance()).mapFromScaffolded(listItem);
                     }
                 });
             } else {
-                throw new UProcessMappingException("Try to mapp not iterable "+value.getClass()+" into process list "+e.getElementPath());
+                throw new UProcessMappingException("Try to mapp not iterable " + value.getClass() + " into process list " + e.getElementPath());
             }
         } else if (e instanceof UProcessComponentImpl pc) {
             pc.mapFromScaffolded(value.getClass(), value);
@@ -565,8 +570,8 @@ public class UProcessComponentImpl extends AbstractUProcessElementImpl implement
     }
 
     public void resetAllValues() {
-        for( UProcessElement pe : this.name2processElementMap.values() ) {
-            if( pe instanceof UProcessField field ) {
+        for (UProcessElement pe : this.name2processElementMap.values()) {
+            if (pe instanceof UProcessField field) {
                 field.setValue(null);
             }
         }

@@ -70,22 +70,26 @@ public class UpeDialog {
     }
 
     public ProcessDelta initiateProcess(String name, Map<String, Serializable> args) {
-        UpeDialogState state = UpeDialogPersistorJdbcImpl.intance(getGson()).initiate();
-        String jsonArgs = new Gson().toJson(args);
+        try( TimeLogger tl = new TimeLogger("initiateProcess") ) {
+            UpeDialogState state = UpeDialogPersistorJdbcImpl.intance(getGson()).initiate();
+            String jsonArgs = new Gson().toJson(args);
 
-        engine.callProcess(name, args, null);
-        ProcessDelta delta = new ProcessDelta(state);
-        delta.buildCompleteState(getActiveProcess());
+            engine.callProcess(name, args, null);
+            ProcessDelta delta = new ProcessDelta(state);
+            delta.buildCompleteState(getActiveProcess());
 
-        UpeDialogPersistorJdbcImpl.intance(getGson()).storeStep(
-                state.getDialogID(),
-                state.getStepCount(),
-                "@INIT;"+name,
-                null,
-                jsonArgs,
-                getGson().toJson(delta));
+            UpeDialogPersistorJdbcImpl.intance(getGson()).storeStep(
+                    state.getDialogID(),
+                    state.getStepCount(),
+                    "@INIT;" + name,
+                    null,
+                    jsonArgs,
+                    getGson().toJson(delta));
 
-        return delta;
+            return delta;
+        } catch( Exception e ) {
+            throw new UPERuntimeException(e);
+        }
     }
 
     public ProcessDelta rebuild(String dialogID) {

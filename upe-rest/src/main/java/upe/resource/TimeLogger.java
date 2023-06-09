@@ -16,6 +16,6 @@ public class TimeLogger implements AutoCloseable {
     @Override
     public void close() throws Exception {
         long timeEndMillis = System.currentTimeMillis();
-        LOGGER.info(String.format("Operation '%s' took %d ms.%n", description, timeEndMillis- timeStartMillis));
+        LOGGER.info(String.format("Operation '%s' took %d ms.", description, timeEndMillis- timeStartMillis));
     }
 }
