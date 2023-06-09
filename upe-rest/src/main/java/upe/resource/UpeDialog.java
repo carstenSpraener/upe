@@ -121,20 +121,24 @@ public class UpeDialog {
     }
 
     public ProcessDelta putValueChange(String dialogID, int stepCount, String valuePath, String newValueFromFrontend) {
-        String oldValue = "";
-        Consumer<UProcess> procConsumer = (p) -> {
-            ((UProcessField)p.getProcessElement(valuePath)).setValueFromFrontend(newValueFromFrontend);
-        };
-        ModificationResult result = doProcessModification(dialogID, stepCount, valuePath, procConsumer);
-        UpeDialogPersistorJdbcImpl.intance(getGson()).storeStep(
-                result.state.getDialogID(),
-                result.state.getStepCount(),
-                valuePath,
-                result.oldValue,
-                result.newValue,
-                getGson().toJson(result.delta)
-        );
-        return result.delta;
+        try(TimeLogger tl = new TimeLogger("putValueChange") ) {
+            String oldValue = "";
+            Consumer<UProcess> procConsumer = (p) -> {
+                ((UProcessField) p.getProcessElement(valuePath)).setValueFromFrontend(newValueFromFrontend);
+            };
+            ModificationResult result = doProcessModification(dialogID, stepCount, valuePath, procConsumer);
+            UpeDialogPersistorJdbcImpl.intance(getGson()).storeStep(
+                    result.state.getDialogID(),
+                    result.state.getStepCount(),
+                    valuePath,
+                    result.oldValue,
+                    result.newValue,
+                    getGson().toJson(result.delta)
+            );
+            return result.delta;
+        } catch( Exception e ) {
+            throw new UPERuntimeException(e);
+        }
     }
 
     private ModificationResult doProcessModification(String dialogID, int stepCount, String valuePath,
@@ -166,20 +170,24 @@ public class UpeDialog {
     }
 
     public ProcessDelta triggerAction(String dialogID, int stepCount, String actionPath) {
-        ModificationResult result = doProcessModification(dialogID, stepCount, actionPath, (p) -> {
-            if( p.getProcessElement(actionPath) instanceof UProcessAction act) {
-                act.execute(null);
-            } else {
-                throw new UPERuntimeException("Illegal action path '"+actionPath+"' in trigger action");
-            }
-        });
-        UpeDialogPersistorJdbcImpl.intance(getGson()).storeAction(
-                result.state.getDialogID(),
-                result.state.getStepCount(),
-                actionPath,
-                getGson().toJson(result.delta)
-        );
-        return result.delta;
+        try(TimeLogger tl = new TimeLogger("putValueChange") ) {
+            ModificationResult result = doProcessModification(dialogID, stepCount, actionPath, (p) -> {
+                if (p.getProcessElement(actionPath) instanceof UProcessAction act) {
+                    act.execute(null);
+                } else {
+                    throw new UPERuntimeException("Illegal action path '" + actionPath + "' in trigger action");
+                }
+            });
+            UpeDialogPersistorJdbcImpl.intance(getGson()).storeAction(
+                    result.state.getDialogID(),
+                    result.state.getStepCount(),
+                    actionPath,
+                    getGson().toJson(result.delta)
+            );
+            return result.delta;
+        } catch( Exception e ) {
+            throw new UPERuntimeException(e);
+        }
     }
 
 
