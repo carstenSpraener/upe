@@ -11,8 +11,7 @@ technologies or other rapidly changing frameworks. This is achieved by:
 * A single threaded programming model independent of the runtime environment
 * As a side product the application is highly testable
 
-__At the moment there is no Getting Started.__ 
-## [Take a look at the examples to get an idea](examples/Readme.md)
+## [Sample-Steps](examples/upe-sample-application/README.md): A tour through UPE
 
 You can build __highly interactive complex applications__ where every field on
 a dialog is a resource. In a browser the Backward-Button is not forbidden,
