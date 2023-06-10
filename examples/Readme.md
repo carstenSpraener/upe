@@ -1,14 +1,12 @@
 # WARNING! Highly under construction
 
-__The projects in this directory are highly under 
+__The projects in this directory are highly under
 construction. The purpose of the projects is
 to test the implementation of upe-core, upe-rest,
-upe-angular-frontend and the cgV19-Cartridge for 
+upe-angular-frontend and the cgV19-Cartridge for
 upe.__
 
-But of course you can look around and get an idea
-of how thinks are meant to be used. But please _do 
-not blame me for code in this directory_.
+Nevertheless, you can look around and understand how things are meant to be used. However, please do not blame me for the code in this directory.
 
 ## The projects are:
 
@@ -17,26 +15,26 @@ A [cgV19-cartridge](https://github.com/carstenSpraener/cgV19) for model driven d
 upe.
 
 ### upe-application
-A model driven developed application to demonstrate
-the use of upe. The model is a [VisualParadigm](https://www.visual-paradigm.com/download/community.jsp) 
+A model-driven developed application to demonstrate
+the use of upe. The model is a [VisualParadigm](https://www.visual-paradigm.com/download/community.jsp)
 UML-Model.
 
-The application runs as a Spring Boot application 
-without a frontend.
+The application runs as a Spring Boot application
+without a front end.
 
 ### upe-ngclient
 A prototype/POC for an Angular frontend for an
-upe application. Not very nice but with some 
-interesting features.
+upe application. Not very nice but with some
+exciting features.
 
 ![img_2.png](images/img_2.png)
 
 ## Features
 
 * All business logic is running on the server. The
-  frontend has  just code to splitt the fields into
+  front end has just code to split the fields into
   views and bind some input fields and buttons to
-  process elements. Frontend-Code is mostly like this:
+  process elements. Frontend-Code is mainly like this:
 
 ```hmtl
 <div [upeProcess]="'personProcess'" style="margin-bottom: 60px">
@@ -50,28 +48,26 @@ interesting features.
 
 ```
 
-* validation errors will be displayed immediately. Also enable/disable elements or
+* validation errors will be displayed immediately. Also, enable/disable elements or
   visible/hide process elements.
 
 * Forward and Backword-Button in the browser are
-  allowed. You can go back through your inputs and
+  allowed. You can go back through your inputs, and
   errors will reappear.
 
-* The link in the browser can be shared. Opening the
-  link will open the application in exact the same state
-  as you see it.
+* The link in the browser can be shared. The
+  link will open the application in precisely the same state
+  you see.
 * There is no "Session" as in classic web applications. Your
   running application is a REST-Resource where you can GET, PUT and POST
   some Data.
-* Synchronisation between frontend and the server-side upe application is
+* Synchronisation between the front end and the server-side upe application is
   done via PUT-Requests and ProcessDelta-Response.
 
 
 ## Model Driven Development with [cgV19](https://github.com/carstenSpraener/cgV19)
 
-As mentioned above, the application is a model driven developed application.
-This means, you will have a mode that feeds a generator that generates
-the majority of your projects code.
+As mentioned above, the application is a model-driven developed application. This means you will have a model that feeds a generator that generates the majority of the code of your project.
 
 __Process Layer of the demo application__
 
