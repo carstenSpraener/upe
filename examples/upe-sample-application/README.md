@@ -18,7 +18,7 @@ tests are red, and to greenifying them is the task of the next steps.
 This project adds mandatory validations to the login process
 to get the first tests green.
 
-## Sample-step3: Adding a rule to a process
+## [Sample-step3](sample-step3/README.md): Adding a rule to a process
 This project shows how to implement a rule to enable the login
 action when all data is filled in and no errors are in the login
 process. It then allows the login action.

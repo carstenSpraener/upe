@@ -47,10 +47,14 @@ public class UMethodURule implements UProcessRule {
     private Object readProcessValue(UProcess activeProcess, Parameter p) {
         UProcessElement pElement = this.containingProcessComponent.getProcessElement(getElementPathForParameter(p));
         String fqPath = pElement.getElementPath();
-        return activeProcess.getProcessElement(
-                fqPath,
-                UProcessField.class
-        ).getValue();
+        UProcessElement pField = activeProcess.getProcessElement(
+                fqPath
+        );
+        if( UProcessElement.class.isAssignableFrom(p.getType()) ) {
+            return pField;
+        } else {
+            return ((UProcessField)pField).getValue();
+        }
     }
 
     private String getElementPathForParameter(Parameter p) {

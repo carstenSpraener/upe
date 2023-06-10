@@ -105,12 +105,14 @@ public class AbstractUProcessElementImpl implements UProcessElement {
 		}
 		msgList.add( msg );
 		needsRenderung = true;
+		fireElementChangedNoVeto();
 	}
 	
 	public void removeProcessMessage( UProcessMessage msg ) {
 		if( msgList.contains(msg) ) {
 			setNeedsRendering(true);
 			msgList.remove(msg);
+			fireElementChangedNoVeto();
 		}
 	}
 
@@ -144,6 +146,16 @@ public class AbstractUProcessElementImpl implements UProcessElement {
 	protected void fireElementChanged() throws UpeRuleVetoException {
 		for( UProcessElementListener pel : listenerList ) {
 			pel.elementChanged(this);
+		}
+	}
+
+	protected void fireElementChangedNoVeto() {
+		for( UProcessElementListener pel : listenerList ) {
+			try {
+				pel.elementChanged(this);
+			} catch( UpeRuleVetoException vXC ) {
+				// Ignored in ths method
+			}
 		}
 	}
 
