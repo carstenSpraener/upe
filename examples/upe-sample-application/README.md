@@ -25,11 +25,11 @@ process. It then allows the login action.
 
 This should turn another test to green.
 
-## Sample-step4: Calling a Backend, jump to a subprocess
+## [Sample-step4](sample-step4%2FREADME.md): Calling a Backend, jump to another process
 This project calls some Backend in the actLogin action and
 queues an error message for the user if login does not succeed.
 
-If the login succeeds, it jumps to a HelloWorld process.
+If the login succeeds, it jumps to a HelloWorld process showing the username.
 
 ## Sample-step5: Calling a sub-process
 

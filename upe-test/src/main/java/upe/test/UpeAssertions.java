@@ -1,6 +1,7 @@
 package upe.test;
 
 import upe.process.UProcessComponent;
+import upe.process.UProcessField;
 
 /**
  * Helper to make expressing assertions in UPE easy. See documentation of the
@@ -86,4 +87,13 @@ public class UpeAssertions {
         }
         return this;
     }
+
+    public UpeAssertions assertHasValue(String path, String valueForFrontend) {
+        String fieldValue = this.pc.getProcessElement(path, UProcessField.class).getValueForFrontend();
+        if( !valueForFrontend.equals(fieldValue) ) {
+            throw new UPEAssertionException("value mismatch: Expected '"+valueForFrontend+"', actual '"+fieldValue+"'");
+        }
+        return this;
+    }
+
 }
