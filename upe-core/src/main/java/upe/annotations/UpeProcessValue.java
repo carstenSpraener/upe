@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
-public @interface UProcessValue {
+public @interface UpeProcessValue {
     /**
      * The path to an ProcessField for the rule to trigger
      * @return

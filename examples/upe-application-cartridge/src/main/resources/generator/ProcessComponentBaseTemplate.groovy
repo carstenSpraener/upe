@@ -38,7 +38,7 @@ import upe.annotations.*;
 import upe.common.MasterProcessComponent;
 import upe.process.*;
 import upe.process.impl.UProcessComponentImpl;
-import upe.process.validation.impl.MandantoryValidator;
+import upe.process.validation.impl.MandatoryValidator;
 
 ${this.pbTemplate.scaffoldsDefinition()}public class ${mClass.getName()} extends UProcessComponentImpl {
 ${this.pbTemplate.peFields()}${this.pbTemplate.peReferences()}

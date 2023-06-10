@@ -14,13 +14,13 @@ and an unimplemented login action.
 It defines a set of JUnit tests to check several validations. These
 tests are red, and to greenifying them is the task of the next steps.
 
-## Sample-step2: Implementing validators
-This project adds some mandatory validations to the login process
+## [Sample-step2](sample-step2/README.md): Implementing validators
+This project adds mandatory validations to the login process
 to get the first tests green.
 
 ## Sample-step3: Adding a rule to a process
 This project shows how to implement a rule to enable the login
-action when all data is filled in, and no errors are in the login
+action when all data is filled in and no errors are in the login
 process. It then allows the login action.
 
 This should turn another test to green.

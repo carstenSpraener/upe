@@ -4,7 +4,6 @@ import upe.annotations.*;
 import upe.process.*;
 
 
-import java.util.List;
 import java.util.Map;
 
 @UpeProcess("TestProcess")
@@ -45,7 +44,7 @@ public class DerivedUProcess extends BaseUProcess {
     }
 
     @UpeRule
-    public void rulNameChanged(@UProcessValue("/name")String name) {
+    public void rulNameChanged(@UpeProcessValue("/name")String name) {
         UProcessTextField mameLC = getProcessElement("myNameLC", UProcessTextField.class);
         if( name==null ) {
             mameLC.setStringValue("null");

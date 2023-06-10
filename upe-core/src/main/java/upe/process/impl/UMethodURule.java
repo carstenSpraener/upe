@@ -1,6 +1,6 @@
 package upe.process.impl;
 
-import upe.annotations.UProcessValue;
+import upe.annotations.UpeProcessValue;
 import upe.exception.UPERuntimeException;
 import upe.process.UProcess;
 import upe.process.UProcessComponent;
@@ -13,7 +13,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -56,8 +55,8 @@ public class UMethodURule implements UProcessRule {
 
     private String getElementPathForParameter(Parameter p) {
         String elementPath = p.getName();
-        if( p.isAnnotationPresent(UProcessValue.class)) {
-            elementPath = p.getAnnotation(UProcessValue.class).value();
+        if( p.isAnnotationPresent(UpeProcessValue.class)) {
+            elementPath = p.getAnnotation(UpeProcessValue.class).value();
         }
         return elementPath;
     }

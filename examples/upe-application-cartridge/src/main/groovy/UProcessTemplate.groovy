@@ -236,7 +236,7 @@ import upe.common.MasterProcessComponent;
         attrList.forEach {
             if( it.getProperties().get("required")!=null ) {
                 sb.append(
-                        """        this.addValidator(new MandantoryValidator("${it.name}"));
+                        """        this.addValidator(new MandatoryValidator("${it.name}"));
 """
                 )
             }

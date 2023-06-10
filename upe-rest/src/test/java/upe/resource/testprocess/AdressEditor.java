@@ -4,10 +4,8 @@ import upe.annotations.UpeProcessField;
 import upe.annotations.UpeScaffolds;
 import upe.process.UProcessComponent;
 import upe.process.UProcessDecimalField;
-import upe.process.UProcessElementSystem;
-import upe.process.UProcessTextField;
 import upe.process.impl.UProcessComponentImpl;
-import upe.process.validation.impl.MandantoryValidator;
+import upe.process.validation.impl.MandatoryValidator;
 import upe.resource.testprocess.dto.AddressDTO;
 
 import java.math.BigDecimal;
@@ -19,7 +17,7 @@ public class AdressEditor extends UProcessComponentImpl {
 
     public AdressEditor(UProcessComponent parent, String name) {
         super(parent, name);
-        this.addValidator(new MandantoryValidator("street"));
+        this.addValidator(new MandatoryValidator("street"));
     }
 
     public BigDecimal getRowIDValue() {

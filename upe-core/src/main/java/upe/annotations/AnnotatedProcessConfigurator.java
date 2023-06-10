@@ -1,15 +1,13 @@
 package upe.annotations;
 
 import upe.process.*;
-import upe.process.impl.UActionMethodInvoker;
-import upe.process.impl.UMethodUProcessAction;
-import upe.process.impl.UMethodURule;
-import upe.process.impl.UProcessComponentImpl;
+import upe.process.impl.*;
+import upe.process.messages.UProcessMessageImpl;
+import upe.process.messages.UProcessMessageStorage;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +42,17 @@ public class AnnotatedProcessConfigurator {
                 LOGGER.severe(String.format("Cannot create UProcessElement for field '%s'. Error: %s", actField.getName(), roXC.getMessage()));
             }
         }
+        for( Field messageField : collectMessageFields(p) ) {
+            UpeProcessMessage msg = messageField.getAnnotation(UpeProcessMessage.class);
+            try {
+                String msgText = (String) messageField.get(null);
+                UProcessMessageStorage.getInstance().storeMessage(
+                        new UProcessMessageImpl(msg.value(), msgText, msg.level())
+                );
+            } catch( ReflectiveOperationException roXC ) {
+                LOGGER.warning("Could not read process message "+msg.value()+" from field "+messageField.getName()+" in process "+p.getName()+". Message fields have to be publid static Strings. Error is: "+roXC.getMessage());
+            }
+        }
         for (Field f : collectAnnotatedComponents(p)) {
             try {
                 UpeProcessComponent pcConfig = f.getAnnotation(UpeProcessComponent.class);
@@ -57,10 +66,14 @@ public class AnnotatedProcessConfigurator {
         if( scaffolds!=null ) {
             ((UProcessComponentImpl)p).scaffold(scaffolds.value());
         }
-        for (Method m : collecRuleMethods(p)) {
+        for (Method m : collectRuleMethods(p)) {
             UpeRule ruleConfig = m.getAnnotation(UpeRule.class);
             UMethodURule rule = new UMethodURule(p, m);
             rule.bindToProcess(p);
+        }
+        for (Method m : collectValidatorMethods(p)) {
+            UpeValidator validatorConfig = m.getAnnotation(UpeValidator.class);
+            new UMethodValidator(p, m);
         }
     }
 
@@ -120,6 +133,10 @@ public class AnnotatedProcessConfigurator {
         return collectAnnotatedFields(p, UpeProcessAction.class);
     }
 
+    private static List<Field> collectMessageFields(UProcessComponent p) {
+        return collectAnnotatedFields(p, UpeProcessMessage.class);
+    }
+
     private static List<Field> collectAnnotatedFields(UProcessComponent p, Class<? extends Annotation> annotation) {
         List<Field> processFields = new ArrayList<>();
         Class<?> clazz = p.getClass();
@@ -134,8 +151,11 @@ public class AnnotatedProcessConfigurator {
         return processFields;
     }
 
-    private static List<Method> collecRuleMethods(UProcessComponent p) {
+    private static List<Method> collectRuleMethods(UProcessComponent p) {
         return collectMethodsWith(p, UpeRule.class);
+    }
+    private static List<Method> collectValidatorMethods(UProcessComponent p) {
+        return collectMethodsWith(p, UpeValidator.class);
     }
 
     private static List<Method> collectActionMethods(UProcessComponent p) {

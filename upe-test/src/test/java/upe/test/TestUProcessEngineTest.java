@@ -8,7 +8,7 @@ import upe.process.UProcessEngine;
 import upe.process.UProcessModification;
 import upe.process.UProcessTextField;
 import upe.process.messages.UProcessMessage;
-import upe.process.validation.impl.MandantoryValidator;
+import upe.process.validation.impl.MandatoryValidator;
 import upe.test.annotations.UInject;
 import upe.test.annotations.UpeBackendComponent;
 import upe.test.annotations.UpeProcessToTest;
@@ -61,7 +61,7 @@ class TestUProcessEngineTest {
         }
         // check that the expected error occurred
         new UpeAssertions(uut)
-                .assertHasError("/name", MandantoryValidator.MSG_ID)
+                .assertHasError("/name", MandatoryValidator.MSG_ID)
                 .assertMaxMsgLevel("/name", UProcessMessage.MESSAGE_LEVEL_ERROR)
         ;
         // modify the name field and set some value
@@ -70,7 +70,7 @@ class TestUProcessEngineTest {
         }
         // check that the expected error disappeared.
         new UpeAssertions(uut)
-                .assertNotHasError("/name",  MandantoryValidator.MSG_ID)
+                .assertNotHasError("/name",  MandatoryValidator.MSG_ID)
                 .assertMaxMsgLevel("/name", UProcessMessage.MESSAGE_LEVEL_NONE)
                 ;
     }

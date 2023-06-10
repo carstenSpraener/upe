@@ -2,7 +2,7 @@ package upe.process;
 
 import org.junit.Test;
 import upe.process.testapp.Application;
-import upe.process.validation.impl.MandantoryValidator;
+import upe.process.validation.impl.MandatoryValidator;
 
 import static org.junit.Assert.assertEquals;
 
@@ -13,7 +13,7 @@ public class ValidationTests {
     public void testValidation() throws Exception {
         UProcess activeUProcess = Application.createTestProcess();
 
-        MandantoryValidator validator = new MandantoryValidator("/name");
+        MandatoryValidator validator = new MandatoryValidator("/name");
         activeUProcess.addValidator(validator);
         UProcessField nameElement = (UProcessField) activeUProcess.getProcessElement("/name");
 

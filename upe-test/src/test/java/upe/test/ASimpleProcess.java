@@ -6,9 +6,8 @@ import upe.backend.UProcessBackend;
 import upe.process.UProcessEngine;
 import upe.process.UProcessTextField;
 import upe.process.impl.AbstractUProcessImpl;
-import upe.process.validation.impl.MandantoryValidator;
+import upe.process.validation.impl.MandatoryValidator;
 
-import java.io.Serializable;
 import java.util.Map;
 
 @UpeProcess("ASimpleProcess")
@@ -20,7 +19,7 @@ public class ASimpleProcess extends AbstractUProcessImpl {
 
     public ASimpleProcess(UProcessEngine pe, String name) {
         super(pe, name);
-        addValidator(new MandantoryValidator("name"));
+        addValidator(new MandatoryValidator("name"));
     }
 
     @Override

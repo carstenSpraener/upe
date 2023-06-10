@@ -35,7 +35,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 })
 // Till now there is nothing implemented. Just the structure was defined. SO
 // all tests will be red. Disable them to not break the build.
-@Disabled("This tests are disabled, since sample-step2")
 class LoginProcessTest {
 
     // Let the test environment inject a instance of LoginProcess to this field.
@@ -64,6 +63,7 @@ class LoginProcessTest {
      *
      * @throws Exception
      */
+    @Disabled("This tests are disabled, since sample-step3")
     @Test
     void testLoginProcessActLoginDisabledUntilFilled() throws Exception {
         uut.initialize(new HashMap<>());

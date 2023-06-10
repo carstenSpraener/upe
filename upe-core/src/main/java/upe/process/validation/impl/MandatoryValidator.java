@@ -8,7 +8,7 @@ import upe.process.messages.UProcessMessage;
 import upe.process.messages.UProcessMessageImpl;
 import upe.process.messages.UProcessMessageStorage;
 
-public class MandantoryValidator extends UProcessValidatorSupport {
+public class MandatoryValidator extends UProcessValidatorSupport {
 
 	/**
 	 * 
@@ -23,7 +23,7 @@ public class MandantoryValidator extends UProcessValidatorSupport {
 
 	private String elementPath = null;
 	
-	public MandantoryValidator(String elementPath ) {
+	public MandatoryValidator(String elementPath ) {
 		this.elementPath = elementPath;
 	}
 	
