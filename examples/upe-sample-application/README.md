@@ -7,9 +7,9 @@ can be compiled, but it is not necessary green.
 See the READMEs in the subprojects for further details. Here is 
 just a little overview.
 
-## Sample-step1: Implementing a process
-Defines a simple login process with a user, pwd1 and pwd2 field 
-and a unimplemented login action.
+## [Sample-step1](sample-step1/README.md): Implementing a process
+Defines a simple login process with a user and password field 
+and an unimplemented login action.
 
 It defines a set of JUnit tests to check several validations. These 
 tests are red and to greenify them is the task of the next steps.
