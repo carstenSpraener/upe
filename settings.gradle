@@ -5,8 +5,10 @@ include ':sample-step1'
 include ':sample-step2'
 include ':sample-step3'
 include ':sample-step4'
+include ':sample-step5'
 
 project(':sample-step1').projectDir = file('examples/upe-sample-application/sample-step1')
 project(':sample-step2').projectDir = file('examples/upe-sample-application/sample-step2')
 project(':sample-step3').projectDir = file('examples/upe-sample-application/sample-step3')
 project(':sample-step4').projectDir = file('examples/upe-sample-application/sample-step4')
+project(':sample-step5').projectDir = file('examples/upe-sample-application/sample-step5')
