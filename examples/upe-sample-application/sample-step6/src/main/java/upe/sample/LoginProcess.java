@@ -77,8 +77,6 @@ public class LoginProcess extends AbstractUProcessImpl {
      */
     @Override
     public void initialize(Map<String, Object> args) {
-        getProcessElement("actLogin", UProcessAction.class).setEnabled(true);
-        getProcessElement("actRegister", UProcessAction.class).setEnabled(true);
     }
 
     /**
