@@ -72,6 +72,9 @@ public class BaseUProcessEngine implements UProcessEngine {
 	public Map<String, Object> cancelProcess() {
 		ActiveUProcessInfo pc = popProcess();
 		Map<String,Object> result = pc.getProcess().cancel();
+		if( result == null ) {
+			result = new HashMap<>();
+		}
 		result.put( PROCESS_RESULT_STATE, PROCESS_CANCEL);
 		pc.getReturnAction().execute(result);
 		return result;

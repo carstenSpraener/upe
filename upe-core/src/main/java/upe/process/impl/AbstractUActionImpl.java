@@ -17,6 +17,8 @@ public abstract class AbstractUActionImpl extends AbstractUProcessElementImpl im
 
 	protected AbstractUActionImpl(UProcessComponent parent, String name) {
 		super(parent, name);
+		setEnabled(true);
+		setVisible(true);
 	}
 
 	public Object execute(Map<String, Object> args) {
@@ -35,7 +37,8 @@ public abstract class AbstractUActionImpl extends AbstractUProcessElementImpl im
 	@Override
 	public void setEnabled( boolean value ) {
 		this.isEnabled = value;
+		super.fireElementChangedNoVeto();
 	}
-	
+
 	public abstract Object internalExecute( Map<String, Object> args );
 }

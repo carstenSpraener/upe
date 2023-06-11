@@ -31,7 +31,7 @@ queues an error message for the user if login does not succeed.
 
 If the login succeeds, it jumps to a HelloWorld process showing the username.
 
-## Sample-step5: Calling a sub-process
+## [Sample-step5](sample-step5%2FREADME.md): Calling a sub-process
 
 This project adds an actRegistration action to the login process, which
 will call a simple registration process. If the process returns,
