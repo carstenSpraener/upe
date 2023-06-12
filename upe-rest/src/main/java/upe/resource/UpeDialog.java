@@ -51,6 +51,10 @@ public class UpeDialog {
         this.engine = engine;
     }
 
+    public ProcessDelta getDialogState(String dialogID) {
+        return getDialogState(dialogID, Integer.MAX_VALUE);
+    }
+
     public ProcessDelta getDialogState(String dialogID, int stepNr) {
         UpeDialogState state = rebuild(dialogID, stepNr);
         UProcess p = getActiveProcess();
@@ -83,9 +87,7 @@ public class UpeDialog {
                     state.getStepCount(),
                     deltaList
             );
-            ProcessDelta delta = new ProcessDelta(this.engine, state, UpeDeltaType.RB);
-            delta.buildCompleteState(engine.getActiveProcess());
-            return delta;
+            return recorder.getActiveDelta();
         } catch (Exception e) {
             throw new UPERuntimeException(e);
         }

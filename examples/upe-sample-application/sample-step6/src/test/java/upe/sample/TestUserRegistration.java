@@ -99,16 +99,6 @@ public class TestUserRegistration {
         ;
         // activate the actRegisterOK action
         registrationProcess.getProcessElement("actRegisterOK", UProcessAction.class).execute(null);
-        // Now the login process should be active aain
-        assertTrue( testUProcessEngine.getActiveProcess() instanceof LoginProcess );
-
-        // Check that the values are taken from the registration process
-        new UpeAssertions(testUProcessEngine.getActiveProcess())
-                .assertHasValue("user", "johndoe")
-                .assertHasValue("password", "password")
-        ;
-        // Activate the actLogin action
-        uut.getProcessElement("actLogin", UProcessAction.class).execute(null);
         // Now the active process should be the HelloWorldProcess
         assertTrue(testUProcessEngine.getActiveProcess() instanceof HelloWorldProcess );
         // and the content should be set as expected

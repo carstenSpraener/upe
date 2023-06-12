@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -49,6 +50,13 @@ public class UpeLifecycleTest {
         UpeDialog dialog = new UpeDialog();
         Map<String, Object> argsMap = new HashMap<>();
         ProcessDelta delta = dialog.initiateProcess("Person", argsMap);
+        assertThat(delta.getElementDeltaList())
+                .flatMap(peDelta ->
+                        peDelta.getNewMessages().stream()
+                                .map(msg -> peDelta.getElementPath()+":"+msg.getMessageID())
+                                .collect(Collectors.toList())
+                )
+                .contains("/selectedAddress/street:UPE0001");
         PersonProcess pp = (PersonProcess)dialog.getActiveProcess();
         assertNotNull(pp);
 

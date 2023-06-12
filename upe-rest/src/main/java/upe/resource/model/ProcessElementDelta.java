@@ -22,22 +22,6 @@ public class ProcessElementDelta {
         return isVisible!=null || enabled != null || valueForFrontend != null || newMessages.size()>0 || removedMessages.size()>0;
     }
 
-    public ProcessElementDelta from(ProcessElementState state) {
-        this.elementPath = state.fieldPath;
-        this.valueForFrontend = state.valueForFrontend;
-        this.isVisible = state.visible;
-        this.enabled = state.enabled;
-        this.newMessages = state.newMessages;
-        this.removedMessages = null;
-        this.severity = 0;
-        for( var msg : this.newMessages ) {
-            if( msg.getMessageLevel() > this.severity ) {
-                this.severity = msg.getMessageLevel();
-            }
-        }
-        return this;
-    }
-
     public Long getPeDeltaID() {
         return peDeltaID;
     }
@@ -84,7 +68,7 @@ public class ProcessElementDelta {
                 '}';
     }
 
-    public void takeState(ProcessElementState elementState) {
+    public ProcessElementDelta from(ProcessElementState elementState) {
         this.isVisible = elementState.visible;
         this.enabled = elementState.enabled;
         this.newMessages = elementState.newMessages;
@@ -92,5 +76,6 @@ public class ProcessElementDelta {
         this.valueForFrontend = elementState.valueForFrontend;
         this.elementPath = elementState.fieldPath;
         this.severity = elementState.severity;
+        return this;
     }
 }

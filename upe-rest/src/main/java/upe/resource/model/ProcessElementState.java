@@ -75,7 +75,7 @@ public class ProcessElementState {
         }
         if (hasChanged) {
             ProcessElementDelta delta = new ProcessElementDelta();
-            delta.takeState(this);
+            delta.from(this);
             return delta;
         } else {
             return null;
@@ -97,5 +97,11 @@ public class ProcessElementState {
 
     public String getFieldPath() {
         return fieldPath;
+    }
+
+    public ProcessElementDelta buildCompleteDelta() {
+        ProcessElementDelta delta = new ProcessElementDelta();
+        this.newMessages = this.originalMessages;
+        return delta.from(this);
     }
 }

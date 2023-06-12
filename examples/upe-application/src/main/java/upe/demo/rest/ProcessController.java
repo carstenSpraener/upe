@@ -44,7 +44,7 @@ public abstract class ProcessController {
     @ResponseBody
     public String getDialogStateToStep(@PathVariable String dialogID, @PathVariable int stepNr ) {
         UpeDialog dialog = new UpeDialog();
-        ProcessDelta delta = dialog.rebuild(dialogID, stepNr);
+        ProcessDelta delta = dialog.getDialogState(dialogID, stepNr);
         return new Gson().toJson(delta);
     }
 
@@ -52,7 +52,7 @@ public abstract class ProcessController {
     @ResponseBody
     public String getDialogState( @PathVariable String dialogID) {
         UpeDialog dialog = new UpeDialog();
-        ProcessDelta delta = dialog.rebuild(dialogID);
+        ProcessDelta delta = dialog.getDialogState(dialogID);
         return new Gson().toJson(delta);
     }
 

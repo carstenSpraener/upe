@@ -130,8 +130,7 @@ public class ProcessDelta {
                 .stream()
                 .filter(pe -> pe instanceof UProcessField)
                 .map( pe -> (UProcessField)pe)
-                .map( pf ->  new ProcessElementState(pf))
-                .map(s -> new ProcessElementDelta().from(s))
+                .map( pf ->  new ProcessElementState(pf).buildCompleteDelta())
                 .map( delta -> {
                     LOGGER.fine("ProcessDelta "+getDeltaID()+" in buildCompleteState: create new processElementDelta "+delta);
                     return delta;
