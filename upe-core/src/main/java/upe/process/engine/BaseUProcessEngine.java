@@ -124,11 +124,11 @@ public class BaseUProcessEngine implements UProcessEngine {
 		return new ActiveUProcessInfo(p,returnAction, callingUProcess);
 	}
 
-	ActiveUProcessInfo popProcess() {
+	protected ActiveUProcessInfo popProcess() {
 		return processStack.pop();
 	}
-	
-	ActiveUProcessInfo peekProcess() {
+
+	protected ActiveUProcessInfo peekProcess() {
 		return processStack.peek();
 	}
 	

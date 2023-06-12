@@ -1,18 +1,18 @@
 package upe.resource.persistorimpl;
 
 import com.google.gson.Gson;
-import upe.exception.UPERuntimeException;
 import upe.resource.UpeDialogPersistor;
 import upe.resource.model.ProcessDelta;
 import upe.resource.model.UpeDialogState;
 import upe.resource.model.UpeStep;
 
 import java.sql.*;
+import java.util.List;
 
 public class UpeDialogPersistorJdbcImpl implements UpeDialogPersistor {
     private static UpeDialogPersistorJdbcImpl instance = null;
     private static boolean INITIALIZED = Boolean.FALSE;
-    private static int MAX_DELTA_SIZE = 8192*2;
+    private static int MAX_PAYLOAD_SIZE = 8192*2;
 
     private String driverClass;
     private String jdbcURL;
@@ -58,11 +58,7 @@ public class UpeDialogPersistorJdbcImpl implements UpeDialogPersistor {
                         con.createStatement().execute("create table UPE_DIALOG_STEP (" +
                                 "  DIALOG_ID VARCHAR(128) NOT NULL," +
                                 "  STEP_NR INTEGER NOT NULL," +
-                                "  TYPE CHAR(2) NOT NULL," +
-                                "  FIELD VARCHAR(1024)," +
-                                "  NEW_VALUE VARCHAR(1024),"+
-                                "  OLD_VALUE VARCHAR(1024)," +
-                                "  DELTA_JSON VARCHAR("+MAX_DELTA_SIZE+")," +
+                                "  PAYLOAD_JSON VARCHAR("+ MAX_PAYLOAD_SIZE +")," +
                                 "  PRIMARY KEY (DIALOG_ID,STEP_NR)" +
                                 ");");
                         INITIALIZED = true;
@@ -92,14 +88,8 @@ public class UpeDialogPersistorJdbcImpl implements UpeDialogPersistor {
         return connection;
     }
 
-
     @Override
-    public UpeDialogState storeAction(String dialogID, int stepCount, String changedFieldPath, String deltaSjon) {
-        return storeStep(dialogID,stepCount,changedFieldPath,null,null, deltaSjon);
-    }
-
-    @Override
-    public UpeDialogState storeStep(String dialogID, int stepCount, String changedFieldPath, String oldValue, String newValue, String deltaJson) {
+    public UpeDialogState storeDelta(String dialogID, int stepCount, List<ProcessDelta> deltaList) {
         try {
             Connection con = getConnection();
             con.setAutoCommit(false);
@@ -107,14 +97,14 @@ public class UpeDialogPersistorJdbcImpl implements UpeDialogPersistor {
             if( stepCount > 0 && upeDialogStep+1 != stepCount ) {
                 throw new IllegalStateException("Step sequence broken. DB-Step is "+upeDialogStep+", Update-Step is "+stepCount);
             }
-            String type = UpeStep.typeOf(changedFieldPath,oldValue,newValue);
+            String payload = this.deltaGson.toJson(deltaList);
             String insertQL = "insert into UPE_DIALOG_STEP (" + UpeStep.FIELD_LIST+") "+
                     "values (" +
-                    "'"+dialogID+"', "+stepCount+" , '"+type+"', '"+changedFieldPath+"', '"+newValue+"', '"+oldValue+"', '"+deltaJson+"')";
+                    "'"+dialogID+"', "+stepCount+" , '"+payload+"')";
             getConnection().createStatement().execute(insertQL);
             getConnection().createStatement().execute("update UPE_DIALOG_STATE set STEP_COUNT="+stepCount+" where DIALOG_ID='"+dialogID+"' and STEP_COUNT="+(stepCount-1));
             getConnection().commit();
-            return restore(dialogID, deltaGson);
+            return restore(dialogID);
         } catch( SQLException sqlXC ) {
             throw new RuntimeException("Exception while storing step: "+sqlXC.getMessage(), sqlXC);
         }
@@ -129,7 +119,7 @@ public class UpeDialogPersistorJdbcImpl implements UpeDialogPersistor {
     }
 
     @Override
-    public UpeDialogState restore(String dialogID, Gson deltaGson) {
+    public UpeDialogState restore(String dialogID) {
         try {
             Connection con = getConnection();
             con.setAutoCommit(false);
@@ -164,7 +154,7 @@ public class UpeDialogPersistorJdbcImpl implements UpeDialogPersistor {
             UpeDialogState result = new UpeDialogState("DIALOGSTATE_"+id);
             con.createStatement().execute("insert into UPE_DIALOG_STATE (DIALOG_ID,STEP_COUNT) values ('"+result.getDialogID()+"',0)");
             con.commit();
-            return restore(result.getDialogID(), deltaGson);
+            return restore(result.getDialogID());
         }  catch( SQLException sXC ) {
         throw new RuntimeException(sXC);
         }

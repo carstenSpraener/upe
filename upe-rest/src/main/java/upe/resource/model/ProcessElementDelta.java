@@ -1,11 +1,15 @@
 package upe.resource.model;
 
+import upe.process.UProcessElement;
 import upe.process.messages.UProcessMessage;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProcessElementDelta {
+    private static long peDeltaCount = 0;
+
+    Long peDeltaID = peDeltaCount++;
     String elementPath;
     Boolean isVisible;
     Boolean enabled;
@@ -34,6 +38,10 @@ public class ProcessElementDelta {
         return this;
     }
 
+    public Long getPeDeltaID() {
+        return peDeltaID;
+    }
+
     public String getElementPath() {
         return elementPath;
     }
@@ -60,5 +68,29 @@ public class ProcessElementDelta {
 
     public Integer getSeverity() {
         return severity;
+    }
+
+    @Override
+    public String toString() {
+        return "ProcessElementDelta{" +
+                "id=" + peDeltaID + '\'' +
+                ", elementPath='" + elementPath + '\'' +
+                ", isVisible=" + isVisible +
+                ", enabled=" + enabled +
+                ", valueForFrontend='" + valueForFrontend + '\'' +
+                ", newMessages=" + newMessages +
+                ", removedMessages=" + removedMessages +
+                ", severity=" + severity +
+                '}';
+    }
+
+    public void takeState(ProcessElementState elementState) {
+        this.isVisible = elementState.visible;
+        this.enabled = elementState.enabled;
+        this.newMessages = elementState.newMessages;
+        this.removedMessages = elementState.removedMessages;
+        this.valueForFrontend = elementState.valueForFrontend;
+        this.elementPath = elementState.fieldPath;
+        this.severity = elementState.severity;
     }
 }

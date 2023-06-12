@@ -4,12 +4,44 @@ import upe.process.*;
 import upe.process.messages.UProcessMessage;
 import upe.resource.model.ProcessDelta;
 import upe.resource.model.ProcessElementDelta;
+import upe.resource.model.UpeDeltaType;
+
+import java.util.List;
+import java.util.logging.Logger;
 
 public class UProcessDeltaApplier {
+    private static final Logger LOGGER = Logger.getLogger(UProcessDeltaRecorder.class.getSimpleName());
+
+    public UProcessDeltaApplier (){
+        LOGGER.fine("\n>>>>>> New UProcessDeltaApplier to rebuild a process");
+    }
 
     public void applyDelta(UProcess activeProcess, ProcessDelta delta) {
         for(ProcessElementDelta peDelta : delta.getElementDeltaList() ) {
+            LOGGER.fine(()->"     applying processElementDelta on element "+peDelta.getElementPath());
             applyElementDelta(activeProcess, peDelta);
+        }
+    }
+
+    public void applyDelta(UpeDialogProcessEngine engine, List<ProcessDelta> deltaList) {
+        for( ProcessDelta pDelta : deltaList ) {
+            LOGGER.fine(()->"Applying process delta "+pDelta.getType()+ ".");
+            applyProcessNavigation(engine, pDelta);
+            applyDelta(engine.getActiveProcess(), pDelta);
+        }
+    }
+
+    private static void applyProcessNavigation(UpeDialogProcessEngine engine, ProcessDelta pDelta) {
+        if( pDelta.getType() == UpeDeltaType.CL ) {
+            UProcessAction returnAction = null;
+            if( engine.hasActiveProcess() && pDelta.getReturnActionPath()!=null ) {
+                returnAction = engine.getActiveProcess().getProcessElement(pDelta.getReturnActionPath(), UProcessAction.class);
+            }
+            LOGGER.fine(()->"     calling callProcessForRestore "+pDelta.getTargetProcess()+ " with args "+pDelta.getCallArgs()+".");
+            engine.callProcessForRestore(pDelta.getTargetProcess(), pDelta.getCallArgs(), returnAction);
+        }
+        if( pDelta.getType() == UpeDeltaType.FP ) {
+            engine.finishProcessForRestore();
         }
     }
 
@@ -23,6 +55,7 @@ public class UProcessDeltaApplier {
         pElement.resetModificationTracking();
         applyMessages(pElement, delta);
         pElement.setNeedsRendering(false);
+        LOGGER.fine(()->"The following ProcessElementDelta was applyied on process "+activeProcess.getName()+" : "+delta);
     }
 
     private void applyMessages(UProcessElement pElement, ProcessElementDelta delta) {

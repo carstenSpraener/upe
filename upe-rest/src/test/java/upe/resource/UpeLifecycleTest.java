@@ -51,6 +51,8 @@ public class UpeLifecycleTest {
         ProcessDelta delta = dialog.initiateProcess("Person", argsMap);
         PersonProcess pp = (PersonProcess)dialog.getActiveProcess();
         assertNotNull(pp);
+
+        dialog = new UpeDialog();
         delta = dialog.putValueChange(delta.getState().getDialogID(),delta.getState().getStepCount(),  "/name", "Carsten");
         assertEquals(1, delta.getElementDeltaList().size());
         assertEquals(1, delta.getState().getStepCount());
@@ -60,16 +62,17 @@ public class UpeLifecycleTest {
 
     @Test
     public void testActionTrigger() throws Exception {
-        UpeDialog dialog = new UpeDialog();
         Map<String, Object> argsMap = new HashMap<>();
-        ProcessDelta delta = dialog.initiateProcess("Person", argsMap);
-        delta = dialog.putValueChange(delta.getState().getDialogID(),delta.getState().getStepCount(),
+        ProcessDelta delta = new UpeDialog().initiateProcess("Person", argsMap);
+        delta = new UpeDialog().putValueChange(delta.getState().getDialogID(),delta.getState().getStepCount(),
                 "/name", "Carsten");
-        delta = dialog.putValueChange(delta.getState().getDialogID(),delta.getState().getStepCount(),
+        delta = new UpeDialog().putValueChange(delta.getState().getDialogID(),delta.getState().getStepCount(),
                 "/selectedAddress/street", "Kirchesch 6");
-        delta = dialog.triggerAction(delta.getState().getDialogID(), delta.getState().getStepCount(),
+        delta = new UpeDialog().triggerAction(delta.getState().getDialogID(), delta.getState().getStepCount(),
                 "actSelectedAddressOK");
-        PersonProcess pp = (PersonProcess)dialog.getActiveProcess();
+        UpeDialog restoreDialog = new UpeDialog();
+        restoreDialog.rebuild(delta.getState().getDialogID());
+        PersonProcess pp = (PersonProcess) restoreDialog.getActiveProcess();
         assertNotNull(pp);
         assertEquals(3, delta.getElementDeltaList().size());
         assertThat(delta.getElementDeltaList())
@@ -82,9 +85,9 @@ public class UpeLifecycleTest {
                         "/addressList[0]/rowID",
                         "/addressList[0]/street"
                 );
-        delta = dialog.putValueChange(delta.getState().getDialogID(),delta.getState().getStepCount(),
+        delta = new UpeDialog().putValueChange(delta.getState().getDialogID(),delta.getState().getStepCount(),
                 "/selectedAddress/street", "Kirchesch 7");
-        delta = dialog.triggerAction(delta.getState().getDialogID(), delta.getState().getStepCount(),
+        delta = new UpeDialog().triggerAction(delta.getState().getDialogID(), delta.getState().getStepCount(),
                 "actSelectedAddressOK");
         List<UProcessElement> elementList = new ArrayList<>();
         assertEquals(3, delta.getElementDeltaList().size());

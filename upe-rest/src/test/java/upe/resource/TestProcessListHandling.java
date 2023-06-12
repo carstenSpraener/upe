@@ -34,25 +34,28 @@ public class TestProcessListHandling {
     @Test
     public void testAddressAdding() throws Exception {
         // Given: A person process with addressEditor and adressList
-        UpeDialog dialog = new UpeDialog();
         Map<String, Object> argsMap = new HashMap<>();
-        ProcessDelta delta = dialog.initiateProcess("Person", argsMap);
-        PersonProcess pp = (PersonProcess) dialog.getActiveProcess();
+        ProcessDelta delta = new UpeDialog().initiateProcess("Person", argsMap);
+
+        UpeDialog _dialog = new UpeDialog();
+        _dialog.rebuild(delta.getState().getDialogID());
+        PersonProcess pp = (PersonProcess) _dialog.getActiveProcess();
+
         // setting the address/strasse field to some value
-        delta = dialog.putValueChange(delta.getState().getDialogID(), delta.getState().getStepCount(), "selectedAddress/street", "Kirchesch 6");
+        delta = new UpeDialog().putValueChange(delta.getState().getDialogID(), delta.getState().getStepCount(), "selectedAddress/street", "Kirchesch 6");
 
         // when: triggering action actSelectedAdressOK
-        delta = dialog.triggerAction(delta.getState().getDialogID(), delta.getState().getStepCount(), "actSelectedAddressOK");
+        delta = new UpeDialog().triggerAction(delta.getState().getDialogID(), delta.getState().getStepCount(), "actSelectedAddressOK");
 
         // then: /address/strasse should empty and addressList[0]/strasse should take the value
         // this changes shall apear in the delta.
         assertThat(delta.getElementDeltaList())
                 .map(peDelta -> peDelta.getElementPath()+"='"+peDelta.getValueForFrontend()+"'")
                 .contains("/selectedAddress/street=''", "/addressList[0]/street='Kirchesch 6'");
-        UpeDialogState upeState = UpeDialogPersistorJdbcImpl.intance(UpeDialog.getGson()).restore(delta.getState().getDialogID(), UpeDialog.getGson());
+        UpeDialogState upeState = UpeDialogPersistorJdbcImpl.intance(UpeDialog.getGson()).restore(delta.getState().getDialogID());
         assertEquals(upeState.getStepCount() + 1, upeState.getSteps().size());
         assertNotNull(upeState.getSteps().get(upeState.getStepCount()));
         UpeStep lastState = upeState.getSteps().get(upeState.getStepCount());
-        assertNotNull(lastState.getDelta());
+        assertNotNull(lastState.getDeltaList().get(0));
     }
 }

@@ -70,7 +70,7 @@ public class TestStartWithPersonID {
         ProcessDelta delta = dialog.initiateProcess("Person", argsMap);
         String dialogID = delta.getState().getDialogID();
         when(this.prsSrv.loadByID(any())).thenThrow(new RuntimeException("Now initialize when restoring from protocol!"));
-        delta = dialog.rebuild(dialogID);
+        delta = new UpeDialog().rebuild(dialogID);
         assertNotNull(delta);
         assertThat(delta.getElementDeltaList())
                 .map(peDelta -> peDelta.getElementPath()+"='"+peDelta.getValueForFrontend()+"'")

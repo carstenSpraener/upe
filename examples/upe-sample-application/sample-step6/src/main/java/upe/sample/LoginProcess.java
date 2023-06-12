@@ -159,6 +159,7 @@ public class LoginProcess extends AbstractUProcessImpl {
         if( password!=null ) {
             getProcessElement("password", UProcessTextField.class).setStringValue(password);
         }
+        getProcessElement("actLogin", UProcessAction.class).execute(null);
     }
 
     @UpeValidator("LOGIN-0001")

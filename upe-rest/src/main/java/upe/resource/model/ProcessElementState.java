@@ -11,22 +11,24 @@ public class ProcessElementState {
     public Boolean visible;
     public Boolean enabled;
     public String valueForFrontend;
-    public List<UProcessMessage> newMessages;
+    public int severity;
+    public List<UProcessMessage> originalMessages = new ArrayList<>();
+    public List<UProcessMessage> newMessages = new ArrayList<>();
+    public List<UProcessMessage> removedMessages = new ArrayList<>();
 
     public ProcessElementState(UProcessField pField) {
         this.fieldPath = pField.getElementPath();
         this.visible = pField.isVisible();
         this.enabled = pField.isEnabled();
         this.valueForFrontend = pField.getValueForFrontend();
-        this.newMessages = new ArrayList<>();
+        this.originalMessages = new ArrayList<>();
         for (UProcessMessage msg : pField.getMessages()) {
-            this.newMessages.add(msg);
+            this.originalMessages.add(msg);
         }
     }
 
     private ProcessElementState(String fieldPath) {
         this.fieldPath = fieldPath;
-        this.newMessages = new ArrayList<>();
     }
 
     public static ProcessElementState fromNewField(String elementPath) {
@@ -37,35 +39,43 @@ public class ProcessElementState {
         if (!pField.getElementPath().equals(this.fieldPath)) {
             throw new IllegalArgumentException("Recorded field " + this.fieldPath + " and compared field " + pField.getElementPath() + " do not match");
         }
-        ProcessElementDelta delta = new ProcessElementDelta();
+        boolean hasChanged = false;
         if (this.enabled == null || pField.isEnabled() != this.enabled) {
-            delta.enabled = pField.isEnabled();
+            this.enabled = pField.isEnabled();
+            hasChanged = true;
         }
         if (this.visible == null || pField.isVisible() != visible) {
-            delta.isVisible = pField.isVisible();
+            this.visible = pField.isVisible();
+            hasChanged = true;
         }
         if (hasValueChanged(pField.getValueForFrontend(), this.valueForFrontend)) {
-            delta.valueForFrontend = pField.getValueForFrontend();
+            this.valueForFrontend = pField.getValueForFrontend();
+            hasChanged = true;
         }
         for (UProcessMessage msg : pField.getMessages()) {
-            if (!this.newMessages.contains(msg)) {
-                delta.newMessages.add(msg);
+            // the message is not in the original message list.
+            if (!this.originalMessages.contains(msg)) {
+                this.newMessages.add(msg);
+                hasChanged = true;
             }
+            // Remove the message from the message list. It is either new
+            // or still remaining.
+            this.originalMessages.remove(msg);
         }
-        for (UProcessMessage msg : this.newMessages) {
-            if (!pField.getMessages().contains(msg)) {
-                delta.removedMessages.add(msg);
-            }
+        // Now only removed messages are left in the original message list.
+        if( this.originalMessages.size() > 0 ) {
+            this.removedMessages.addAll(this.originalMessages);
+            hasChanged = true;
         }
-        int severity = 0;
+        this.severity = 0;
         for (var msg : pField.getMessages()) {
             if (msg.getMessageLevel() > severity) {
                 severity = msg.getMessageLevel();
             }
         }
-        delta.severity = severity;
-        if (delta.hasDelta()) {
-            delta.elementPath = pField.getElementPath();
+        if (hasChanged) {
+            ProcessElementDelta delta = new ProcessElementDelta();
+            delta.takeState(this);
             return delta;
         } else {
             return null;

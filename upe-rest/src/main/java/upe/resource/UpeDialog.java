@@ -6,34 +6,33 @@ package upe.resource;
 import com.google.gson.*;
 import upe.exception.UPERuntimeException;
 import upe.process.*;
-import upe.process.engine.BaseUProcessEngine;
 import upe.process.messages.UProcessMessage;
 import upe.process.messages.UProcessMessageImpl;
 import upe.process.messages.UProcessMessageStorage;
-import upe.resource.model.ProcessDelta;
-import upe.resource.model.UpeDialogState;
-import upe.resource.model.UpeStep;
+import upe.resource.model.*;
 import upe.resource.persistorimpl.UpeDialogPersistorJdbcImpl;
 
-import java.io.Serializable;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ConcurrentModificationException;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class UpeDialog {
+    private static final Logger LOGGER = Logger.getLogger(UpeDialog.class.getName());
+
     private UpeDialogProcessEngine engine;
-    private List<UProcessMessage> queuedMessages = new ArrayList<>();
 
     public UpeDialog() {
-        engine = (UpeDialogProcessEngine)new UpeDialogProcessEngine()
-                .withQueuedMessageConsumer(this::recordMessage);
+        engine = new UpeDialogProcessEngine();
     }
 
     public static Gson getGson() {
         return new GsonBuilder()
-                .registerTypeAdapter(UProcessMessage.class, (JsonSerializer)UpeDialog::jsonizeMessage)
-                .registerTypeAdapter(UProcessMessage.class, (JsonDeserializer<UProcessMessage>)UpeDialog::deserializeMessage)
+                .registerTypeAdapter(UProcessMessage.class, (JsonSerializer) UpeDialog::jsonizeMessage)
+                .registerTypeAdapter(UProcessMessage.class, (JsonDeserializer<UProcessMessage>) UpeDialog::deserializeMessage)
                 .create();
     }
 
@@ -43,201 +42,152 @@ public class UpeDialog {
     }
 
     private static JsonElement jsonizeMessage(Object o, Type type, JsonSerializationContext jsonSerializationContext) {
-        UProcessMessage msgIn = (UProcessMessage)o;
+        UProcessMessage msgIn = (UProcessMessage) o;
         UProcessMessageImpl msg = new UProcessMessageImpl(msgIn.getMessageID(), null, msgIn.getMessageLevel());
         return jsonSerializationContext.serialize(msg);
-    }
-
-    private void recordMessage(UProcessMessage uProcessMessage) {
-        this.queuedMessages.add(uProcessMessage);
     }
 
     public UpeDialog(UpeDialogProcessEngine engine) {
         this.engine = engine;
     }
 
+    public ProcessDelta getDialogState(String dialogID, int stepNr) {
+        UpeDialogState state = rebuild(dialogID, stepNr);
+        UProcess p = getActiveProcess();
+        ProcessDelta pDelta = new ProcessDelta(engine, state, UpeDeltaType.RB);
+        pDelta.buildCompleteState(p);
+        return pDelta;
+    }
+
     private class ModificationResult {
         UpeDialogState state;
-        ProcessDelta delta;
-        String oldValue;
-        String newValue;
-        public ModificationResult(UpeDialogState state, ProcessDelta delta, String oldValue, String newValue, List<UProcessMessage> queuedMessages) {
+        UProcessDeltaRecorder deltaRecorder;
+
+        public ModificationResult(UpeDialogState state, UProcessDeltaRecorder deltaRecorder) {
             this.state = state;
-            this.delta = delta;
-            this.oldValue = oldValue;
-            this.newValue = newValue;
+            this.deltaRecorder = deltaRecorder;
         }
     }
 
     public ProcessDelta initiateProcess(String name, Map<String, Object> args) {
-        try( TimeLogger tl = new TimeLogger("initiateProcess") ) {
+        LOGGER.info(()->"Initiating process "+name+" with args "+args);
+        try (TimeLogger tl = new TimeLogger("initiateProcess")) {
             UpeDialogState state = UpeDialogPersistorJdbcImpl.intance(getGson()).initiate();
-            String jsonArgs = new Gson().toJson(args);
-
+            UProcessDeltaRecorder recorder = new UProcessDeltaRecorder(state,this.engine);
+            recorder.startRecording(UpeDeltaType.CL);
             engine.callProcess(name, args, null);
-            ProcessDelta delta = new ProcessDelta(state);
-            delta.buildCompleteState(getActiveProcess());
-
-            UpeDialogPersistorJdbcImpl.intance(getGson()).storeStep(
+            engine.getActiveProcess().inputStops();
+            List<ProcessDelta> deltaList = recorder.stopRecording();
+            UpeDialogPersistorJdbcImpl.intance(getGson()).storeDelta(
                     state.getDialogID(),
                     state.getStepCount(),
-                    "@INIT;" + name,
-                    null,
-                    jsonArgs,
-                    getGson().toJson(delta));
-
+                    deltaList
+            );
+            ProcessDelta delta = new ProcessDelta(this.engine, state, UpeDeltaType.RB);
+            delta.buildCompleteState(engine.getActiveProcess());
             return delta;
-        } catch( Exception e ) {
+        } catch (Exception e) {
             throw new UPERuntimeException(e);
         }
     }
 
-    public ProcessDelta rebuild(String dialogID) {
+    public UpeDialogState rebuild(String dialogID) {
         return this.rebuild(dialogID, Integer.MAX_VALUE);
     }
 
-    public ProcessDelta rebuild(String dialogID, int stepNr) {
-        UpeDialogState state = UpeDialogPersistorJdbcImpl.intance(getGson()).restore(dialogID, getGson());
-        UpeStep initialStep = state.getSteps().get(0);
-        UProcess p = buildFromInitialStep(engine, initialStep);
+    public UpeDialogState rebuild(String dialogID, int stepNr) {
+        UpeDialogState state = UpeDialogPersistorJdbcImpl.intance(getGson()).restore(dialogID);
         List<UpeStep> stepList = state.getSteps().stream()
-                .skip(1)
                 .filter(step -> step.getStepNr() <= stepNr)
                 .collect(Collectors.toList());
-        if( !stepList.isEmpty() ) {
-            for (int i = 0; i < stepList.size() - 1; i++) {
-                UpeStep step = stepList.get(i);
-                handleStep(engine, step);
-                engine.getActiveProcess().resetModificationTracking();
+        if (!stepList.isEmpty()) {
+            UProcessDeltaApplier applier = new UProcessDeltaApplier();
+            for( UpeStep step : stepList ) {
+                applier.applyDelta(this.engine, step.getDeltaList());
             }
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException xc) {
-            }
-            handleStep(engine, stepList.get(stepList.size() - 1));
         }
-        if( stepNr <= state.getStepCount() ) {
+        if (stepNr <= state.getStepCount()) {
             state.setStepCount(stepNr);
         }
-        ProcessDelta delta = new ProcessDelta(state);
-        delta.buildCompleteState(p);
-        return delta;
+        return state;
     }
 
     public ProcessDelta putValueChange(String dialogID, int stepCount, String valuePath, String newValueFromFrontend) {
-        try(TimeLogger tl = new TimeLogger("putValueChange") ) {
+        LOGGER.info("putValueChange on Dialog "+dialogID+" step "+stepCount+" and element "+valuePath+" with value "+newValueFromFrontend);
+        try (TimeLogger tl = new TimeLogger("putValueChange")) {
             String oldValue = "";
             Consumer<UProcess> procConsumer = (p) -> {
                 ((UProcessField) p.getProcessElement(valuePath)).setValueFromFrontend(newValueFromFrontend);
             };
-            ModificationResult result = doProcessModification(dialogID, stepCount, valuePath, procConsumer);
-            UpeDialogPersistorJdbcImpl.intance(getGson()).storeStep(
-                    result.state.getDialogID(),
-                    result.state.getStepCount(),
-                    valuePath,
-                    result.oldValue,
-                    result.newValue,
-                    getGson().toJson(result.delta)
-            );
-            return result.delta;
-        } catch( Exception e ) {
+            ModificationResult result = doProcessModification(dialogID, stepCount, valuePath, UpeDeltaType.VC, procConsumer);
+            UpeDialogPersistorJdbcImpl.intance(getGson())
+                    .storeDelta(
+                            result.state.getDialogID(),
+                            result.state.getStepCount(),
+                            result.deltaRecorder.getRecordedDeltas()
+                    );
+            return result.deltaRecorder.getActiveDelta();
+        } catch (Exception e) {
             throw new UPERuntimeException(e);
         }
     }
 
     private ModificationResult doProcessModification(String dialogID, int stepCount, String valuePath,
+                                                     UpeDeltaType deltaType,
                                                      Consumer<UProcess> procConsumer
     ) {
-        UpeDialogState state = rebuild(dialogID).getState();
-        if( state.getStepCount() != stepCount) {
-            throw new ConcurrentModificationException("Dialog "+ dialogID +" was externaly updated");
+        LOGGER.info(()->">>>Starting process modification on dialog "+dialogID+" and step "+stepCount+"\n");
+        UpeDialogState state = rebuild(dialogID);
+        if (state.getStepCount() != stepCount) {
+            throw new ConcurrentModificationException("Dialog " + dialogID + " was externaly updated");
         }
-        ProcessDelta delta = new ProcessDelta(state);
         UProcess p = getActiveProcess();
+
+        LOGGER.info(()->"Rebuilding of process "+p.getName()+" done. Creating a new Recorder.");
         String oldValue = null;
         UProcessElement elementToModify = p.getProcessElement(valuePath);
-        if( elementToModify instanceof UProcessField field) {
+        if (elementToModify instanceof UProcessField field) {
             oldValue = field.getValueForFrontend();
         }
-        delta.startRecording(p);
+
+        LOGGER.info(()->"Starting Recording of process modifications.");
+        UProcessDeltaRecorder deltaRecorder = new UProcessDeltaRecorder(state, this.engine);
+        deltaRecorder.startRecording(deltaType);
         p.inputStarts();
         procConsumer.accept(p);
-        p.inputStops();
-        delta.stopRecording(p);
-        delta.setGlobalMessages(this.queuedMessages);
-        state.setStepCount(state.getStepCount()+1);
+        engine.getActiveProcess().inputStops();
+        LOGGER.info(()->"Modification done. Stopping Recording of process modifications.");
+        deltaRecorder.stopRecording();
+        state.setStepCount(state.getStepCount() + 1);
         String newValue = null;
-        if( elementToModify instanceof UProcessField field) {
+        if (elementToModify instanceof UProcessField field) {
             newValue = field.getValueForFrontend();
         }
-        return new ModificationResult(state, delta, oldValue, newValue, this.queuedMessages);
+        state.getSteps().clear();
+        LOGGER.info(()->">>ProcessModification is finished.\n");
+        return new ModificationResult(state, deltaRecorder);
     }
 
     public ProcessDelta triggerAction(String dialogID, int stepCount, String actionPath) {
-        try(TimeLogger tl = new TimeLogger("putValueChange") ) {
-            ModificationResult result = doProcessModification(dialogID, stepCount, actionPath, (p) -> {
+        LOGGER.info("triggerAction on Dialog "+dialogID+" step "+stepCount+" and action "+actionPath);
+
+        try (TimeLogger tl = new TimeLogger("putValueChange")) {
+            ModificationResult result = doProcessModification(dialogID, stepCount, actionPath, UpeDeltaType.AC, (p) -> {
                 if (p.getProcessElement(actionPath) instanceof UProcessAction act) {
                     act.execute(null);
                 } else {
                     throw new UPERuntimeException("Illegal action path '" + actionPath + "' in trigger action");
                 }
             });
-            UpeDialogPersistorJdbcImpl.intance(getGson()).storeAction(
+            UpeDialogPersistorJdbcImpl.intance(getGson()).storeDelta(
                     result.state.getDialogID(),
                     result.state.getStepCount(),
-                    actionPath,
-                    getGson().toJson(result.delta)
+                    result.deltaRecorder.getRecordedDeltas()
             );
-            return result.delta;
-        } catch( Exception e ) {
+            return result.deltaRecorder.getActiveDelta();
+        } catch (Exception e) {
             throw new UPERuntimeException(e);
         }
-    }
-
-
-    private void handleStep(UProcessEngine pe, UpeStep step) {
-        String type = step.getType();
-        UProcess p = ((BaseUProcessEngine)pe).getActiveProcessInfo().getProcess();
-        p.inputStarts();
-        switch( type ) {
-            case "VC":
-                ((UProcessField)p.getProcessElement(step.getFieldPath())).setValueFromFrontend(step.getNewValue());
-                break;
-            case "AC":
-                new UProcessDeltaApplier().applyDelta(p.getProcessEngine().getActiveProcess(), step.getDelta());
-                break;
-            default:
-                break;
-        }
-        p.inputStops();
-        this.queuedMessages.clear();
-    }
-
-    private UProcess buildFromInitialStep(UpeDialogProcessEngine pe, UpeStep initialStep) {
-        String cmd = initialStep.getFieldPath();
-        UProcess p = null;
-        if( cmd.startsWith("@") ) {
-            String instruction = cmd.substring(1, cmd.indexOf(';'));
-            String param = cmd.substring(cmd.indexOf(';')+1);
-            Map<String, Serializable>argsMap = buildArgsMap(initialStep);
-            switch (instruction) {
-                case "INIT":
-                    pe.callProcessForRestore(param, new HashMap<>(), null);
-                    new UProcessDeltaApplier().applyDelta(pe.getActiveProcess(), initialStep.getDelta());
-                    break;
-                default:
-                    break;
-            }
-        }
-        return ((BaseUProcessEngine)pe).getActiveProcessInfo().getProcess();
-    }
-
-    private Map<String, Serializable> buildArgsMap(UpeStep initialStep) {
-        Map<String, Serializable> args = new HashMap<>();
-        if( initialStep.getNewValue() != null ) {
-            args = getGson().fromJson(initialStep.getNewValue(), Map.class);
-        }
-        return args;
     }
 
     public UProcess getActiveProcess() {

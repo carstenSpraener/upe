@@ -1,7 +1,7 @@
 # Testdriven Development of a Login Process with UPE
 
-That was a solid trip till here. Now it is time to complete the
-user login process and fullfill it with a tiny registration
+That was a solid. Now it is time to complete the
+user login process and fulfill it with a tiny registration
 process. The user can call a ActRegistration, fill in the
 data, activate the ActRegistrationOK action and can 
 successfully log in to the application.

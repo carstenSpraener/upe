@@ -1,10 +1,10 @@
 # Sample-Application of a Login Process
 
-The projects sample-1 to sample-N in this directory show how to
+The projects sample-step1 to sample-step7 in this directory show how to
 implement a login process as a UPE application. Each subproject
 can be compiled, but it is not necessarily green.
 
-See the READMEs in the subprojects for further details. Here is
+See the READMEs in the subprojects for further details.
 Here is an overview.
 
 ## [Sample-step1](sample-step1/README.md): Implementing a process

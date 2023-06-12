@@ -1,5 +1,7 @@
 package upe.resource.model;
 
+import com.google.gson.annotations.JsonAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
 

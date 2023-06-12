@@ -15,7 +15,10 @@ repositories {
 
 dependencies {
     implementation project(':upe-core')
+    implementation project(':upe-rest')
     implementation 'com.googlecode.lanterna:lanterna:3.1.1'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.7.11'
+    implementation 'com.fasterxml.jackson.module:jackson-module-jsonSchema:2.15.2'
 
     testImplementation project(':upe-test')
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
@@ -27,4 +30,4 @@ dependencies {
 test {
     useJUnitPlatform()
 }
-mainClassName "upe.sample.UpeSampleApp"
+mainClassName "upe.sample.lanterna.LanternaApplication"

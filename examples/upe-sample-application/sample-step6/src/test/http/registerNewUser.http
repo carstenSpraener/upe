@@ -1,0 +1,101 @@
+GET http://localhost:8080/init
+
+> {%
+    client.test("LoginProcess start", function() {
+        client.assert(response.status=200, "ResponseStatus is not 200.")
+        client.assert(response.body.processName==="login")
+    });
+    client.global.set("dialogID", response.body.state.dialogID);
+    client.global.set("stepCount", response.body.state.stepCount);
+%}
+###
+PUT http://localhost:8080/{{dialogID}}/action
+Content-Type: application/json
+
+{
+  "dialogID": "{{dialogID}}",
+  "step": "{{stepCount}}",
+  "fieldPath": "/actRegister"
+}
+
+> {%
+    client.test("Call actRegister", function() {
+        client.assert(response.status=200, "ResponseStatus is not 200.")
+        client.assert(response.body.processName==="userRegistration");
+    });
+    client.global.set("stepCount", response.body.state.stepCount);
+%}
+###
+PUT http://localhost:8080/{{dialogID}}/value
+Content-Type: application/json
+
+{
+  "dialogID": "{{dialogID}}",
+  "step": "{{stepCount}}",
+  "fieldPath": "/user",
+  "newValue": "carldall"
+}
+
+> {%
+    client.test("LoginProcess fill password", function() {
+        client.assert(response.status=200, "ResponseStatus is not 200.")
+    });
+    client.global.set("stepCount", response.body.state.stepCount);
+%}
+
+###
+PUT http://localhost:8080/{{dialogID}}/value
+Content-Type: application/json
+
+{
+  "dialogID": "{{dialogID}}",
+  "step": "{{stepCount}}",
+  "fieldPath": "/password",
+  "newValue": "password"
+}
+
+> {%
+    client.test("LoginProcess fill password", function() {
+        client.assert(response.status=200, "ResponseStatus is not 200.")
+    });
+    client.global.set("stepCount", response.body.state.stepCount);
+%}
+
+###
+PUT http://localhost:8080/{{dialogID}}/value
+Content-Type: application/json
+
+{
+  "dialogID": "{{dialogID}}",
+  "step": "{{stepCount}}",
+  "fieldPath": "/password2",
+  "newValue": "password"
+}
+
+> {%
+    client.test("LoginProcess fill password", function() {
+        client.assert(response.status=200, "ResponseStatus is not 200.")
+    });
+    client.global.set("stepCount", response.body.state.stepCount);
+%}
+###
+PUT http://localhost:8080/{{dialogID}}/action
+Content-Type: application/json
+
+{
+  "dialogID": "{{dialogID}}",
+  "step": "{{stepCount}}",
+  "fieldPath": "/actRegisterOK"
+}
+
+> {%
+    client.test("Call actRegister", function() {
+        client.assert(response.status=200, "ResponseStatus is not 200.")
+        client.assert(response.body.processName==="helloWorld");
+        client.assert(response.body.elementDeltaList[0].elementPath==="/content");
+        client.assert(response.body.elementDeltaList[0].valueForFrontend==="Hello to 'carldall'");
+
+    });
+    client.global.set("stepCount", response.body.state.stepCount);
+%}
+###
